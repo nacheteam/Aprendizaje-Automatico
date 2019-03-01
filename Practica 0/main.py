@@ -18,10 +18,11 @@ AZUL = (0,0,1)
 MORADO = (0.5,0,1)
 ROSA = (1,0,1)
 GRIS = (0.5,0.5,0.5)
+NEGRO = (0,0,0)
 
 # Se usan para colorear los puntos según la clase
-COLORES = [AMARILLO,ROJO,NARANJA,VERDE,VERDE_AZULADO,AZUL_CLARO,AZUL,MORADO,ROSA,GRIS]
-COLORES_LABEL = ["Amarillo","Rojo","Naranja","Verde","Verde azulado","Azul claro","Azul","Morado","Rosa","Gris"]
+COLORES = [AMARILLO,ROJO,NARANJA,VERDE,VERDE_AZULADO,AZUL_CLARO,AZUL,MORADO,ROSA,GRIS,NEGRO]
+COLORES_LABEL = ["Amarillo","Rojo","Naranja","Verde","Verde azulado","Azul claro","Azul","Morado","Rosa","Gris","Negro"]
 
 ################################################################################
 ##                                   Parte 1                                  ##
@@ -77,11 +78,32 @@ def parte2():
     input("Pulsa ENTER para seguir")
 
 ################################################################################
+##                                   Parte 3                                  ##
+################################################################################
+
+def parte3(nvalues=100):
+    # Fijamos la semilla
+    np.random.seed(12345)
+    # Obtenemos nvalues valores equiespaciados entre 0  y 2pi
+    values = np.linspace(0, 2*np.pi, num=nvalues)
+    # Calculamos el seno, coseno y seno+coseno
+    sine = np.sin(values)
+    cosine = np.cos(values)
+    sine_plus_cosine = sine+cosine
+    # Dibujamos las curvas resultantes
+    plt.plot(values,sine,"--",c=NEGRO,label="Seno")
+    plt.plot(values,cosine,"--",c=AZUL,label="Coseno")
+    plt.plot(values,sine_plus_cosine,"--",c=ROJO,label="Seno más coseno")
+    plt.legend()
+    plt.show()
+
+################################################################################
 ##                                 MAIN                                       ##
 ################################################################################
 
 def main():
     parte1()
     parte2()
+    parte3()
 
 main()
