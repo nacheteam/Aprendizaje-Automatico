@@ -2,7 +2,7 @@ import numpy as np
 import sklearn as sk
 from sklearn import datasets
 import matplotlib.pyplot as plt
-import pdb
+from sklearn.model_selection import train_test_split
 
 ################################################################################
 ##                                COLORES RGB                                 ##
@@ -55,6 +55,18 @@ def parte1():
     plt.legend()
     plt.show()
 
+################################################################################
+##                                   Parte 2                                  ##
+################################################################################
+
+def parte2():
+    # Cargamos el dataset
+    iris = datasets.load_iris()
+    # Obtenemos los datos, las etiquetas y los nombres de las características
+    data = iris["data"]
+    labels = iris["target"]
+    # Separamos los datos en test y train
+    train_data,test_data,train_labels,test_labels = train_test_split(data,labels,test_size=0.20,stratify=labels)
 
 ################################################################################
 ##                                 MAIN                                       ##
