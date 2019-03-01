@@ -67,6 +67,14 @@ def parte2():
     labels = iris["target"]
     # Separamos los datos en test y train
     train_data,test_data,train_labels,test_labels = train_test_split(data,labels,test_size=0.20,stratify=labels)
+    # Imprimimos los datos
+    print("Datos de test")
+    print(test_data)
+    print(test_labels)
+    print("Datos de entrenamiento")
+    print(train_data)
+    print(train_labels)
+    input("Pulsa ENTER para seguir")
 
 ################################################################################
 ##                                 MAIN                                       ##
@@ -74,5 +82,6 @@ def parte2():
 
 def main():
     parte1()
+    parte2()
 
 main()
