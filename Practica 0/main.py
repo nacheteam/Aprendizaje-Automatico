@@ -33,14 +33,18 @@ COLORES_LABEL = ["Amarillo","Rojo","Naranja","Verde","Verde azulado","Azul claro
 def parte1():
     # Cargamos el dataset
     iris = datasets.load_iris()
-    # Obtenemos los datos, las etiquetas y los nombres de las características
+    # Obtenemos los datos, las etiquetas, los nombres de las características y los
+    # nombres de las clases
     data = iris["data"]
     labels = iris["target"]
     nombre_clases = iris["target_names"]
     nombre_features = iris["feature_names"]
     # Nos quedamos con las dos últimas columnas de los datos
     last2_col = data[:,-2:]
-    # Dividimos las filas según las etiquetas
+    # Dividimos los datos según las etiquetas en una lista de listas
+    # Cada sublista tiene el conjunto de datos que corresponde a cada clase, esto
+    # es, en la posición 0 la lista de elementos con clase 0, en la posición 1 la
+    # lista de elementos con la clase 1, etc
     max_label = max(labels)
     data_divided = []
     for i in range(max_label+1):
@@ -69,7 +73,7 @@ def parte2():
     train_percentage = 0.8
     # Cargamos el dataset
     iris = datasets.load_iris()
-    # Obtenemos los datos, las etiquetas y los nombres de las características
+    # Obtenemos los datosy las etiquetas
     data = iris["data"]
     labels = iris["target"]
     # Calculamos el tamaño del test y train
@@ -78,13 +82,17 @@ def parte2():
     # Calculamos números de forma aleatoria (según una uniforme) de para sacar los índices
     # del conjunto de test
     test_index = np.random.choice(len(data), test_size,replace=False)
+    # Calculamos los índices del conjunto de entrenamiento como los índices que no hemos
+    # empleado en el conjunto de test
     train_index = np.array(list(set([i for i in range(len(data))]).difference(set(test_index))))
-    # Obtenemos los conjuntos de train y test
+    # Obtenemos los conjuntos de datos de train y test
     test_data = data[test_index]
     train_data = data[train_index]
     test_labels = labels[test_index]
     train_labels = labels[train_index]
 
+    # Contamos los elementos que hay en cada clase para el conjunto de test y train
+    # y lo mostramos por pantalla
     unique_test, counts_test = np.unique(test_labels, return_counts=True)
     print("Distribución de clases en test")
     print(dict(zip(unique_test, counts_test)))
@@ -92,6 +100,17 @@ def parte2():
     unique_train, counts_train = np.unique(train_labels, return_counts=True)
     print("Distribución de clases en train")
     print(dict(zip(unique_train, counts_train)))
+    print("\n\n")
+
+    # Calculamos los porcentajes obtenidos en el train y en el test
+    # Los porcentajes no van a salir exactamente un 33% porque me he valido del uso de la probabilidad.
+    # Se emplea el hecho de que, si el número de datos creciera de forma indefinida entonces
+    # al tomar un conjunto de elementos mediante una distibución unifome obtendríamos el mismo número
+    # de elementos de cada clase, esto es un 33% de cada una de las clases.
+    print("Porcentaje de clases en test")
+    print(dict(zip(unique_test, counts_test/np.sum(counts_test))))
+    print("Porcentaje de clases en train")
+    print(dict(zip(unique_train, counts_train/np.sum(counts_train))))
 
     input("Pulsa ENTER para seguir")
 
@@ -100,9 +119,7 @@ def parte2():
 ################################################################################
 
 def parte3(nvalues=100):
-    # Fijamos la semilla
-    np.random.seed(12345)
-    # Obtenemos nvalues valores equiespaciados entre 0  y 2pi
+    # Obtenemos nvalues valores equiespaciados entre 0 y 2pi
     values = np.linspace(0, 2*np.pi, num=nvalues)
     # Calculamos el seno, coseno y seno+coseno
     sine = np.sin(values)
