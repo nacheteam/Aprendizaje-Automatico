@@ -103,6 +103,8 @@ def parte2():
     print("\n\n")
 
     # Calculamos los porcentajes obtenidos en el train y en el test
+    # Sabemos que la proporción de datos es de 50,50,50 para las clases, esto es un 33% de aparición
+    # de cada clase
     # Los porcentajes no van a salir exactamente un 33% porque me he valido del uso de la probabilidad.
     # Se emplea el hecho de que, si el número de datos creciera de forma indefinida entonces
     # al tomar un conjunto de elementos mediante una distibución unifome obtendríamos el mismo número
