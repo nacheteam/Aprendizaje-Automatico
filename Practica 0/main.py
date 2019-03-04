@@ -4,6 +4,8 @@ from sklearn import datasets
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 
+np.random.seed(123456)
+
 ################################################################################
 ##                                COLORES RGB                                 ##
 ################################################################################
@@ -34,7 +36,8 @@ def parte1():
     # Obtenemos los datos, las etiquetas y los nombres de las características
     data = iris["data"]
     labels = iris["target"]
-    nombre_clases = iris["feature_names"]
+    nombre_clases = iris["target_names"]
+    nombre_features = iris["feature_names"]
     # Nos quedamos con las dos últimas columnas de los datos
     last2_col = data[:,-2:]
     # Dividimos las filas según las etiquetas
@@ -50,8 +53,8 @@ def parte1():
     for i in range(len(data_divided)):
         subsample = data_divided[i]
         plt.scatter(subsample[:,:1],subsample[:,1:],c=COLORES[i],label=COLORES_LABEL[i]+" ("+nombre_clases[i]+")")
-    plt.xlabel(nombre_clases[-2])
-    plt.ylabel(nombre_clases[-1])
+    plt.xlabel(nombre_features[-2])
+    plt.ylabel(nombre_features[-1])
     plt.title("Scatter Plot de las dos últimas características")
     plt.legend()
     plt.show()
@@ -61,20 +64,35 @@ def parte1():
 ################################################################################
 
 def parte2():
+    # Porcentaje de test y train
+    test_percentage = 0.2
+    train_percentage = 0.8
     # Cargamos el dataset
     iris = datasets.load_iris()
     # Obtenemos los datos, las etiquetas y los nombres de las características
     data = iris["data"]
     labels = iris["target"]
-    # Separamos los datos en test y train
-    train_data,test_data,train_labels,test_labels = train_test_split(data,labels,test_size=0.20,stratify=labels)
-    # Imprimimos los datos
-    print("Datos de test")
-    print(test_data)
-    print(test_labels)
-    print("Datos de entrenamiento")
-    print(train_data)
-    print(train_labels)
+    # Calculamos el tamaño del test y train
+    test_size = int(test_percentage*len(data))
+    train_size = len(data)-test_size
+    # Calculamos números de forma aleatoria (según una uniforme) de para sacar los índices
+    # del conjunto de test
+    test_index = np.random.choice(len(data), test_size,replace=False)
+    train_index = np.array(list(set([i for i in range(len(data))]).difference(set(test_index))))
+    # Obtenemos los conjuntos de train y test
+    test_data = data[test_index]
+    train_data = data[train_index]
+    test_labels = labels[test_index]
+    train_labels = labels[train_index]
+
+    unique_test, counts_test = np.unique(test_labels, return_counts=True)
+    print("Distribución de clases en test")
+    print(dict(zip(unique_test, counts_test)))
+
+    unique_train, counts_train = np.unique(train_labels, return_counts=True)
+    print("Distribución de clases en train")
+    print(dict(zip(unique_train, counts_train)))
+
     input("Pulsa ENTER para seguir")
 
 ################################################################################
