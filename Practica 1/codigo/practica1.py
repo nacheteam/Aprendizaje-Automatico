@@ -29,7 +29,7 @@ def dEv(u,v):
 def gradE(u,v):
     return np.array([dEu(u,v), dEv(u,v)])
 
-# Implementación del método gradiente descendiente
+# Implementación del método gradiente descendente
 def gradient_descent(w_init,learning_rate,max_iter,tol):
     w_before=w_init
     w = w_before-learning_rate*gradE(w_before[0],w_before[1])
@@ -50,3 +50,9 @@ def apartado2():
     error2get = 1e-14
     initial_point = np.array([1.0,1.0])
     w, it = gradient_descent(initial_point,eta,maxIter,error2get)
+    print("El número de iteraciones empleado ha sido de: " + str(it))
+    print("El mínimo encontrado por gradiente desdendente ha sido: ")
+    print("x: (" + str(w[0]) + ")")
+    print("y: (" + str(w[1]) + ")")
+
+apartado2()
