@@ -54,8 +54,8 @@ def apartado2():
     w, it = gradient_descent(initial_point,eta,maxIter,error2get,expr,symbol)
     print("El número de iteraciones empleado ha sido de: " + str(it))
     print("El mínimo encontrado por gradiente desdendente ha sido: ")
-    print("x: (" + str(w[0]) + ")")
-    print("y: (" + str(w[1]) + ")")
+    print("x: " + str(w[0]))
+    print("y: " + str(w[1]))
 
 #------------------------------------------------------------------------------#
 ##                               Apartado 3                                   ##
