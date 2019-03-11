@@ -41,7 +41,7 @@ def gradient_descent(w_init,learning_rate,max_iter,tol):
     return w, iterations
 
 #------------------------------------------------------------------------------#
-##                           Apartado 2 y 3                                   ##
+##                               Apartado 2                                   ##
 #------------------------------------------------------------------------------#
 
 def apartado2():
