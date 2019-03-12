@@ -48,5 +48,32 @@ De esta forma lo que vamos a hacer en la práctica es comprobar lo siguiente: va
 
 Cabe destacar que en mi caso he generalizado la implementación del algoritmo mediante el uso de la librería SymPy. Mediante esta librería he implementado una función que generaliza el cálculo del gradiente en un punto, de tal forma que no tengo que programar explícitamente la función que calcula el gradiente de la función que queremos minimizar. Esto se plasma en las funciones ``evaluate'' y ``gradiente'' de mi código.
 
+\subsection{Apartado 2}
+
+\subsubsection{Apartado a}
+
+En este apartado se nos proporciona la siguiente función a minimizar:
+
+$$E(u,v) = (u^2 e^{v} - 2v^2 e^{-u})^2$$
+
+Vamos a calcular analíticamente la expresión del gradiente como se nos pide en el ejercicio. Lo primero que tenemos que hacer es ver cómo sería la expresión del gradiente en nuestro caso:
+
+$$\nabla E(u,v) = (\frac{\partial E(u,v)}{\partial u},\frac{\partial E(u,v)}{\partial v})$$
+
+Calculemos pues cada una de las dos parciales.
+
+$$\frac{\partial E(u,v)}{\partial u} = 2(u^2 e^{v} - 2v^2 e^{-u})(2ue^{v}+2v^2e^{-u})$$
+
+$$\frac{\partial E(u,v)}{\partial v} = 2(u^2 e^{v} - 2v^2 e^{-u})(u^2 e^{v}-4ve^{-u})$$
+
+Por tanto:
+
+$$\nabla E(u,v) = (\frac{\partial E(u,v)}{\partial u},\frac{\partial E(u,v)}{\partial v}) = 2 (u^2 e^{v} - 2v^2 e^{-u})\cdot [(2ue^{v}+2v^2e^{-u}), (u^2 e^{v}-4ve^{-u})](u,v)$$
+
+Cabe decir que esta es una función $\nabla E(u,v): \mathbb{R}^2 \rightarrow \mathbb{R}^2$, es decir que toma dos variables y que obtiene un vector de dimensión 2.
+
+\subsubsection{Apartado b y c}
+
+
 
 \end{document}
