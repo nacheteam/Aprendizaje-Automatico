@@ -3,6 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sympy import *
+from tabulate import tabulate
 
 np.random.seed(1)
 
@@ -75,7 +76,7 @@ def apartado3a(eta):
     symbol = [x,y]
     expr = x**2 + 2*y**2 + 2*sin(2*pi*x)*sin(2*pi*y)
     w, it, values = gradient_descent(initial_point,eta,maxIter,error2get,expr,symbol,ret_values=True)
-    print("#################################\nEjercicio 1, apartado 3\n#################################\n\n")
+    print("#################################\nEjercicio 1, apartado 3 a\n#################################\n\n")
     print("Estamos utilizando eta = " + str(eta))
     print("El número de iteraciones empleado ha sido de: " + str(it))
     print("El mínimo encontrado por gradiente desdendente ha sido: ")
@@ -87,6 +88,25 @@ def apartado3a(eta):
     plt.show()
     input("Presione ENTER para continuar")
 
+def apartado3b():
+    eta=0.01
+    maxIter = 50
+    error2get = 1e-14
+    x,y = symbols('x y',real=True)
+    symbol = [x,y]
+    expr = x**2 + 2*y**2 + 2*sin(2*pi*x)*sin(2*pi*y)
+    ws_init = [np.array([0.1,0.1]),np.array([1,1]),np.array([-0.5,-0.5]),np.array([-1,-1])]
+    results = []
+    for w_init in ws_init:
+        w, it = gradient_descent(w_init,eta,maxIter,error2get,expr,symbol)
+        results.append([w_init,w,evaluate(expr,symbol,w)])
+
+    print("#################################\nEjercicio 1, apartado 3 b\n#################################\n\n")
+    print("Tabla con los valores de los mínimos encontrados: \n")
+    print(tabulate(results,headers=["Punto inicial", "Mínimo encontrado", "Valor en el mínimo"]))
+
+
 apartado2()
 apartado3a(0.01)
 apartado3a(0.1)
+apartado3b()
