@@ -14,11 +14,8 @@ np.random.seed(1)
 ##                              Apartado 1                                    ##
 #------------------------------------------------------------------------------#
 def evaluate(E,symbols,w):
-    value = E.subs(symbols[0],w[0])
-    for j in range(1,len(symbols)):
-        new_value = value.subs(symbols[j],w[j])
-        value = new_value
-    return N(value)
+    point = dict(zip(symbols,w))
+    return N(E.subs(point))
 
 def gradiente(E,symbols,w):
     gradiente = []
