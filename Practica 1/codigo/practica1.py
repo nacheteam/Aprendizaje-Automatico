@@ -26,15 +26,22 @@ def gradiente(E,symbols,w):
     return np.array(gradiente)
 
 # Implementación del método gradiente descendente
-def gradient_descent(w_init,learning_rate,max_iter,tol,E,symbols):
+def gradient_descent(w_init,learning_rate,max_iter,tol,E,symbols,ret_values=False):
     w_before=w_init
     w = w_before-learning_rate*gradiente(E,symbols,w_before)
+    # Cuidado que no hay el mismo número de elementos que iteraciones, para la primera iteración
+    # introducimos dos valores, no uno
+    func_values = [evaluate(E,symbols,w_init),evaluate(E,symbols,w)]
     iterations=1
     while iterations<max_iter and np.absolute(evaluate(E,symbols,w)-evaluate(E,symbols,w_before))>=tol:
         w_before=w
         w = w_before-learning_rate*gradiente(E,symbols,w_before)
+        func_values.append(evaluate(E,symbols,w))
         iterations+=1
-    return w, iterations
+    if ret_values:
+        return w, iterations, func_values
+    else:
+        return w, iterations
 
 #------------------------------------------------------------------------------#
 ##                               Apartado 2                                   ##
@@ -49,16 +56,37 @@ def apartado2():
     symbol = [u,v]
     expr = (u**2*exp(v)-2*v**2*exp(-u))**2
     w, it = gradient_descent(initial_point,eta,maxIter,error2get,expr,symbol)
+    print("#################################\nEjercicio 1, apartado 2\n#################################\n\n")
     print("El número de iteraciones empleado ha sido de: " + str(it))
     print("El mínimo encontrado por gradiente desdendente ha sido: ")
     print("x: " + str(w[0]))
     print("y: " + str(w[1]))
+    input("Presione ENTER para continuar")
 
 #------------------------------------------------------------------------------#
 ##                               Apartado 3                                   ##
 #------------------------------------------------------------------------------#
 
-def apartado3():
-    print("hola")
+def apartado3a(eta):
+    maxIter = 50
+    error2get = 1e-14
+    initial_point = np.array([0.1,0.1])
+    x,y = symbols('x y',real=True)
+    symbol = [x,y]
+    expr = x**2 + 2*y**2 + 2*sin(2*pi*x)*sin(2*pi*y)
+    w, it, values = gradient_descent(initial_point,eta,maxIter,error2get,expr,symbol,ret_values=True)
+    print("#################################\nEjercicio 1, apartado 3\n#################################\n\n")
+    print("Estamos utilizando eta = " + str(eta))
+    print("El número de iteraciones empleado ha sido de: " + str(it))
+    print("El mínimo encontrado por gradiente desdendente ha sido: ")
+    print("x: " + str(w[0]))
+    print("y: " + str(w[1]))
+
+    plt.plot(list(range(len(values))),values,label="Valores de la función para cada iteración")
+    plt.legend()
+    plt.show()
+    input("Presione ENTER para continuar")
 
 apartado2()
+apartado3a(0.01)
+apartado3a(0.1)
