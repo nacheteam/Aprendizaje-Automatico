@@ -20,6 +20,7 @@
 \date{25 de Marzo de 2019}
 
 \setlength{\parindent}{0cm}
+\setlength{\parskip}{10px}
 
 
 \begin{document}
@@ -31,9 +32,21 @@
 
 \section{Ejercicio 1}
 
+\subsection{Apartado 1}
 
-\subsection*{\underline{Solución}}
+Se nos pide implementar el algoritmo de gradiente descendente, veamos como funciona para justificar la implementación.
 
+El algoritmo de gradiente descendente aplicado a minimización de funciones toma la idea del ajuste de una función lineal que hemos estudiado en teoría. Ahora en vez de actualizar $w_j$ de forma proporcional a la derivada parcial j-ésima de el error dentro de la muestra vamos a actualizarla mediante la derivada parcial j-ésima de la función que queremos minimizar.
+
+El algoritmo parte de un punto $w$ inicial, que se irá actualizando hasta aproximar el mínimo de la función. El valor de $w$ en la iteración i+1-ésima será el valor de $w$ en la iteración i-ésima menos una constante de proporcionalidad que llamamos tasa de aprendizaje por el gradiente de la función a minimizar, esto es:
+
+$$w_{i+1} = w_i - \eta \cdot \nabla f(x_1,...,x_n)$$
+
+Donde $f(x_1,...,x_n)$ es la función que queremos minimizar.
+
+De esta forma lo que vamos a hacer en la práctica es comprobar lo siguiente: vamos a actualizar de esta forma el valor de $w$ hasta que agotemos un número de iteraciones máximas fijadas o hasta que el valor absoluto de la diferencia de $f(w_i))$ y $f(w_{i+1})$ sea menor que una cierta tolerancia, esto es que la imagen de los $w_i$ y $w_{i+1}$ no hayan experimentado un cambio apreciable entre dos iteraciones consecutivas.
+
+Cabe destacar que en mi caso he generalizado la implementación del algoritmo mediante el uso de la librería SymPy. Mediante esta librería he implementado una función que generaliza el cálculo del gradiente en un punto, de tal forma que no tengo que programar explícitamente la función que calcula el gradiente de la función que queremos minimizar. Esto se plasma en las funciones ``evaluate'' y ``gradiente'' de mi código.
 
 
 \end{document}
