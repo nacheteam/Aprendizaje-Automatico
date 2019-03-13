@@ -201,4 +201,38 @@ Veamos los valores mínimos obtenidos con estos puntos:
 
 Como podemos observar el punto de inicio es altamente determinante para obtener el mínimo de la función ya que dependiendo del valor inicial podemos acabar obteniendo uno u otro mínimo local o incluso el mínimo global de la función. Como podemos ver inclusive en esta función (por ciertas razones de simetría de los senos) hemos acabado obteniendo como mínimo un punto y su opuesto como se puede ver en las filas 2 y 4 de la tabla.
 
+\subsection{Apartado 4}
+
+Si observamos todos los resultados que hemos obtenido hasta ahora podemos obtener dos conclusiones acerca de la dificultad de hallar un mínimo:
+
+\begin{itemize}
+	\item La elección de la tasa de aprendizaje: si escogemos una tasa de aprendizaje muy grande podemos incluso forzar que la convergencia se produzca en un número de iteraciones excesivamente grande no obteniendo por tanto un mínimo satisfactorio de la función. Esto no es realmente un problema, puesto que siempre podemos escoger una tasa de aprendizaje muy pequeña para avanzar en pasos pequeños y no saltarnos el mínimo más próximo al punto de inicio. Esto nos obligaría probablemente a usar un número mayor de iteraciones, pero no influiría en el mínimo que obtenemos.
+	\item El punto de inicio: esto es totalmente determinante. Supongamos que tenemos una función con una serie de mínimos locales y un mínimo global de la siguiente forma:
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}
+			\begin{axis}[ 
+			xlabel=$x$,
+			ylabel={$f(x) = \frac{x^6}{6} - \frac{17x^4}{2} + \frac{225x^2}{2}$}
+			] 
+			\addplot[domain=-6:6,blue,thick,smooth,samples=1000]{(1/6)*x^6 - (1/2)*17*x^4 + (1/2)*225*x^2};
+			\addplot+ [mark=*,thick,red] table{
+				-5.5 238.534
+			};
+			\addplot+ [mark=*,thick,orange] table{
+				2 324.667
+			};
+			\addplot+ [mark=*,thick,black] table{
+				4 306.667
+			};
+			\end{axis}
+		\end{tikzpicture}
+	\end{figure}
+	Si consideramos como punto de partida el punto rojo con una tasa de aprendizaje adecuada acabaremos llegando al mínimo local que tiene justo a su derecha, gracias a que el gradiente de la función  ``empuja'' al algoritmo hacia ese punto. 
+	
+	Si tomásemos como punto inicial el punto negro iríamos también hacia el mínimo local que tiene a su derecha.
+	
+	En cambio estos dos mínimos no son los mínimos globales de la función ya que de los tres puntos tomados sólo el naranja tendería hacia el mínimo real de la función. En este caso es fácil poder escoger el punto inicial del que partimos, incluso en una función de dos variables sería sencillo tomar este punto inicial pero imaginemos una función de 10 variables con valores en $\mathbb{R}$. Esta función ya no la podemos dibujar, por lo que no podemos tomar el punto de forma visual aproximada. Si no tenemos más información sobre la función este es el paso más complejo del algoritmo pues según nuestra elección del punto inicial obtendremos un verdadero mínimo global (si es que existe) o un mínimo local de la función.
+\end{itemize}
+
 \end{document}
