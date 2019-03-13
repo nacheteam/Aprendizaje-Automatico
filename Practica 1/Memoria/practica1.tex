@@ -15,6 +15,10 @@
 \usepackage{subcaption}
 \usepackage{pgfplots}
 
+% Para la tabla
+\usepackage[normalem]{ulem}
+\useunder{\uline}{\ul}{}
+
 
 \author{Ignacio Aguilera Martos}
 \title{Práctica 1 \\ Aprendizaje Automático}
@@ -177,5 +181,24 @@ En el segundo caso con $\eta=0.1$ podemos observar en la gráfica \textbf{\ref{3
 En la figura con $\eta=0.1$ también se aprecia que la amplitud de valores que toma va disminuyendo, es decir, poco a poco se está dirigiendo hacia el mínimo. El algoritmo gradiente descendente llegará eventualmente al mínimo con este valor de $\eta$ pero consumirá un número mucho mayor de iteraciones que si escogemos de forma más ajustada la tasa de aprendizaje.
 
 Esto último mencionado no quiere decir que el algoritmo partiendo de un punto inicial fijo siempre converja hacia el mismo mínimo de la función, ya que puede que en función del valor de $\eta$ las iteraciones vayan saltando hasta dar con otro mínimo local o global de la función.
+
+\subsubsection{Apartado b}
+
+Se nos pide obtener el valor mínimo con 50 iteraciones fijando los puntos de inicio $w_1 = (0.1,0.1)$, $w_2 = (1,1)$, $w_3 = (-0.5,-0.5)$, $w_4 = (-1,-1)$.
+
+Veamos los valores mínimos obtenidos con estos puntos:
+
+\begin{table}[H]
+	\begin{tabular}{|l|c|l|}
+		\hline
+		{\textbf{Punto inicial}} & {\textbf{Mínimo encontrado}}            & {\textbf{Valor en el mínimo}} \\ \hline \hline
+		{[}0.1 0.1{]}                & {[}0.243804966858502 -0.237925820555452{]}  & -1.82008                          \\ \hline
+		{[}1 1{]}                    & {[}1.21807029968290 0.712811949619077{]}    & 0.593269                          \\ \hline
+		{[}-0.5 -0.5{]}              & {[}-0.731377457654812 -0.237855363313347{]} & -1.33248                          \\ \hline
+		{[}-1 -1{]}                  & {[}-1.21807029968290 -0.712811949619077{]}  & 0.593269                          \\ \hline
+	\end{tabular}
+\end{table}
+
+Como podemos observar el punto de inicio es altamente determinante para obtener el mínimo de la función ya que dependiendo del valor inicial podemos acabar obteniendo uno u otro mínimo local o incluso el mínimo global de la función. Como podemos ver inclusive en esta función (por ciertas razones de simetría de los senos) hemos acabado obteniendo como mínimo un punto y su opuesto como se puede ver en las filas 2 y 4 de la tabla.
 
 \end{document}
