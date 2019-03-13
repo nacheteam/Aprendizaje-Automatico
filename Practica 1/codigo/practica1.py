@@ -27,18 +27,20 @@ def gradiente(E,symbols,w):
     return np.array(gradiente)
 
 # Implementación del método gradiente descendente
-def gradient_descent(w_init,learning_rate,max_iter,tol,E,symbols,ret_values=False):
+def gradient_descent(w_init,learning_rate,max_iter,tol,E,symbols,ret_values=False,check_func_value=False):
     w_before=w_init
     w = w_before-learning_rate*gradiente(E,symbols,w_before)
     # Cuidado que no hay el mismo número de elementos que iteraciones, para la primera iteración
     # introducimos dos valores, no uno
     func_values = [evaluate(E,symbols,w_init),evaluate(E,symbols,w)]
     iterations=1
-    while iterations<max_iter and np.absolute(evaluate(E,symbols,w)-evaluate(E,symbols,w_before))>=tol:
+    tolerance_check=np.absolute(evaluate(E,symbols,w)-evaluate(E,symbols,w_before)) if not check_func_value else evaluate(E,symbols,w)
+    while iterations<max_iter and tolerance_check>=tol:
         w_before=w
         w = w_before-learning_rate*gradiente(E,symbols,w_before)
         func_values.append(evaluate(E,symbols,w))
         iterations+=1
+        tolerance_check=np.absolute(evaluate(E,symbols,w)-evaluate(E,symbols,w_before)) if not check_func_value else evaluate(E,symbols,w)
     if ret_values:
         return w, iterations, func_values
     else:
@@ -56,7 +58,7 @@ def apartado2():
     u,v = symbols('u v',real=True)
     symbol = [u,v]
     expr = (u**2*exp(v)-2*v**2*exp(-u))**2
-    w, it = gradient_descent(initial_point,eta,maxIter,error2get,expr,symbol)
+    w, it = gradient_descent(initial_point,eta,maxIter,error2get,expr,symbol,check_func_value=True)
     print("#################################\nEjercicio 1, apartado 2\n#################################\n\n")
     print("El número de iteraciones empleado ha sido de: " + str(it))
     print("El mínimo encontrado por gradiente desdendente ha sido: ")
