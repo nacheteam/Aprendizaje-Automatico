@@ -124,4 +124,4 @@ apartado3b()
 def pseudoInversa(X,y):
     X = np.matrix(X)
     pseudo_inverse = np.linalg.inv(np.transpose(X)@X)@np.transpose(X)
-    return pseudo_inverse.dot(y)
+    return np.array(pseudo_inverse.dot(y))[0]
