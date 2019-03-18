@@ -193,10 +193,10 @@ def Ej2apartado1():
     print("W SGD: " + str(w_sgd))
     print("W Pseudo: " + str(w_pseudo))
 
-    plt.scatter(X_train_1[:,0],X_train_1[:,1],c="b")
-    plt.scatter(X_train_2[:,0],X_train_2[:,1],c="g")
-    plt.plot(w_sgd,c="r",label="Recta obtenida por SGD")
-    plt.plot(w_pseudo,c="y", label="Recta obtenida por el algoritmo de la pseudo-inversa")
+    plt.scatter(X_train_1[:,1],X_train_1[:,2],c="b")
+    plt.scatter(X_train_2[:,1],X_train_2[:,2],c="g")
+    plt.plot([0,1],[-w_sgd[0]/w_sgd[2],(w_sgd[0]-w_sgd[1])/w_sgd[2]],c="r",label="Recta obtenida por SGD")
+    plt.plot([0,1],[-w_pseudo[0]/w_pseudo[2],(w_pseudo[0]-w_pseudo[1])/w_pseudo[2]],c="y", label="Recta obtenida por el algoritmo de la pseudo-inversa")
     plt.show()
 
     print("\nEin de SGD: " + str(Error(w_sgd,X_train,y_train)))
