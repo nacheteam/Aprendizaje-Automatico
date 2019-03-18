@@ -125,19 +125,18 @@ def pseudoInversa(X,y):
     X = np.matrix(X)
     U,D,VT = np.linalg.svd(X)
     D_mat = np.diag(D)
-    D_pseudo_inverse = np.linalg.inv(np.transpose(D_mat)@D_mat)@np.transpose(D_mat)
-    xtx_inv = np.transpose(VT)@D_pseudo_inverse@VT
+    xtx_inv = np.transpose(VT)@np.linalg.inv(D_mat)@np.linalg.inv(D_mat)@VT
     pseudo_inverse = xtx_inv@np.transpose(X)
     return np.array(pseudo_inverse.dot(y))[0]
 
-def Ein(w,X,y):
+def Error(w,X,y):
     return (1/len(X))*np.linalg.norm(np.dot(X,w)-y)
 
 def stochasticGradientDescent(max_iter,tasa_aprendizaje,X,y,tol,minibatch_size=64):
     dimension = len(X[0])
     iter = 0
     w = np.zeros(dimension)
-    while iter<=max_iter and Ein(w,X,y)>=tol:
+    while iter<=max_iter and Error(w,X,y)>=tol:
         minibatch = np.random.choice(len(X), size=minibatch_size, replace=False)
         substraction = np.zeros(dimension)
         for j in range(len(substraction)):
@@ -147,38 +146,47 @@ def stochasticGradientDescent(max_iter,tasa_aprendizaje,X,y,tol,minibatch_size=6
         iter+=1
     return w,iter
 
-def readData():
-    X_train = np.load("./datos/X_train.npy")
-    y_train = np.load("./datos/y_train.npy")
+# Funcion para leer los datos
+def readData(file_x, file_y):
+    label5 = 1
+    label1 = -1
+	# Leemos los ficheros
+    datax = np.load(file_x)
+    datay = np.load(file_y)
+    y = []
+    x = []
+	# Solo guardamos los datos cuya clase sea la 1 o la 5
+    for i in range(0,datay.size):
+        if datay[i] == 5 or datay[i] == 1:
+            if datay[i] == 5:
+                y.append(label5)
+            else:
+                y.append(label1)
+            x.append(np.array([1, datax[i][0], datax[i][1]]))
 
-    X_train_proc = []
-    y_train_proc = []
+    x = np.array(x, np.float64)
+    y = np.array(y, np.float64)
+
+    return x, y
+
+def Ej2apartado1():
+    X_train, y_train = readData("./datos/X_train.npy","./datos/y_train.npy")
+    X_test, y_test = readData("./datos/X_test.npy","./datos/y_test.npy")
+
+    w_sgd,iter = stochasticGradientDescent(1000,0.01,X_train,y_train,1e-10)
+    w_pseudo = pseudoInversa(X_train,y_train)
 
     X_train_1 = []
     X_train_2 = []
 
     for i in range(len(X_train)):
-        if y_train[i]==1:
-            X_train_proc.append(X_train[i])
-            y_train_proc.append(-1)
+        if y_train[i]==-1:
             X_train_1.append(X_train[i])
-        if  y_train[i]==5:
-            X_train_proc.append(X_train[i])
-            y_train_proc.append(1)
+        else:
             X_train_2.append(X_train[i])
-
-    X_train_proc = np.array(X_train_proc)
-    y_train_proc = np.array(y_train_proc)
 
     X_train_1 = np.array(X_train_1)
     X_train_2 = np.array(X_train_2)
-    return X_train_1,X_train_2,X_train_proc,y_train_proc
-
-def Ej2apartado1():
-    X_train_1,X_train_2,X_train_proc,y_train_proc = readData()
-
-    w_sgd,iter = stochasticGradientDescent(1000,0.01,X_train_proc,y_train_proc,1e-10)
-    w_pseudo = pseudoInversa(X_train_proc,y_train_proc)
 
     print("#################################\nEjercicio 2, apartado 1\n#################################\n\n")
 
@@ -191,7 +199,18 @@ def Ej2apartado1():
     plt.plot(w_pseudo,c="y", label="Recta obtenida por el algoritmo de la pseudo-inversa")
     plt.show()
 
-    print("\nEin de SGD: " + str(Ein(w_sgd,X_train_proc,y_train_proc)))
-    print("Ein de la pseudo-inversa: " + str(Ein(w_pseudo,X_train_proc,y_train_proc)))
+    print("\nEin de SGD: " + str(Error(w_sgd,X_train,y_train)))
+    print("Ein de la pseudo-inversa: " + str(Error(w_pseudo,X_train,y_train)))
+
+    print("\nEout de SGD: " + str(Error(w_sgd,X_test,y_test)))
+    print("Eout de la pseudo-inversa: " + str(Error(w_pseudo,X_test,y_test)))
 
 Ej2apartado1()
+
+#------------------------------------------------------------------------------#
+##                               Apartado 2                                   ##
+#------------------------------------------------------------------------------#
+
+# Simula datos en un cuadrado [-size,size]x[-size,size]
+def simula_unif(N, d, size):
+	return np.random.uniform(-size,size,(N,d))
