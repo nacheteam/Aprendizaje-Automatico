@@ -50,7 +50,7 @@ def gradient_descent(w_init,learning_rate,max_iter,tol,E,symbols,ret_values=Fals
 ##                               Apartado 2                                   ##
 #------------------------------------------------------------------------------#
 
-def apartado2():
+def Ej1apartado2():
     eta = 0.01
     maxIter = 10000000000
     error2get = 1e-14
@@ -70,7 +70,7 @@ def apartado2():
 ##                               Apartado 3                                   ##
 #------------------------------------------------------------------------------#
 
-def apartado3a(eta):
+def Ej1apartado3a(eta):
     maxIter = 50
     error2get = 1e-14
     initial_point = np.array([0.1,0.1])
@@ -90,7 +90,7 @@ def apartado3a(eta):
     plt.show()
     input("Presione ENTER para continuar")
 
-def apartado3b():
+def Ej1apartado3b():
     eta=0.01
     maxIter = 50
     error2get = 1e-14
@@ -107,12 +107,12 @@ def apartado3b():
     print("Tabla con los valores de los mínimos encontrados: \n")
     print(tabulate(results,headers=["Punto inicial", "Mínimo encontrado", "Valor en el mínimo"]))
 
-
-apartado2()
-apartado3a(0.01)
-apartado3a(0.1)
-apartado3b()
-
+'''
+Ej1apartado2()
+Ej1apartado3a(0.01)
+Ej1apartado3a(0.1)
+Ej1apartado3b()
+'''
 ################################################################################
 ##                               Ejercicio 2                                  ##
 ################################################################################
@@ -123,5 +123,75 @@ apartado3b()
 
 def pseudoInversa(X,y):
     X = np.matrix(X)
-    pseudo_inverse = np.linalg.inv(np.transpose(X)@X)@np.transpose(X)
+    U,D,VT = np.linalg.svd(X)
+    D_mat = np.diag(D)
+    D_pseudo_inverse = np.linalg.inv(np.transpose(D_mat)@D_mat)@np.transpose(D_mat)
+    xtx_inv = np.transpose(VT)@D_pseudo_inverse@VT
+    pseudo_inverse = xtx_inv@np.transpose(X)
     return np.array(pseudo_inverse.dot(y))[0]
+
+def Ein(w,X,y):
+    return (1/len(X))*np.linalg.norm(np.dot(X,w)-y)
+
+def stochasticGradientDescent(max_iter,tasa_aprendizaje,X,y,tol,minibatch_size=64):
+    dimension = len(X[0])
+    iter = 0
+    w = np.zeros(dimension)
+    while iter<=max_iter and Ein(w,X,y)>=tol:
+        minibatch = np.random.choice(len(X), size=minibatch_size, replace=False)
+        substraction = np.zeros(dimension)
+        for j in range(len(substraction)):
+            for n in range(len(minibatch)):
+                substraction[j]+=X[minibatch[n]][j]*(np.dot(w,X[minibatch[n]])-y[minibatch[n]])
+        w = w-tasa_aprendizaje*substraction*(2/minibatch_size)
+        iter+=1
+    return w,iter
+
+def readData():
+    X_train = np.load("./datos/X_train.npy")
+    y_train = np.load("./datos/y_train.npy")
+
+    X_train_proc = []
+    y_train_proc = []
+
+    X_train_1 = []
+    X_train_2 = []
+
+    for i in range(len(X_train)):
+        if y_train[i]==1:
+            X_train_proc.append(X_train[i])
+            y_train_proc.append(-1)
+            X_train_1.append(X_train[i])
+        if  y_train[i]==5:
+            X_train_proc.append(X_train[i])
+            y_train_proc.append(1)
+            X_train_2.append(X_train[i])
+
+    X_train_proc = np.array(X_train_proc)
+    y_train_proc = np.array(y_train_proc)
+
+    X_train_1 = np.array(X_train_1)
+    X_train_2 = np.array(X_train_2)
+    return X_train_1,X_train_2,X_train_proc,y_train_proc
+
+def Ej2apartado1():
+    X_train_1,X_train_2,X_train_proc,y_train_proc = readData()
+
+    w_sgd,iter = stochasticGradientDescent(1000,0.01,X_train_proc,y_train_proc,1e-10)
+    w_pseudo = pseudoInversa(X_train_proc,y_train_proc)
+
+    print("#################################\nEjercicio 2, apartado 1\n#################################\n\n")
+
+    print("W SGD: " + str(w_sgd))
+    print("W Pseudo: " + str(w_pseudo))
+
+    plt.scatter(X_train_1[:,0],X_train_1[:,1],c="b")
+    plt.scatter(X_train_2[:,0],X_train_2[:,1],c="g")
+    plt.plot(w_sgd,c="r",label="Recta obtenida por SGD")
+    plt.plot(w_pseudo,c="y", label="Recta obtenida por el algoritmo de la pseudo-inversa")
+    plt.show()
+
+    print("\nEin de SGD: " + str(Ein(w_sgd,X_train_proc,y_train_proc)))
+    print("Ein de la pseudo-inversa: " + str(Ein(w_pseudo,X_train_proc,y_train_proc)))
+
+Ej2apartado1()
