@@ -215,10 +215,23 @@ def Ej2apartado1():
 def simula_unif(N, d, size):
 	return np.random.uniform(-size,size,(N,d))
 
-def Ej2apartado2a():
+def Ej2apartado2():
     muestra = simula_unif(1000,2,1)
     plt.scatter(muestra[:,0],muestra[:,1])
     plt.show()
-    
 
-Ej2apartado2a()
+    x1,x2 = symbols('x1 x2',real=True)
+    symbol = [x1,x2]
+    f = sign((x1-0.2)**2 + x2**2 - 0.6)
+    labels = np.array([f.subs(dict(zip(symbol,[x,y]))) for x,y in muestra])
+    ind_noise = np.random.choice(len(labels),int(0.1*len(labels)),replace=False)
+    labels[ind_noise] = -labels[ind_noise]
+
+    muestra_lab1 = np.array([muestra[i] for i in range(len(labels)) if labels[i]==1])
+    muestra_lab2 = np.array([muestra[i] for i in range(len(labels)) if labels[i]==-1])
+
+    plt.scatter(muestra_lab1[:,0],muestra_lab1[:,1])
+    plt.scatter(muestra_lab2[:,0],muestra_lab2[:,1])
+    plt.show()
+
+Ej2apartado2()
