@@ -205,7 +205,7 @@ def Ej2apartado1():
     print("\nEout de SGD: " + str(Error(w_sgd,X_test,y_test)))
     print("Eout de la pseudo-inversa: " + str(Error(w_pseudo,X_test,y_test)))
 
-Ej2apartado1()
+#Ej2apartado1()
 
 #------------------------------------------------------------------------------#
 ##                               Apartado 2                                   ##
@@ -214,3 +214,11 @@ Ej2apartado1()
 # Simula datos en un cuadrado [-size,size]x[-size,size]
 def simula_unif(N, d, size):
 	return np.random.uniform(-size,size,(N,d))
+
+def Ej2apartado2a():
+    muestra = simula_unif(1000,2,1)
+    plt.scatter(muestra[:,0],muestra[:,1])
+    plt.show()
+    
+
+Ej2apartado2a()
