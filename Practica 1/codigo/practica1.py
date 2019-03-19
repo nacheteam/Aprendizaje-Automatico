@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sympy import *
 from tabulate import tabulate
+from sympy.tensor.array import derive_by_array
 
 np.random.seed(1)
 
@@ -219,7 +220,7 @@ def Ej2apartado1():
     print("Eout de la pseudo-inversa: " + str(Error(w_pseudo,X_test,y_test)))
     input("Presione ENTER para continuar")
 
-Ej2apartado1()
+#Ej2apartado1()
 
 #------------------------------------------------------------------------------#
 ##                               Apartado 2                                   ##
@@ -265,4 +266,29 @@ def Ej2apartado2(niter=1000):
     print("Media Eout: " + str(np.mean(hist_eout)))
     input("Presione ENTER para continuar")
 
-Ej2apartado2()
+#Ej2apartado2()
+
+################################################################################
+##                                  Bonus                                     ##
+################################################################################
+
+def hessian(E,x,y,w):
+    return np.array([[N(E.diff(x).diff(x).subs({x:w[0],y:w[1]})),N(E.diff(x).diff(y).subs({x:w[0],y:w[1]}))],[N(E.diff(y).diff(x).subs({x:w[0],y:w[1]})),N(E.diff(y).diff(y).subs({x:w[0],y:w[1]}))]],dtype=np.float64)
+
+def newton(max_iter,tol,w_init,E,x,y,step=0.01):
+    iter = 0
+    w=w_init
+    while iter<=max_iter and evaluate(E,[x,y],w):
+        w = w - step*np.linalg.inv(hessian(E,x,y,w)).dot(gradiente(E,[x,y],w))
+        iter+=1
+    return w,iter
+
+def bonus():
+    x,y = symbols('x y',real=True)
+    expr = x**2 + 2*y**2 + 2*sin(2*pi*x)*sin(2*pi*y)
+    ws_init = [np.array([0.1,0.1]),np.array([1,1]),np.array([-0.5,-0.5]),np.array([-1,-1])]
+    for w_init in ws_init:
+        w,iter = newton(100,1e-10,w_init,expr,x,y)
+        print("w: " + str(w) + " valor: " + str(evaluate(expr,[x,y],w)))
+
+bonus()
