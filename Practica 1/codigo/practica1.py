@@ -109,12 +109,12 @@ def Ej1apartado3b():
     print(tabulate(results,headers=["Punto inicial", "Mínimo encontrado", "Valor en el mínimo"]))
     input("Presione ENTER para continuar")
 
-'''
+
 Ej1apartado2()
 Ej1apartado3a(0.01)
 Ej1apartado3a(0.1)
 Ej1apartado3b()
-'''
+
 
 ################################################################################
 ##                               Ejercicio 2                                  ##
@@ -220,7 +220,7 @@ def Ej2apartado1():
     print("Eout de la pseudo-inversa: " + str(Error(w_pseudo,X_test,y_test)))
     input("Presione ENTER para continuar")
 
-#Ej2apartado1()
+Ej2apartado1()
 
 #------------------------------------------------------------------------------#
 ##                               Apartado 2                                   ##
@@ -266,7 +266,7 @@ def Ej2apartado2(niter=1000):
     print("Media Eout: " + str(np.mean(hist_eout)))
     input("Presione ENTER para continuar")
 
-#Ej2apartado2()
+Ej2apartado2()
 
 ################################################################################
 ##                                  Bonus                                     ##
