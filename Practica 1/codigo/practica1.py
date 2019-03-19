@@ -201,16 +201,18 @@ def Ej2apartado1():
     print("W SGD: " + str(w_sgd))
     print("W Pseudo: " + str(w_pseudo))
 
-    plt.scatter(X_train_1[:,1],X_train_1[:,2],c="b")
-    plt.scatter(X_train_2[:,1],X_train_2[:,2],c="g")
+    plt.scatter(X_train_1[:,1],X_train_1[:,2],c="b",label="Clase con etiqueta -1")
+    plt.scatter(X_train_2[:,1],X_train_2[:,2],c="g",label="Clase con etiqueta 1")
     plt.plot([0,1],[-w_sgd[0]/w_sgd[2],(w_sgd[0]-w_sgd[1])/w_sgd[2]],c="r",label="Recta obtenida por SGD")
     plt.plot([0,1],[-w_pseudo[0]/w_pseudo[2],(w_pseudo[0]-w_pseudo[1])/w_pseudo[2]],c="y", label="Recta obtenida por el algoritmo de la pseudo-inversa")
+    plt.legend()
     plt.show()
 
     print("\nEin de SGD: " + str(Error(w_sgd,X_train,y_train)))
     print("Ein de la pseudo-inversa: " + str(Error(w_pseudo,X_train,y_train)))
 
-    plt.plot(list(range(len(ein_hist))),ein_hist)
+    plt.plot(list(range(len(ein_hist))),ein_hist,label="Evolución de Ein")
+    plt.legend()
     plt.show()
 
     print("\nEout de SGD: " + str(Error(w_sgd,X_test,y_test)))
@@ -233,7 +235,8 @@ def f(x,y):
 def Ej2apartado2(niter=1000):
     print("#################################\nEjercicio 2, apartado 1\n#################################\n\n")
     muestra = simula_unif(1000,2,1)
-    plt.scatter(muestra[:,0],muestra[:,1])
+    plt.scatter(muestra[:,0],muestra[:,1],label="Muestra de 1000 puntos según una uniforme")
+    plt.legend()
     plt.show()
 
     labels = np.array([f(x,y) for x,y in muestra],dtype=np.float64)
@@ -243,8 +246,9 @@ def Ej2apartado2(niter=1000):
     muestra_lab1 = np.array([muestra[i] for i in range(len(labels)) if labels[i]==1])
     muestra_lab2 = np.array([muestra[i] for i in range(len(labels)) if labels[i]==-1])
 
-    plt.scatter(muestra_lab1[:,0],muestra_lab1[:,1])
-    plt.scatter(muestra_lab2[:,0],muestra_lab2[:,1])
+    plt.scatter(muestra_lab1[:,0],muestra_lab1[:,1],label="Clase con etiqueta 1")
+    plt.scatter(muestra_lab2[:,0],muestra_lab2[:,1],label="clase con etiqueta -1")
+    plt.legend()
     plt.show()
 
     hist_ein = np.array([])
