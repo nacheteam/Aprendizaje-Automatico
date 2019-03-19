@@ -249,7 +249,6 @@ def Ej2apartado2(niter=1000):
     for i in range(niter):
         vec_caract = np.hstack((np.ones(shape=(muestra.shape[0],1)),simula_unif(1000,2,1)))
         labels = np.array([f(y,z) for x,y,z in vec_caract],dtype=np.float64)
-        print("Iteración " + str(i+1) + "/" + str(niter))
         w,it = stochasticGradientDescent(50,0.01,vec_caract,labels,1e-10)
         hist_ein = np.append(hist_ein,Error(w,vec_caract,labels))
         muestra_out = np.hstack((np.ones(shape=(1000,1)),simula_unif(1000,2,1)))
