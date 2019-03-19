@@ -106,13 +106,14 @@ def Ej1apartado3b():
     print("#################################\nEjercicio 1, apartado 3 b\n#################################\n\n")
     print("Tabla con los valores de los mínimos encontrados: \n")
     print(tabulate(results,headers=["Punto inicial", "Mínimo encontrado", "Valor en el mínimo"]))
+    input("Presione ENTER para continuar")
 
-'''
+
 Ej1apartado2()
 Ej1apartado3a(0.01)
 Ej1apartado3a(0.1)
 Ej1apartado3b()
-'''
+
 ################################################################################
 ##                               Ejercicio 2                                  ##
 ################################################################################
@@ -130,7 +131,10 @@ def pseudoInversa(X,y):
     return np.array(pseudo_inverse.dot(y))[0]
 
 def Error(w,X,y):
-    return (1/len(X))*np.linalg.norm(np.dot(X,w)-y)
+    error = 0
+    for i in range(len(X)):
+        error+=(np.dot(X[i],w)-y[i])**2
+    return (1/len(X))*error
 
 def stochasticGradientDescent(max_iter,tasa_aprendizaje,X,y,tol,minibatch_size=64):
     dimension = len(X[0])
@@ -204,8 +208,9 @@ def Ej2apartado1():
 
     print("\nEout de SGD: " + str(Error(w_sgd,X_test,y_test)))
     print("Eout de la pseudo-inversa: " + str(Error(w_pseudo,X_test,y_test)))
+    input("Presione ENTER para continuar")
 
-#Ej2apartado1()
+Ej2apartado1()
 
 #------------------------------------------------------------------------------#
 ##                               Apartado 2                                   ##
@@ -215,7 +220,8 @@ def Ej2apartado1():
 def simula_unif(N, d, size):
 	return np.random.uniform(-size,size,(N,d))
 
-def Ej2apartado2():
+def Ej2apartado2(niter=1000):
+    print("#################################\nEjercicio 2, apartado 1\n#################################\n\n")
     muestra = simula_unif(1000,2,1)
     plt.scatter(muestra[:,0],muestra[:,1])
     plt.show()
@@ -223,7 +229,7 @@ def Ej2apartado2():
     x1,x2 = symbols('x1 x2',real=True)
     symbol = [x1,x2]
     f = sign((x1-0.2)**2 + x2**2 - 0.6)
-    labels = np.array([f.subs(dict(zip(symbol,[x,y]))) for x,y in muestra])
+    labels = np.array([f.subs(dict(zip(symbol,[x,y]))) for x,y in muestra],dtype=np.float64)
     ind_noise = np.random.choice(len(labels),int(0.1*len(labels)),replace=False)
     labels[ind_noise] = -labels[ind_noise]
 
@@ -233,5 +239,20 @@ def Ej2apartado2():
     plt.scatter(muestra_lab1[:,0],muestra_lab1[:,1])
     plt.scatter(muestra_lab2[:,0],muestra_lab2[:,1])
     plt.show()
+
+    hist_ein = np.array([])
+    hist_eout = np.array([])
+    for i in range(niter):
+        vec_caract = np.hstack((np.ones(shape=(muestra.shape[0],1)),simula_unif(1000,2,1)))
+        labels = np.array([f.subs(dict(zip(symbol,[y,z]))) for x,y,z in vec_caract],dtype=np.float64)
+        print("Iteración " + str(i+1) + "/" + str(niter))
+        w,it = stochasticGradientDescent(50,0.01,vec_caract,labels,1e-10)
+        hist_ein = np.append(hist_ein,Error(w,vec_caract,labels))
+        muestra_out = np.hstack((np.ones(shape=(1000,1)),simula_unif(1000,2,1)))
+        labels_out = np.array([f.subs(dict(zip(symbol,[y,z]))) for x,y,z in muestra_out],dtype=np.float64)
+        hist_eout = np.append(hist_eout,Error(w,muestra_out,labels_out))
+    print("Media Ein: " + str(np.mean(hist_ein)))
+    print("Media Eout: " + str(np.mean(hist_eout)))
+    input("Presione ENTER para continuar")
 
 Ej2apartado2()
