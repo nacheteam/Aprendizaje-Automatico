@@ -278,17 +278,21 @@ def hessian(E,x,y,w):
 def newton(max_iter,tol,w_init,E,x,y,step=0.01):
     iter = 0
     w=w_init
+    hist_values = [evaluate(E,[x,y],w)]
     while iter<=max_iter and evaluate(E,[x,y],w):
         w = w - step*np.linalg.inv(hessian(E,x,y,w)).dot(gradiente(E,[x,y],w))
+        hist_values.append(evaluate(E,[x,y],w))
         iter+=1
-    return w,iter
+    return w,iter,hist_values
 
 def bonus():
     x,y = symbols('x y',real=True)
     expr = x**2 + 2*y**2 + 2*sin(2*pi*x)*sin(2*pi*y)
     ws_init = [np.array([0.1,0.1]),np.array([1,1]),np.array([-0.5,-0.5]),np.array([-1,-1])]
     for w_init in ws_init:
-        w,iter = newton(100,1e-10,w_init,expr,x,y)
+        w,iter,hist_values = newton(50,1e-10,w_init,expr,x,y)
         print("w: " + str(w) + " valor: " + str(evaluate(expr,[x,y],w)))
+        plt.plot(list(range(len(hist_values))),hist_values)
+        plt.show()
 
 bonus()
