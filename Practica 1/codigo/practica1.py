@@ -181,7 +181,7 @@ def Ej2apartado1():
     X_train, y_train = readData("./datos/X_train.npy","./datos/y_train.npy")
     X_test, y_test = readData("./datos/X_test.npy","./datos/y_test.npy")
 
-    w_sgd,iter = stochasticGradientDescent(1000,0.01,X_train,y_train,1e-10)
+    w_sgd,iter,ein_hist = stochasticGradientDescent(1000,0.01,X_train,y_train,1e-10,return_errors=True)
     w_pseudo = pseudoInversa(X_train,y_train)
 
     X_train_1 = []
@@ -210,11 +210,14 @@ def Ej2apartado1():
     print("\nEin de SGD: " + str(Error(w_sgd,X_train,y_train)))
     print("Ein de la pseudo-inversa: " + str(Error(w_pseudo,X_train,y_train)))
 
+    plt.plot(list(range(len(ein_hist))),ein_hist)
+    plt.show()
+
     print("\nEout de SGD: " + str(Error(w_sgd,X_test,y_test)))
     print("Eout de la pseudo-inversa: " + str(Error(w_pseudo,X_test,y_test)))
     input("Presione ENTER para continuar")
 
-#Ej2apartado1()
+Ej2apartado1()
 
 #------------------------------------------------------------------------------#
 ##                               Apartado 2                                   ##
