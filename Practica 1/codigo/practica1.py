@@ -292,7 +292,9 @@ def bonus():
     for w_init in ws_init:
         w,iter,hist_values = newton(50,1e-10,w_init,expr,x,y)
         print("w: " + str(w) + " valor: " + str(evaluate(expr,[x,y],w)))
-        plt.plot(list(range(len(hist_values))),hist_values)
+        plt.plot(list(range(len(hist_values))),hist_values,label="Punto inicial " + str(w_init))
+        plt.legend()
         plt.show()
+    input("Presione ENTER para continuar")
 
 bonus()
