@@ -270,4 +270,16 @@ Con este comportamiento descrito es como se ha implementado el algoritmo de la p
 
 Para gradiente descendente estocástico partimos de la base conocida del algoritmo gradiente descendente aplicado a regresión lineal.
 
+La idea es la misma que en el algoritmo gradiente descendente. Queremos actualizar el valor de $w$ en función de un factor $\eta$ que llamamos tasa de aprendizaje y en función de $\frac{\partial E_{in}(w)}{\partial w_j}$, pero en este caso no tenemos en cuenta toda la muestra completa, si no que vamos a crear subconjuntos de la muestra que llamamos ``minibatches''. Estos subconjuntos tienen un tamaño finito, típicamente entre 32 y 128 (en mi implementación particular 64 por recomendación del profesor del prácticas).
+
+Por tanto el valor de $w$ lo vamos a actualizar tomando, como se muestra en las diapositivas de teoría:
+
+$$\frac{\partial E_{in}(w)}{\partial w_j} = \frac{2}{M}\sum_{n=1}^{M}x_{nj}(h(x_n)-y_n)$$
+
+Donde M es el tamaño del minibatch y tomamos los índices correspondientes al mismo para el cómputo del cálculo. Es decir, tomando la filosofía de gradiente descendente tendríamos:
+
+$$w_j = w_j - \eta \frac{\partial E_{in}(w)}{\partial w_j}$$
+
+Por tanto el algoritmo recibirá un número de iteraciones, para cada una de las cuales calcularemos un minibatch y actualizaremos el valor de $w$ tal y como acabamos de describir.
+
 \end{document}
