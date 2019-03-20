@@ -197,7 +197,7 @@ def Ej2apartado1():
     X_train_1 = np.array(X_train_1)
     X_train_2 = np.array(X_train_2)
 
-    print("#################################\nEjercicio 2, apartado 1\n#################################\n\n")
+    print("\n\n#################################\nEjercicio 2, apartado 1\n#################################\n\n")
 
     print("W SGD: " + str(w_sgd))
     print("W Pseudo: " + str(w_pseudo))
@@ -286,6 +286,7 @@ def newton(max_iter,tol,w_init,E,x,y,step=0.01):
     return w,iter,hist_values
 
 def bonus():
+    print("\n\n#################################\nBonus\n#################################\n\n")
     x,y = symbols('x y',real=True)
     expr = x**2 + 2*y**2 + 2*sin(2*pi*x)*sin(2*pi*y)
     ws_init = [np.array([0.1,0.1]),np.array([1,1]),np.array([-0.5,-0.5]),np.array([-1,-1])]
