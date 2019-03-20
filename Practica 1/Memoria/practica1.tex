@@ -235,4 +235,39 @@ Si observamos todos los resultados que hemos obtenido hasta ahora podemos obtene
 	En cambio estos dos mínimos no son los mínimos globales de la función ya que de los tres puntos tomados sólo el naranja tendería hacia el mínimo real de la función. En este caso es fácil poder escoger el punto inicial del que partimos, incluso en una función de dos variables sería sencillo tomar este punto inicial pero imaginemos una función de 10 variables con valores en $\mathbb{R}$. Esta función ya no la podemos dibujar, por lo que no podemos tomar el punto de forma visual aproximada. Si no tenemos más información sobre la función este es el paso más complejo del algoritmo pues según nuestra elección del punto inicial obtendremos un verdadero mínimo global (si es que existe) o un mínimo local de la función.
 \end{itemize}
 
+\section{Ejercicio 2}
+\subsection{Apartado 1}
+Vamos en primer lugar a estudiar los algoritmos que se nos proponen para implementar.
+
+El primero de los algoritmos implementados es el algoritmo de la pseudoinversa. Este algoritmo se basa en la resolución del método de mínimos cuadrados lineal, es decir, resolver el problema de ajustar una serie de datos mediante una función lineal minimizando el cuadrado de los errores a dicha función. Esto se puede visualizar con ejemplos clásicos como:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{./Imagenes/ej2-1.png}
+	\caption{Ejemplo de la función lineal con mínimos cuadrados.}
+	\label{ej2-1}
+\end{figure}
+
+en la cual podemos intuir que la recta minimiza los errores entre los valores de la propia recta y los valores reales de los puntos del conjunto de datos.
+
+El fundamento teórico parte de que podemos expresar el gradiente de $E_{in}(w)$ como:
+
+$$\nabla E_{in}(w) = \frac{2}{N}X^T (Xw - y) = 0$$
+
+De donde podemos obtener la aproximación de igualdad $X^T X w = X^T y$
+
+Entonces podemos expresar $w$ como $w = X^{\dagger}y$ donde $X^{\dagger} = (X^T X)^{-1}X^T$
+
+Pero no tenemos la certeza de que podamos calcular siempre $(X^T X)^{-1}$, por lo que acudimos a lo que se define como la pseudo inversa de Moore-Penrose.
+
+Partimos de la descomposición en valores singulares de la matrix $X = UDV^T$, entonces podemos obtener que $X^TX = VDDV^T$.
+
+Si intentamos obtener la inversa de aquí entonces obtenemos $(X^TX)^{-1} = (V^T)^{-1}(D^2)^{-1}V^T$. Observemos que en general tampoco podemos considerar la inversa de la matriz diagonal $D$, pero en nuestra implementación de Python, al obtener la descomposición en valores singulares con NumPy se nos devuelve únicamente los elementos de D que no son cero. Con ellos podemos crear una matriz diagonal $D$ que sí es cuadrada y que es la que emplearemos y a la que sí le podemos encontrar la inversa.
+
+Visto ya todo esto sólo resta volver al punto anterior a la disertación sobre la inversa y ver que podemos definir $X^{\dagger} = (X^T X)^{-1}X^T$ calculado como se ha descrito previamente y observar que podemos por tanto expresar $w = X^{\dagger}y$.
+
+Con este comportamiento descrito es como se ha implementado el algoritmo de la pseudo inversa.
+
+Para gradiente descendente estocástico partimos de la base conocida del algoritmo gradiente descendente aplicado a regresión lineal.
+
 \end{document}
