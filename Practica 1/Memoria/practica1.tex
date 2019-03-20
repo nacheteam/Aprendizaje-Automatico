@@ -237,6 +237,7 @@ Si observamos todos los resultados que hemos obtenido hasta ahora podemos obtene
 
 \section{Ejercicio 2}
 \subsection{Apartado 1}
+\subsubsection{Algoritmos}
 Vamos en primer lugar a estudiar los algoritmos que se nos proponen para implementar.
 
 El primero de los algoritmos implementados es el algoritmo de la pseudoinversa. Este algoritmo se basa en la resolución del método de mínimos cuadrados lineal, es decir, resolver el problema de ajustar una serie de datos mediante una función lineal minimizando el cuadrado de los errores a dicha función. Esto se puede visualizar con ejemplos clásicos como:
@@ -281,5 +282,44 @@ Donde M es el tamaño del minibatch y tomamos los índices correspondientes al m
 $$w_j = w_j - \eta \frac{\partial E_{in}(w)}{\partial w_j}$$
 
 Por tanto el algoritmo recibirá un número de iteraciones, para cada una de las cuales calcularemos un minibatch y actualizaremos el valor de $w$ tal y como acabamos de describir.
+
+\subsubsection{Resultados}
+
+Tal y como describe el enunciado he empleado los dos algoritmos (pseudo inversa y gradiente descendente estocástico) para obtener las rectas que separan los datos de las dos clases existentes.
+
+Veamos por tanto el resultado obtenido pintando el conjunto de datos por clases y las rectas obtenidas según los dos algoritmos:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.8]{./Imagenes/ej2-1_w.png}
+	\caption{Rectas obtenidas por SGD y el algoritmo de la pseudo inversa}
+	\label{ej2-1_w}
+\end{figure}
+
+Como podemos observar ambas rectas son buenas fronteras de los conjuntos dados por cada clase, ya que ambas delimitan (o se encuentran cerca de la idea de frontera de los conjuntos) de forma aceptable los conjuntos de diferentes clases.
+
+Además si observamos los errores obtenemos los siguientes datos:
+
+\begin{table}[H]
+	\begin{tabular}{|l|l|l|}
+		\hline
+		& \textbf{Gradiente Descendente Estocástico} & \textbf{Pseudo Inversa}      \\ \hline \hline
+		$\mathbf{E_{in}}$  & 0.08211846978544149               & 0.07918658628900395 \\ \hline
+		$\mathbf{E_{out}}$ & 0.13797854740774448               & 0.13095383720052572 \\ \hline
+	\end{tabular}
+\end{table}
+
+De donde podemos observar que el algoritmo de la pseudo inversa funciona ligeramente mejor que el algoritmo de gradiente descendente estocástico, al menos para los parámetros elegidos para este algoritmo. En este caso he tomado como $\eta = 0.01$ y 1000 iteraciones. Esta tasa de aprendizaje la he tomado atendiendo a diferentes pruebas que he realizado. Se puede observar que a partir de valores no mucho mayores a 0.01 el algoritmo no converge adecuadamente y con valores menores a 0.01 se actualiza el valor de $w$ demasiado lento, por lo que he convenido usar 0.01.
+
+Podemos ver que tanto para el error dentro de la muestra, esto es usando los datos de train del conjunto proporcionado como para el error fuera de la muestra, es decir usando los datos de test del conjunto proporcionado obtenemos un error menor en el algoritmo de la pseudo inversa. Podemos intuir, que al aumentar el número de iteraciones de GDS obtendremos un mejor resultado que el algoritmo de la pseudo inversa. Este hecho intuitivo viene dado por la realidad de que el algoritmo de la pseudo inversa siempre nos da el mismo resultado, mientras que SGD va mejorando el valor obtenido a mayor número de iteraciones dadas.
+
+Podemos ver además que el algoritmo SGD va mejorando a cada iteración el error dentro de la muestra ($E_{in}$):
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.8]{./Imagenes/ej2-1_evol_ein.png}
+	\caption{Evolución del error dentro de la muestra para SGD}
+	\label{ej2-1_evol_ein}
+\end{figure}
+aunque como se puede percibir, la mejora en el error disminuye de forma notable a partir de la iteración 300 aproximadamente.
 
 \end{document}
