@@ -454,12 +454,26 @@ def hessian(E,x,y,w):
     '''
     return np.array([[N(E.diff(x).diff(x).subs({x:w[0],y:w[1]})),N(E.diff(x).diff(y).subs({x:w[0],y:w[1]}))],[N(E.diff(y).diff(x).subs({x:w[0],y:w[1]})),N(E.diff(y).diff(y).subs({x:w[0],y:w[1]}))]],dtype=np.float64)
 
-def newton(max_iter,tol,w_init,E,x,y,step=0.01):
+def newton(max_iter,w_init,E,x,y,tasa_aprendizaje=0.01):
+    '''
+    @brief Función que implementa el algoritmo de Newton para minimización de funciones
+    @param max_iter Número máximo de iteraciones concedidas para la ejcución del algoritmo
+    @param w_init Valor inicial de w, el punto que al final del algoritmo será el mínimo.
+    @param E expresión (función) que queremos minimizar
+    @param x primera variable de la función E
+    @param y segunda variable de la función E
+    @param tasa_aprendizaje Tasa de aprendizaje (valor que pondera cómo modificamos w)
+    @return Devuelve w, el número de iteraciones consumidas y una lista de los valores que ha tomado la función en
+    cada una de las iteraciones para cada w
+    '''
     iter = 0
     w=w_init
+    # Inicializamos la lista de valores de la función
     hist_values = [evaluate(E,[x,y],w)]
-    while iter<=max_iter and evaluate(E,[x,y],w):
-        w = w - step*np.linalg.inv(hessian(E,x,y,w)).dot(gradiente(E,[x,y],w))
+    # Hasta que agotemos el numero de iteraciones
+    while iter<=max_iter:
+        # Actualizamos w en función de la hessiana y el gradiente
+        w = w - tasa_aprendizaje*np.linalg.inv(hessian(E,x,y,w)).dot(gradiente(E,[x,y],w))
         hist_values.append(evaluate(E,[x,y],w))
         iter+=1
     return w,iter,hist_values
