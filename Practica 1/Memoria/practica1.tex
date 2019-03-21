@@ -322,4 +322,51 @@ Podemos ver además que el algoritmo SGD va mejorando a cada iteración el error
 \end{figure}
 aunque como se puede percibir, la mejora en el error disminuye de forma notable a partir de la iteración 300 aproximadamente.
 
+\subsection{Apartado 2}
+Lo primero que se nos pide en el experimento es que muestreemos 1000 puntos en el espacio 2-dimensional $[-1,1]\times [-1,1]$ mediante una distribución uniforme. Veamos la nube de puntos generada:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{./Imagenes/ej2-2-1.png}
+	\caption{Nube de puntos muestreada}
+	\label{ej2-2-1}
+\end{figure}
+
+Como se puede ver, los puntos están uniformemente distribuidos en el cuadrado $[-1,1]\times [-1,1]$.
+
+Ahora hemos considerado la función $f(x_1,x_2) = sign((x_1-0.2)^2 + x_{2}^{2}-0.6)$ la cual hemos usado para obtener etiquetas de cada punto, con lo que obtendremos etiquetas 1 y -1. Veamos la distribución de los puntos por clase:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.8]{./Imagenes/ej2-2-3.png}
+	\caption{Muestra uniforme por clases en función de f}
+	\label{ej2-2-3}
+\end{figure}
+
+Como podemos observar la geometría del conjunto de datos es difícil de ajustar mediante una transformación lineal, de hecho sabemos que la frontera del conjunto tiene forma cuadrática y por ello presumiblemente al obtener la frontera mediante una función lineal el error será alto en este ejemplo.
+
+Tras esto debemos introducir ruido en el conjunto, es decir, cambiar a la etiqueta opuesta al $10\%$ de puntos de conjunto. Tras hacer esto obtenemos el conjunto de datos siguiente:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.8]{./Imagenes/ej2-2-2.png}
+	\caption{Conjunto de datos depués de añadirle ruido}
+	\label{ej2-2-2}
+\end{figure}
+
+Como podemos observar la tendencia general de los datos sigue siendo la distribución en una  transformación no lineal (cuadrática) y ahora con algunos puntos mas mezclados entre las clases por culpa del 10\% añadido con el ruido.
+
+Usando este conjunto de datos obtenemos un error de $E_{in} = 0.9644280378022521$ y $E_{out} = 0.9516984833453794$ que es bastante elevado. Observemos en la figura el por qué de este error tan alto:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.8]{./Imagenes/ej2-2-4.png}
+	\caption{Recta obtenida para la muestra}
+	\label{ej2-2-4}
+\end{figure}
+
+Como podemos ver la separación no es nada satisfactoria pues deja muchos puntos mezclados.
+
+Ahora el experimento se repite haciendo 1000 veces esta generación aleatoria uniforme, produciendo el ruido e intentando ajustar la función lineal que separa los datos por etiquetas. Veamos la media de los errores en el experimento han sido $E_{in} = 0.9628429069146025$ y $E_{out} = 0.954638048152815$. Como podemos observar la tendencia no es del ejemplo concreto descrito anteriormente, si no que en media, en este tipo de conjuntos, el comportamiento de las transformaciones lineales no es satisfactorio.
+
 \end{document}

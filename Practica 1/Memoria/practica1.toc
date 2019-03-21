@@ -12,3 +12,4 @@
 \contentsline {subsection}{\numberline {2.1}Apartado 1}{7}{subsection.2.1}
 \contentsline {subsubsection}{\numberline {2.1.1}Algoritmos}{7}{subsubsection.2.1.1}
 \contentsline {subsubsection}{\numberline {2.1.2}Resultados}{9}{subsubsection.2.1.2}
+\contentsline {subsection}{\numberline {2.2}Apartado 2}{10}{subsection.2.2}
