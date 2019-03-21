@@ -187,11 +187,24 @@ Ej1apartado3b()
 #------------------------------------------------------------------------------#
 
 def pseudoInversa(X,y):
+    '''
+    @brief Función que implementa el algoritmo de la pseudo inversa
+    @param X datos (en formato numpy array o numpy matrix) de los que queremos obtener
+    la función lineal que los separa
+    @param y etiquetas de los datos de X (en formato numpy array)
+    @return Devuelve un numpy array que representa a w (los coeficientes de la función lineal asociada)
+    '''
+    # Convertimos los datos a formato matriz
     X = np.matrix(X)
+    # Calculamos la descomposición en valores singulares
     U,D,VT = np.linalg.svd(X)
+    # Creamos una matriz diagonal a partir de los valores de D (que es un array)
     D_mat = np.diag(D)
+    # Calculamos la pseudo inversa de X^TX
     xtx_inv = np.transpose(VT)@np.linalg.inv(D_mat)@np.linalg.inv(D_mat)@VT
+    # Calculamos la matriz (X^TX)^-1X^T
     pseudo_inverse = xtx_inv@np.transpose(X)
+    # Devolvemos los coeficientes de la función lineal asociada que separa los datos
     return np.array(pseudo_inverse.dot(y))[0]
 
 def Error(w,X,y):
