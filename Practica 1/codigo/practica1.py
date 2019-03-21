@@ -32,11 +32,26 @@ def evaluate(E,symbols,w):
     return N(E.subs(point))
 
 def gradiente(E,symbols,w):
+    '''
+    @brief Función que obtiene el gradiente de la función dada por la expresión E
+    y la evalúa en el punto w
+    @param E Expresión de la que se quiere obtener el gradiente dada en sintaxis
+    de SymPy
+    @param symbols Símbolos de los que depende la función dada por la expresión E
+    dados como una lista
+    @param w Punto en el que queremos que se evalúe el vector gradiente dado como una lista
+    de python o como un numpy array
+    @return Devuelve un vector que representa el gradiente de la función dada por
+    la expresión E en función de las variables que se incluyen dentro de la lista symbols
+    evaluado en el punto w.
+    '''
     gradiente = []
+    # Obtenemos la derivada para cada una de las variables, la evaluamos en el punto y
+    # ponemos el valor en el vector gradiente
     for i in range(len(symbols)):
         dife = diff(E,symbols[i])
         gradiente.append(evaluate(dife,symbols,w))
-
+    # Lo devolvemos como un numpy array
     return np.array(gradiente)
 
 # Implementación del método gradiente descendente
