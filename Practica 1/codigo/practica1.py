@@ -54,16 +54,38 @@ def gradiente(E,symbols,w):
     # Lo devolvemos como un numpy array
     return np.array(gradiente)
 
-# Implementación del método gradiente descendente
 def gradient_descent(w_init,learning_rate,max_iter,tol,E,symbols,ret_values=False,check_func_value=False):
+    '''
+    @brief Función que implementa el algoritmo de gradiente descendente orientado
+    a encontrar el mínimo de una función
+    @param w_init Punto inicial del que se parten los cálculos
+    @param learning_rate Factor llamado tasa de aprendizaje que se utiliza para
+    ajustar el valor w en la siguiente iteración
+    @param max_iter Número de iteraciones máximas dadas para la ejecución del algoritmo
+    @param tol Tolerancia mínima, esto es, una condición de que el algoritmo ha obtenido una solución
+    considerada como aceptable en términos del error
+    @param E Expresión de la función que queremos minimizar
+    @param symbols Símbolos de los que depende la función (es una lista)
+    @param ret_values Es una condición booleana que si es falsa sólo se devuelven
+    el número de iteraciones consumidas y el w final obtenido. En caso de ser verdadera
+    se devuelve además una lista con los valores de la función para cada paso de w calculado
+    @param check_func_value Condición booleana que, de ser verdadera, se utliza como tolerancia
+    el valor de la función en el w actual. Si es falsa se utiliza la diferencia de las imágenes
+    del w actual con el anterior como medida de tolerancia.
+    @return Se devuelve el punto mínimo, el número de iteraciones empleado y si ret_values es verdadero
+    una lista con los valores que ha ido tomando la función para cada w calculado.
+    '''
+    # Hacemos el primer cálculo de w
     w_before=w_init
     w = w_before-learning_rate*gradiente(E,symbols,w_before)
     # Cuidado que no hay el mismo número de elementos que iteraciones, para la primera iteración
     # introducimos dos valores, no uno
     func_values = [evaluate(E,symbols,w_init),evaluate(E,symbols,w)]
     iterations=1
+    # Actualizamos la condición de la tolerancia
     tolerance_check=np.absolute(evaluate(E,symbols,w)-evaluate(E,symbols,w_before)) if not check_func_value else evaluate(E,symbols,w)
     while iterations<max_iter and tolerance_check>=tol:
+        # Mantenemos el w actual y el w anterior para poder calcular la tolerancia
         w_before=w
         w = w_before-learning_rate*gradiente(E,symbols,w_before)
         func_values.append(evaluate(E,symbols,w))
