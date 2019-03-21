@@ -2,10 +2,10 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sympy import *
-from tabulate import tabulate
-from sympy.tensor.array import derive_by_array
+from sympy import *                     # Para la derivación de funciones
+from tabulate import tabulate           # Para colocar los datos como una tabla al hacer print
 
+# Fijamos la semilla aleatoria
 np.random.seed(1)
 
 ################################################################################
