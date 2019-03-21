@@ -124,12 +124,15 @@ def Ej1apartado2():
 #------------------------------------------------------------------------------#
 
 def Ej1apartado3a(eta):
+    # Definimos los parámetros para el algoritmo de gradiente descendente como se indica en el enunciado
     maxIter = 50
     error2get = 1e-14
     initial_point = np.array([0.1,0.1])
+    # Definimos los simbolos de la función y la expresión de la misma.
     x,y = symbols('x y',real=True)
     symbol = [x,y]
     expr = x**2 + 2*y**2 + 2*sin(2*pi*x)*sin(2*pi*y)
+    # Obtenemos el resultado de gradiente descendente para los parámetros anteriores
     w, it, values = gradient_descent(initial_point,eta,maxIter,error2get,expr,symbol,ret_values=True)
     print("#################################\nEjercicio 1, apartado 3 a\n#################################\n\n")
     print("Estamos utilizando eta = " + str(eta))
@@ -138,6 +141,8 @@ def Ej1apartado3a(eta):
     print("x: " + str(w[0]))
     print("y: " + str(w[1]))
 
+    # Generamos un gráfico de la evolución de los valores de la función dada por expr
+    # a cada paso del algoritmo gradiente descendente
     plt.plot(list(range(len(values))),values,label="Valores de la función para cada iteración")
     plt.legend()
     plt.show()
