@@ -369,4 +369,79 @@ Como podemos ver la separación no es nada satisfactoria pues deja muchos puntos
 
 Ahora el experimento se repite haciendo 1000 veces esta generación aleatoria uniforme, produciendo el ruido e intentando ajustar la función lineal que separa los datos por etiquetas. Veamos la media de los errores en el experimento han sido $E_{in} = 0.9628429069146025$ y $E_{out} = 0.954638048152815$. Como podemos observar la tendencia no es del ejemplo concreto descrito anteriormente, si no que en media, en este tipo de conjuntos, el comportamiento de las transformaciones lineales no es satisfactorio.
 
+\section{Bonus}
+El algoritmo implementado para el ejercicio bonus es el algoritmo de Newton o Método de Newton. En el algoritmo de gradiente descendente empleamos como aproximación el gradiente de la función de la que queríamos obtener el mínimo. Este hecho viene determinado de que el gradiente nos da la tendencia o dirección del cambio de una función. En análisis multivariante o análisis de varias variables la Hessiana cuenta con un papel muy relevante también a la hora del estudio de los puntos de mínimo y máximo valor de una función de varias variables. En concreto, por ejemplo, sabemos que si la función tiene Hessiana definida positiva, entonces la función cuenta con un mínimo en el punto en el que se produzca la convexidad. Veamos la forma de la matriz hessiana en general para nuestra función $f(x_1,x_2)$ de dos variables:
+
+$$Hess(f) = \begin{pmatrix}
+\frac{\partial^2 f(x_1,x_2)}{\partial x_{1}^{2}} & \frac{\partial^2 f(x_1,x_2)}{\partial x_1 \partial x_2} \\
+\frac{\partial^2 f(x_1,x_2)}{\partial x_2 \partial x_1} & \frac{\partial^2 f(x_1,x_2)}{\partial x_{2}^{2}} \\
+\end{pmatrix}$$
+
+Veamos de dónde proviene la idea de usar la matriz hessiana. Para empezar debemos saber qué son los polinomios de Taylor. Estos polinomios, explicados de forma simple, son polinomios que aproximan una función mediante una suma infinita de términos de la forma $f(x) = \sum_{n=0}^{\infty}\frac{f^{(n)}(a)}{n!}(x-a)^n$. Este polinomio nos da la forma para aquellas funciones que son de una sola variable. El concepto se puede extender a funciones de varias variables, pero como es evidente ya no podemos hacer la derivada n-ésima si no que debemos generalizarlo con el gradiente, la hessiana y derivadas de orden superior. En particular la hessiana nos aparece en el segundo término de esta expansión de Taylor y por tanto podemos pensar que una forma de aproximar la función puede ser empleando la hessiana.
+
+Se puede probar, aunque no es de relevancia en este estudio pues se desconecta demasiado de la asignatura, que el gradiente y la hessiana mantienen una cierta relación. Es este hecho el que nos lleva a pensar que el gradiente de la función empleado en el método de gradiente descendente es sustituible por la hessiana.
+
+Una vez motivada la aparición de la hessiana vamos a ver cómo funciona el algoritmo.
+
+Al igual que en gradiente descendente vamos a modificar w a cada paso de la siguiente forma:
+
+$$w_{n+1} = w_n-\eta Hess(f(x_1,x_2))^{-1}\nabla f(x_1,x_2)$$
+
+Donde $w_{n+1}$ representa el valor de $w$ en la iteración n+1-ésima y $w_n$ representa el valor de $w$ en la iteración n-ésima.
+
+Esta actualización de la variable dependiente del gradiente y la hessiana no es de extrañar dado que ya hemos motivado que mantienen una relación entre sí y ambos elementos (el gradiente y la hessiana) aparecen en el desarrollo de la función mediante polinomios de Taylor.
+
+Veamos cómo ha funcionado este algoritmo con las mismas iteraciones que gradiente descendente en el primer ejercicio (50 iteraciones) y con los mismos puntos de inicio comparando los valores de función obtenidos en los mínimos encontrados.
+
+\begin{table}[H]
+	\begin{tabular}{|l|c|l|}
+		\hline
+		{\textbf{Punto inicial}} & {\textbf{Mínimo encontrado}}            & {\textbf{Valor en el mínimo}} \\ \hline \hline
+		{[}0.1 0.1{]}                & {[}0.0486405155671848 0.0483402069479654{]}  & 0.187016232200131                          \\ \hline
+		{[}1 1{]}                    & {[}0.980088999815528 0.990265537884792{]}    & 2.93708035581126                          \\ \hline
+		{[}-0.5 -0.5{]}              & {[}-0.490075759559880 -0.495162184791504{]} & 0.734333236339149                          \\ \hline
+		{[}-1 -1{]}                  & {[}-0.980088999815528 -0.990265537884792{]}  & 2.93708035581126                          \\ \hline
+	\end{tabular}
+\end{table}
+
+Si los comparamos con los obtenidos en gradiente descendente podemos ver que en todos los casos el resultado dado por el método de Newton es peor. Veamos por qué estudiando cómo descienden las gráficas de los valores de la función a lo largo de las iteraciones:
+
+\begin{figure}[H]
+	\begin{subfigure}{0.24\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{./Imagenes/bonus1.png}
+	\end{subfigure}
+	\begin{subfigure}{0.24\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{./Imagenes/bonus2.png}
+	\end{subfigure}
+	\begin{subfigure}{0.24\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{./Imagenes/bonus3.png}
+	\end{subfigure}
+	\begin{subfigure}{0.24\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{./Imagenes/bonus4.png}
+	\end{subfigure}
+	\caption{Convergencia de los valores de la función con el método de Newton}
+	\label{convergenciaNewton}
+\end{figure}
+
+Aquí podemos ver que la convergencia es mucho más lenta que en el caso de gradiente descendente, podemos ver que comparado con la función que muestra el valor de la función a cada iteración en el empleo de gradiente descendente y en este caso con el método de Newton tenemos un comportamiento mucho más lento con el método de Newton. 
+
+Este hecho es el que nos ha llevado a la obtención de peores resultados, pues a mismo número de iteraciones el algoritmo de gradiente descendente consigue mejor resultado que el método de Newton.
+
+Esto no quiere decir que siempre sea mejor el uso de gradiente descendente. Pudieramos encontrar una función en la que el mínimo fuera localizado de forma más eficiente por el método de Newton debido a que su avance es más lento que el que nos da el método de gradiente descendente. Visualicemos por ejemplo esta función:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{./Imagenes/bonus5.png}
+	\caption{Ejemplo de función para el método de Newton}
+	\label{bonus5}
+\end{figure}
+
+Como podemos ver esta función tiene un mínimo muy claro pero concentrado en un punto muy concreto de la función. El método de Newton nos proporciona de por sí (a misma tasa de aprendizaje) un avance más lento que gradiente descendente. Este hecho podría ser aprovechado para detectar mínimos de este tipo en funciones pues es más fácil hacer que el método de Newton caiga en este mínimo que lo haga el algoritmo de gradiente descendente a misma tasa de aprendizaje.
+
+
+
 \end{document}

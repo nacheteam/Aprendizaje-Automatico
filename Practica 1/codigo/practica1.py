@@ -265,6 +265,10 @@ def Ej2apartado2(niter=1000):
     vec_caract = np.hstack((np.ones(shape=(1000,1)),muestra))
     w,it = stochasticGradientDescent(50,0.01,vec_caract,labels,1e-10)
     print("El error obtenido (Ein): " + str(Error(w,vec_caract,labels)))
+    vec_caract_out = np.hstack((np.ones(shape=(1000,1)),simula_unif(1000,2,1)))
+    labels_out = np.array([f(y,z) for x,y,z in vec_caract_out],dtype=np.float64)
+    print("El error obtenido (Eout): " + str(Error(w,vec_caract_out,labels_out)))
+
     plt.scatter(muestra_lab1[:,0],muestra_lab1[:,1],c="b",label="Clase con etiqueta -1")
     plt.scatter(muestra_lab2[:,0],muestra_lab2[:,1],c="g",label="Clase con etiqueta 1")
     plt.plot([0,1],[-w[0]/w[2],(w[0]-w[1])/w[2]],c="r",label="Recta obtenida por SGD")
