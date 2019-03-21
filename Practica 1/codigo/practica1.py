@@ -241,6 +241,14 @@ def Ej2apartado2(niter=1000):
     plt.show()
 
     labels = np.array([f(x,y) for x,y in muestra],dtype=np.float64)
+
+    muestra_no_noise_lab1 = np.array([muestra[i] for i in range(len(labels)) if labels[i]==1])
+    muestra_no_noise_lab2 = np.array([muestra[i] for i in range(len(labels)) if labels[i]==-1])
+    plt.scatter(muestra_no_noise_lab1[:,0],muestra_no_noise_lab1[:,1],label="Muestra con etiqueta 1")
+    plt.scatter(muestra_no_noise_lab2[:,0],muestra_no_noise_lab2[:,1],label="Muestra con etiqueta -1")
+    plt.legend()
+    plt.show()
+
     ind_noise = np.random.choice(len(labels),int(0.1*len(labels)),replace=False)
     labels[ind_noise] = -labels[ind_noise]
 
