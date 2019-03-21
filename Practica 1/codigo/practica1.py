@@ -480,12 +480,17 @@ def newton(max_iter,w_init,E,x,y,tasa_aprendizaje=0.01):
 
 def bonus():
     print("\n\n#################################\nBonus\n#################################\n\n")
+    # Definimos la función que queremos minimizar
     x,y = symbols('x y',real=True)
     expr = x**2 + 2*y**2 + 2*sin(2*pi*x)*sin(2*pi*y)
+    # Vector de puntos iniciales
     ws_init = [np.array([0.1,0.1]),np.array([1,1]),np.array([-0.5,-0.5]),np.array([-1,-1])]
+    # Para cada punto inicial
     for w_init in ws_init:
+        # Calculamos w empleando el método de newton
         w,iter,hist_values = newton(50,1e-10,w_init,expr,x,y)
         print("w: " + str(w) + " valor: " + str(evaluate(expr,[x,y],w)))
+        # Hacemos una gráfica de los valores de la función para cada w de cada iteración
         plt.plot(list(range(len(hist_values))),hist_values,label="Punto inicial " + str(w_init))
         plt.legend()
         plt.show()
