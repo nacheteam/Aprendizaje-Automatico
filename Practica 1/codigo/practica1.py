@@ -287,12 +287,15 @@ def readData(file_x, file_y):
     return x, y
 
 def Ej2apartado1():
+    # Leemos los conjuntos de train y test
     X_train, y_train = readData("./datos/X_train.npy","./datos/y_train.npy")
     X_test, y_test = readData("./datos/X_test.npy","./datos/y_test.npy")
 
+    # Calculamos w con gradiente descendente estocastico y con el algoritmo de la pseudo inversa
     w_sgd,iter,ein_hist = stochasticGradientDescent(1000,0.01,X_train,y_train,1e-10,return_errors=True)
     w_pseudo = pseudoInversa(X_train,y_train)
 
+    # Separamos el conjunto de train por clases para poder hacer el plot de forma visual por colores
     X_train_1 = []
     X_train_2 = []
 
@@ -310,6 +313,7 @@ def Ej2apartado1():
     print("W SGD: " + str(w_sgd))
     print("W Pseudo: " + str(w_pseudo))
 
+    # Hacemos una gráfica con los datos separados por clases y las dos rectas obtenidas
     plt.scatter(X_train_1[:,1],X_train_1[:,2],c="b",label="Clase con etiqueta -1")
     plt.scatter(X_train_2[:,1],X_train_2[:,2],c="g",label="Clase con etiqueta 1")
     plt.plot([0,1],[-w_sgd[0]/w_sgd[2],(w_sgd[0]-w_sgd[1])/w_sgd[2]],c="r",label="Recta obtenida por SGD")
@@ -320,6 +324,7 @@ def Ej2apartado1():
     print("\nEin de SGD: " + str(Error(w_sgd,X_train,y_train)))
     print("Ein de la pseudo-inversa: " + str(Error(w_pseudo,X_train,y_train)))
 
+    # Hacemos un plot de la evolución de los errores
     plt.plot(list(range(len(ein_hist))),ein_hist,label="Evolución de Ein")
     plt.legend()
     plt.show()
