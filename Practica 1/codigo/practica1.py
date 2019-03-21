@@ -16,7 +16,19 @@ np.random.seed(1)
 ##                              Apartado 1                                    ##
 #------------------------------------------------------------------------------#
 def evaluate(E,symbols,w):
+    '''
+    @brief función que se encarga de evaluar la función dada por la expresión E
+    que está formada por las variables symbols y que se quiere evaluar en el punto w.
+    @param E expresión escrita en sintaxis de SymPy que se quiere evaluar
+    @param symbols lista de símbolos de los que se compone la expresión E
+    @param w punto (en forma de lista o numpy array) en el que se quiere evaluar
+    la expresión E
+    @return Devuelve un valor numérico que representa el valor de la función codificada
+    por la expresión E en el punto w.
+    '''
+    # Hacemos un diccionario de la forma {simbolo1:w[0],...,simbolon:w[n]}
     point = dict(zip(symbols,w))
+    # Devolvemos la evaluación de la función
     return N(E.subs(point))
 
 def gradiente(E,symbols,w):
