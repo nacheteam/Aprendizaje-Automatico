@@ -354,40 +354,57 @@ def f(x,y):
 
 def Ej2apartado2(niter=1000):
     print("#################################\nEjercicio 2, apartado 2\n#################################\n\n")
+    # Tomamos una muestra uniforme de 1000 puntos con 2 dimensiones en [-1,1]x[-1,1]
     muestra = simula_unif(1000,2,1)
+    # Pintamos una gráfica de los datos
     plt.scatter(muestra[:,0],muestra[:,1],label="Muestra de 1000 puntos según una uniforme")
     plt.legend()
     plt.show()
 
+    # Calculamos las etiquetas de la muestra mediante la función f
     labels = np.array([f(x,y) for x,y in muestra],dtype=np.float64)
 
+    # Separamos la muestra según sus etiquetas para poder pintarlas diferenciando
     muestra_no_noise_lab1 = np.array([muestra[i] for i in range(len(labels)) if labels[i]==1])
     muestra_no_noise_lab2 = np.array([muestra[i] for i in range(len(labels)) if labels[i]==-1])
+
+    # Generamos una gráfica de los datos separados por clases y colores diferentes
     plt.scatter(muestra_no_noise_lab1[:,0],muestra_no_noise_lab1[:,1],label="Clase con etiqueta 1")
     plt.scatter(muestra_no_noise_lab2[:,0],muestra_no_noise_lab2[:,1],label="Clase con etiqueta -1")
     plt.title("Antes del ruido")
     plt.legend()
     plt.show()
 
+    # Calculamos un conjunto de índices de tamaño el 10% de la muestra
     ind_noise = np.random.choice(len(labels),int(0.1*len(labels)),replace=False)
+    # Cambiamos los índices de la muestra por los opuestos
     labels[ind_noise] = -labels[ind_noise]
 
+    # Separamos la muestra con ruido por clases para pintarlas por colores
     muestra_lab1 = np.array([muestra[i] for i in range(len(labels)) if labels[i]==1])
     muestra_lab2 = np.array([muestra[i] for i in range(len(labels)) if labels[i]==-1])
 
+    # Generamos el gráfico de los datos con ruido separados por clases
     plt.scatter(muestra_lab1[:,0],muestra_lab1[:,1],label="Clase con etiqueta 1")
     plt.scatter(muestra_lab2[:,0],muestra_lab2[:,1],label="clase con etiqueta -1")
     plt.title("Después de introducir ruido")
     plt.legend()
     plt.show()
 
+    # Generamos la muestra de la forma (1,x,y) donde x e y pertenecen a la muestra con ruido
     vec_caract = np.hstack((np.ones(shape=(1000,1)),muestra))
+    # Calculamos el w que nos da gradiente descendente estocástico para la muestra de la forma (1,x,y) con ruido
     w,it = stochasticGradientDescent(50,0.01,vec_caract,labels,1e-10)
+
+    # Calculamos para el w anterior el error fuera y dentro de la muestra
+    # Para ello calculamos un nuevo conjunto de datos uniformes con simula_unif y calculamos el error
+    # de w en ese conjunto nuevo de datos
     print("El error obtenido (Ein): " + str(Error(w,vec_caract,labels)))
     vec_caract_out = np.hstack((np.ones(shape=(1000,1)),simula_unif(1000,2,1)))
     labels_out = np.array([f(y,z) for x,y,z in vec_caract_out],dtype=np.float64)
     print("El error obtenido (Eout): " + str(Error(w,vec_caract_out,labels_out)))
 
+    # Visualizamos la recta generada sobre este conjunto de datos
     plt.scatter(muestra_lab1[:,0],muestra_lab1[:,1],c="b",label="Clase con etiqueta -1")
     plt.scatter(muestra_lab2[:,0],muestra_lab2[:,1],c="g",label="Clase con etiqueta 1")
     plt.plot([0,1],[-w[0]/w[2],(w[0]-w[1])/w[2]],c="r",label="Recta obtenida por SGD")
@@ -395,18 +412,27 @@ def Ej2apartado2(niter=1000):
     plt.legend()
     plt.show()
 
+    # Vamos a repetir el experimento 1000 veces y además mantenemos un vector con
+    # los errores dentro y fuera de la muestra para poder hacer la media
     hist_ein = np.array([])
     hist_eout = np.array([])
     for i in range(niter):
+        # Calculamos un vector de características de la forma (1,x,y) usando simula_unif
         vec_caract = np.hstack((np.ones(shape=(1000,1)),simula_unif(1000,2,1)))
+        # Calculamos las etiquetas asociadas mediante f
         labels = np.array([f(y,z) for x,y,z in vec_caract],dtype=np.float64)
+        # Calculamos un 10% aleatorio de los índices del conjunto
         ind_noise = np.random.choice(len(labels),int(0.1*len(labels)),replace=False)
+        # Cambiamos las etiquetas de estos índices por las opuestas
         labels[ind_noise] = -labels[ind_noise]
+        # Calculamos el w que nos da gradiente descendente estocastico sobre este conjunto de datos
         w,it = stochasticGradientDescent(50,0.01,vec_caract,labels,1e-10)
+        # Actualizamos el vector de errores dentro y fuera de la muestra
         hist_ein = np.append(hist_ein,Error(w,vec_caract,labels))
         muestra_out = np.hstack((np.ones(shape=(1000,1)),simula_unif(1000,2,1)))
         labels_out = np.array([f(y,z) for x,y,z in muestra_out],dtype=np.float64)
         hist_eout = np.append(hist_eout,Error(w,muestra_out,labels_out))
+    # Imprimimos la media de los errores
     print("Media Ein: " + str(np.mean(hist_ein)))
     print("Media Eout: " + str(np.mean(hist_eout)))
     input("Presione ENTER para continuar")
