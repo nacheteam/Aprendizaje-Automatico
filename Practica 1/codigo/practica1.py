@@ -208,6 +208,14 @@ def pseudoInversa(X,y):
     return np.array(pseudo_inverse.dot(y))[0]
 
 def Error(w,X,y):
+    '''
+    @brief Función que calcula el error de w al dividir los datos de X con etiquetas y
+    como función lineal
+    @param w coeficientes de la función lineal asociada a la división de los datos de X
+    con etiquetas y
+    @param X datos
+    @param y etiquetas
+    '''
     return (1/len(X))*np.sum(np.square(X.dot(w)-y))
 
 def stochasticGradientDescent(max_iter,tasa_aprendizaje,X,y,tol,minibatch_size=64,return_errors=False):
