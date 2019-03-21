@@ -149,20 +149,25 @@ def Ej1apartado3a(eta):
     input("Presione ENTER para continuar")
 
 def Ej1apartado3b():
+    # Definimos los parámetros para el algoritmo de gradiente descendente como se indica en el enunciado
     eta=0.01
     maxIter = 50
     error2get = 1e-14
+    # Definimos los simbolos de la función y la expresión de la misma.
     x,y = symbols('x y',real=True)
     symbol = [x,y]
     expr = x**2 + 2*y**2 + 2*sin(2*pi*x)*sin(2*pi*y)
     ws_init = [np.array([0.1,0.1]),np.array([1,1]),np.array([-0.5,-0.5]),np.array([-1,-1])]
     results = []
+    # Para cada uno de los puntos iniciales obtenemos el mínimo por gradiente descendente
     for w_init in ws_init:
         w, it = gradient_descent(w_init,eta,maxIter,error2get,expr,symbol)
+        # Añadimos en la lista resuts el punto incial, el punto mínimo obtenido y su valor de la función.
         results.append([w_init,w,evaluate(expr,symbol,w)])
 
     print("#################################\nEjercicio 1, apartado 3 b\n#################################\n\n")
     print("Tabla con los valores de los mínimos encontrados: \n")
+    # Uso la librería tabulate para darle formato de tabla a la salida
     print(tabulate(results,headers=["Punto inicial", "Mínimo encontrado", "Valor en el mínimo"]))
     input("Presione ENTER para continuar")
 
