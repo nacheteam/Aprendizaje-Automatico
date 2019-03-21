@@ -244,8 +244,9 @@ def Ej2apartado2(niter=1000):
 
     muestra_no_noise_lab1 = np.array([muestra[i] for i in range(len(labels)) if labels[i]==1])
     muestra_no_noise_lab2 = np.array([muestra[i] for i in range(len(labels)) if labels[i]==-1])
-    plt.scatter(muestra_no_noise_lab1[:,0],muestra_no_noise_lab1[:,1],label="Muestra con etiqueta 1")
-    plt.scatter(muestra_no_noise_lab2[:,0],muestra_no_noise_lab2[:,1],label="Muestra con etiqueta -1")
+    plt.scatter(muestra_no_noise_lab1[:,0],muestra_no_noise_lab1[:,1],label="Clase con etiqueta 1")
+    plt.scatter(muestra_no_noise_lab2[:,0],muestra_no_noise_lab2[:,1],label="Clase con etiqueta -1")
+    plt.title("Antes del ruido")
     plt.legend()
     plt.show()
 
@@ -257,6 +258,7 @@ def Ej2apartado2(niter=1000):
 
     plt.scatter(muestra_lab1[:,0],muestra_lab1[:,1],label="Clase con etiqueta 1")
     plt.scatter(muestra_lab2[:,0],muestra_lab2[:,1],label="clase con etiqueta -1")
+    plt.title("Después de introducir ruido")
     plt.legend()
     plt.show()
 
