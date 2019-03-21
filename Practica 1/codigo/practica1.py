@@ -444,6 +444,14 @@ Ej2apartado2()
 ################################################################################
 
 def hessian(E,x,y,w):
+    '''
+    @brief Función que devuelve la hessiana de la función E de dos variables (x e y) evaluada en el punto w
+    @param E expresión (función) de la que queremos obtener la matrix hessiana
+    @param x Primera variable de la función E
+    @param y Segunda variable de la función E
+    @param w Punto en el que queremos evaluar la matrix hessiana
+    @return Devuelve una matriz en forma de numpy array con la matriz hessiana de E evaluada en w
+    '''
     return np.array([[N(E.diff(x).diff(x).subs({x:w[0],y:w[1]})),N(E.diff(x).diff(y).subs({x:w[0],y:w[1]}))],[N(E.diff(y).diff(x).subs({x:w[0],y:w[1]})),N(E.diff(y).diff(y).subs({x:w[0],y:w[1]}))]],dtype=np.float64)
 
 def newton(max_iter,tol,w_init,E,x,y,step=0.01):
