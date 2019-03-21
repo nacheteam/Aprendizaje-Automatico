@@ -234,7 +234,7 @@ def f(x,y):
     return np.sign((x-0.2)**2 + y**2 - 0.6)
 
 def Ej2apartado2(niter=1000):
-    print("#################################\nEjercicio 2, apartado 1\n#################################\n\n")
+    print("#################################\nEjercicio 2, apartado 2\n#################################\n\n")
     muestra = simula_unif(1000,2,1)
     plt.scatter(muestra[:,0],muestra[:,1],label="Muestra de 1000 puntos según una uniforme")
     plt.legend()
@@ -262,11 +262,23 @@ def Ej2apartado2(niter=1000):
     plt.legend()
     plt.show()
 
+    vec_caract = np.hstack((np.ones(shape=(1000,1)),muestra))
+    w,it = stochasticGradientDescent(50,0.01,vec_caract,labels,1e-10)
+    print("El error obtenido (Ein): " + str(Error(w,vec_caract,labels)))
+    plt.scatter(muestra_lab1[:,0],muestra_lab1[:,1],c="b",label="Clase con etiqueta -1")
+    plt.scatter(muestra_lab2[:,0],muestra_lab2[:,1],c="g",label="Clase con etiqueta 1")
+    plt.plot([0,1],[-w[0]/w[2],(w[0]-w[1])/w[2]],c="r",label="Recta obtenida por SGD")
+    plt.axis((-1,1,-1,1))
+    plt.legend()
+    plt.show()
+
     hist_ein = np.array([])
     hist_eout = np.array([])
     for i in range(niter):
-        vec_caract = np.hstack((np.ones(shape=(muestra.shape[0],1)),simula_unif(1000,2,1)))
+        vec_caract = np.hstack((np.ones(shape=(1000,1)),simula_unif(1000,2,1)))
         labels = np.array([f(y,z) for x,y,z in vec_caract],dtype=np.float64)
+        ind_noise = np.random.choice(len(labels),int(0.1*len(labels)),replace=False)
+        labels[ind_noise] = -labels[ind_noise]
         w,it = stochasticGradientDescent(50,0.01,vec_caract,labels,1e-10)
         hist_ein = np.append(hist_ein,Error(w,vec_caract,labels))
         muestra_out = np.hstack((np.ones(shape=(1000,1)),simula_unif(1000,2,1)))
