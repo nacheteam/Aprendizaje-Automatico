@@ -344,6 +344,12 @@ def simula_unif(N, d, size):
 	return np.random.uniform(-size,size,(N,d))
 
 def f(x,y):
+    '''
+    @brief Función que implementa la función con la que vamos a trabajar
+    @param x Argumento de la función
+    @param y Argumento de la función
+    @return Valor numérico de la función del enunciado
+    '''
     return np.sign((x-0.2)**2 + y**2 - 0.6)
 
 def Ej2apartado2(niter=1000):
