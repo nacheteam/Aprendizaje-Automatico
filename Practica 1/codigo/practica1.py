@@ -101,13 +101,16 @@ def gradient_descent(w_init,learning_rate,max_iter,tol,E,symbols,ret_values=Fals
 #------------------------------------------------------------------------------#
 
 def Ej1apartado2():
+    # Definimos los parámetros para el algoritmo de gradiente descendente como se indica en el enunciado
     eta = 0.01
     maxIter = 10000000000
     error2get = 1e-14
     initial_point = np.array([1.0,1.0])
+    # Definimos los simbolos de la función y la expresión de la misma.
     u,v = symbols('u v',real=True)
     symbol = [u,v]
     expr = (u**2*exp(v)-2*v**2*exp(-u))**2
+    # Obtenemos el resultado de gradiente descendente para los parámetros anteriores
     w, it = gradient_descent(initial_point,eta,maxIter,error2get,expr,symbol,check_func_value=True)
     print("#################################\nEjercicio 1, apartado 2\n#################################\n\n")
     print("El número de iteraciones empleado ha sido de: " + str(it))
