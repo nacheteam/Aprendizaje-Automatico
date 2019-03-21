@@ -219,20 +219,45 @@ def Error(w,X,y):
     return (1/len(X))*np.sum(np.square(X.dot(w)-y))
 
 def stochasticGradientDescent(max_iter,tasa_aprendizaje,X,y,tol,minibatch_size=64,return_errors=False):
+    '''
+    @brief Función que implementa el algoritmo gradiente descendente estocástico
+    @param max_iter Número máximo de iteraciones a emplear
+    @param tasa_aprendizaje Tasa de aprendizaje que multiplica al factor con el que se actualiza w
+    @param X Conjunto de datos de entrenamiento
+    @param y etiquetas de los datos de entrenamiento
+    @param tol Tolerancia asociada al error, se considera una solución admisible cuando
+    el error es menor que esta tolerancia
+    @param minibatch_size Tamaño del minibatch, por defecto 64
+    @param return_errors Condición booleana, que de ser cierta hace que la función devuelva
+    un vector con la evolución del error a cada iteración
+    @return Devuelve el w obtenido que ajusta la función lineal que divide los datos, el número
+    de iteraciones consumidad y, en caso de ser return_errors verdadero, una lista de errores a lo largo
+    de las iteraciones del algoritmo.
+    '''
+    # Obtenemos la dimensión de los datos
     dimension = len(X[0])
     iter = 0
+    # Inicializamos el vector w inicial a ceros
     w = np.zeros(dimension)
+    # Si se requieren los errores los computamos
     if return_errors:
         error_hist = [Error(w,X,y)]
+    # Hasta que agotemos las iteraciones máximas o el error sea menor que la tolerancia
     while iter<=max_iter and Error(w,X,y)>=tol:
+        # Calculamos un conjunto de índices de tamaño minibatch_size que serán nuestro minibatch
         minibatch = np.random.choice(len(X), size=minibatch_size, replace=False)
+        # Obtenemos los datos y etiquetas asociados al minibatch que hemos calculado
         X_minibatch = X[minibatch,:]
         y_minibatch = y[minibatch]
+        # Calculamos el factor que vamos a restar a w
         substraction = X_minibatch.T.dot(np.dot(X_minibatch,w)-y_minibatch)
+        # Actualizamos el valor de w multiplicando por la tasa de aprendizaje y como indican las
+        # transparencias de teoría
         w = w-tasa_aprendizaje*substraction*(2/minibatch_size)
         if return_errors:
             error_hist.append(Error(w,X,y))
         iter+=1
+    # Devolvemos w, el número de iteraciones y los errores si es necesario
     if not return_errors:
         return w,iter
     else:
