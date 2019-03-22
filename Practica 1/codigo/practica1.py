@@ -194,18 +194,7 @@ def pseudoInversa(X,y):
     @param y etiquetas de los datos de X (en formato numpy array)
     @return Devuelve un numpy array que representa a w (los coeficientes de la función lineal asociada)
     '''
-    # Convertimos los datos a formato matriz
-    X = np.matrix(X)
-    # Calculamos la descomposición en valores singulares
-    U,D,VT = np.linalg.svd(X)
-    # Creamos una matriz diagonal a partir de los valores de D (que es un array)
-    D_mat = np.diag(D)
-    # Calculamos la pseudo inversa de X^TX
-    xtx_inv = np.transpose(VT)@np.linalg.inv(D_mat)@np.linalg.inv(D_mat)@VT
-    # Calculamos la matriz (X^TX)^-1X^T
-    pseudo_inverse = xtx_inv@np.transpose(X)
-    # Devolvemos los coeficientes de la función lineal asociada que separa los datos
-    return np.array(pseudo_inverse.dot(y))[0]
+    return np.linalg.inv(X.T@X)@X.T@y
 
 def Error(w,X,y):
     '''
@@ -316,8 +305,8 @@ def Ej2apartado1():
     # Hacemos una gráfica con los datos separados por clases y las dos rectas obtenidas
     plt.scatter(X_train_1[:,1],X_train_1[:,2],c="b",label="Clase con etiqueta -1")
     plt.scatter(X_train_2[:,1],X_train_2[:,2],c="g",label="Clase con etiqueta 1")
-    plt.plot([0,1],[-w_sgd[0]/w_sgd[2],(w_sgd[0]-w_sgd[1])/w_sgd[2]],c="r",label="Recta obtenida por SGD")
-    plt.plot([0,1],[-w_pseudo[0]/w_pseudo[2],(w_pseudo[0]-w_pseudo[1])/w_pseudo[2]],c="y", label="Recta obtenida por el algoritmo de la pseudo-inversa")
+    plt.plot([0,1],[-w_sgd[0]/w_sgd[2],(-w_sgd[0]-w_sgd[1])/w_sgd[2]],c="r",label="Recta obtenida por SGD")
+    plt.plot([0,1],[-w_pseudo[0]/w_pseudo[2],(-w_pseudo[0]-w_pseudo[1])/w_pseudo[2]],c="y", label="Recta obtenida por el algoritmo de la pseudo-inversa")
     plt.legend()
     plt.show()
     input("Presione ENTER para continuar")
