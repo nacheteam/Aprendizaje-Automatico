@@ -448,6 +448,20 @@ Esto no quiere decir que siempre sea mejor el uso de gradiente descendente. Pudi
 
 Como podemos ver esta función tiene un mínimo muy claro pero concentrado en un punto muy concreto de la función. El método de Newton nos proporciona de por sí (a misma tasa de aprendizaje) un avance más lento que gradiente descendente. Este hecho podría ser aprovechado para detectar mínimos de este tipo en funciones pues es más fácil hacer que el método de Newton caiga en este mínimo que lo haga el algoritmo de gradiente descendente a misma tasa de aprendizaje.
 
+Cabe decir que el método de Newton funciona bien cuando la matriz hessiana es definida positiva, esto ocurre (aplicando el llamado criterio de Sylvester) cuando los menores principales de la matriz tienen determinante positivo. Esto en nuestro caso particular se traduce en que $\frac{\partial^2 f(x_1,x_2)}{\partial x_{1}^{2}}>0$ y que el determinante de la matriz hessiana sea positivo. Esto no ocurre en todo punto, es decir, existen conjuntos de puntos donde la matriz hessiana no es definida positiva. Bajo estas condiciones se sabe que el método de Newton converge a puntos de silla y no a mínimos, tal y como nos está ocurriendo. Visualicemos este comportamiento:
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.42]{./Imagenes/bonus6.png}
+	\caption{Movimiento descrito por el algoritmo de Newton desde el lateral}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.42]{./Imagenes/bonus7.png}
+	\caption{Movimiento descrito por el algoritmo de Newton desde arriba}
+\end{figure}
+
+Como podemos observar el comportamiento es exactamente el que la teoría nos predijo, converge a puntos de silla en vez de mínimos debido a que la matriz hessiana no es definida positiva.
 
 \end{document}
