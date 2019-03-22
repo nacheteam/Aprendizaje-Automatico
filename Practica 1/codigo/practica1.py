@@ -4,6 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sympy import *                     # Para la derivación de funciones
 from tabulate import tabulate           # Para colocar los datos como una tabla al hacer print
+# Para plots 3D
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 # Fijamos la semilla aleatoria
 np.random.seed(1)
@@ -465,13 +468,15 @@ def newton(max_iter,w_init,E,x,y,tasa_aprendizaje=0.01):
     w=w_init
     # Inicializamos la lista de valores de la función
     hist_values = [evaluate(E,[x,y],w)]
+    hist_w = [list(w)]
     # Hasta que agotemos el numero de iteraciones
     while iter<=max_iter:
         # Actualizamos w en función de la hessiana y el gradiente
         w = w - tasa_aprendizaje*np.linalg.inv(hessian(E,x,y,w)).dot(gradiente(E,[x,y],w))
         hist_values.append(evaluate(E,[x,y],w))
+        hist_w.append(list(w))
         iter+=1
-    return w,iter,hist_values
+    return w,iter,np.array(hist_values),np.array(hist_w)
 
 def bonus():
     print("\n\n#################################\nBonus\n#################################\n\n")
@@ -480,15 +485,28 @@ def bonus():
     expr = x**2 + 2*y**2 + 2*sin(2*pi*x)*sin(2*pi*y)
     # Vector de puntos iniciales
     ws_init = [np.array([0.1,0.1]),np.array([1,1]),np.array([-0.5,-0.5]),np.array([-1,-1])]
+    hists_w = []
+    hists_values = []
     # Para cada punto inicial
     for w_init in ws_init:
         # Calculamos w empleando el método de newton
-        w,iter,hist_values = newton(50,w_init,expr,x,y)
+        w,iter,hist_values,hist_w = newton(50,w_init,expr,x,y)
+        hists_w.append(hist_w)
+        hists_values.append(hist_values)
         print("w: " + str(w) + " valor: " + str(evaluate(expr,[x,y],w)))
         # Hacemos una gráfica de los valores de la función para cada w de cada iteración
         plt.plot(list(range(len(hist_values))),hist_values,label="Punto inicial " + str(w_init))
         plt.legend()
         plt.show()
     input("Presione ENTER para continuar")
+    muestra = simula_unif(3000,2,1.2)
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    ax.plot_trisurf(muestra[:,0:1].reshape(-1),muestra[:,1:].reshape(-1),np.array(list(map(lambda x: x[0]**2 + 2*x[1]**2 + 2*sin(2*np.pi*x[0])*sin(2*np.pi*x[1]),muestra)),dtype=np.float64),linewidth=0.2, antialiased=True)
+    ax.plot(hists_w[0][:,0:1],hists_w[0][:,1:],hists_values[0],c="r")
+    ax.plot(hists_w[1][:,0:1],hists_w[1][:,1:],hists_values[1],c="r")
+    ax.plot(hists_w[2][:,0:1],hists_w[2][:,1:],hists_values[2],c="r")
+    ax.plot(hists_w[3][:,0:1],hists_w[3][:,1:],hists_values[3],c="r")
+    plt.show()
 
 bonus()
