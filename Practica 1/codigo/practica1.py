@@ -320,6 +320,7 @@ def Ej2apartado1():
     plt.plot([0,1],[-w_pseudo[0]/w_pseudo[2],(w_pseudo[0]-w_pseudo[1])/w_pseudo[2]],c="y", label="Recta obtenida por el algoritmo de la pseudo-inversa")
     plt.legend()
     plt.show()
+    input("Presione ENTER para continuar")
 
     print("\nEin de SGD: " + str(Error(w_sgd,X_train,y_train)))
     print("Ein de la pseudo-inversa: " + str(Error(w_pseudo,X_train,y_train)))
@@ -328,6 +329,7 @@ def Ej2apartado1():
     plt.plot(list(range(len(ein_hist))),ein_hist,label="Evolución de Ein")
     plt.legend()
     plt.show()
+    input("Presione ENTER para continuar")
 
     print("\nEout de SGD: " + str(Error(w_sgd,X_test,y_test)))
     print("Eout de la pseudo-inversa: " + str(Error(w_pseudo,X_test,y_test)))
@@ -360,6 +362,7 @@ def Ej2apartado2(niter=1000):
     plt.scatter(muestra[:,0],muestra[:,1],label="Muestra de 1000 puntos según una uniforme")
     plt.legend()
     plt.show()
+    input("Presione ENTER para continuar")
 
     # Calculamos las etiquetas de la muestra mediante la función f
     labels = np.array([f(x,y) for x,y in muestra],dtype=np.float64)
@@ -374,6 +377,7 @@ def Ej2apartado2(niter=1000):
     plt.title("Antes del ruido")
     plt.legend()
     plt.show()
+    input("Presione ENTER para continuar")
 
     # Calculamos un conjunto de índices de tamaño el 10% de la muestra
     ind_noise = np.random.choice(len(labels),int(0.1*len(labels)),replace=False)
@@ -390,6 +394,7 @@ def Ej2apartado2(niter=1000):
     plt.title("Después de introducir ruido")
     plt.legend()
     plt.show()
+    input("Presione ENTER para continuar")
 
     # Generamos la muestra de la forma (1,x,y) donde x e y pertenecen a la muestra con ruido
     vec_caract = np.hstack((np.ones(shape=(1000,1)),muestra))
@@ -411,6 +416,7 @@ def Ej2apartado2(niter=1000):
     plt.axis((-1,1,-1,1))
     plt.legend()
     plt.show()
+    input("Presione ENTER para continuar")
 
     # Vamos a repetir el experimento 1000 veces y además mantenemos un vector con
     # los errores dentro y fuera de la muestra para poder hacer la media
@@ -488,7 +494,7 @@ def bonus():
     # Para cada punto inicial
     for w_init in ws_init:
         # Calculamos w empleando el método de newton
-        w,iter,hist_values = newton(50,1e-10,w_init,expr,x,y)
+        w,iter,hist_values = newton(50,w_init,expr,x,y)
         print("w: " + str(w) + " valor: " + str(evaluate(expr,[x,y],w)))
         # Hacemos una gráfica de los valores de la función para cada w de cada iteración
         plt.plot(list(range(len(hist_values))),hist_values,label="Punto inicial " + str(w_init))
