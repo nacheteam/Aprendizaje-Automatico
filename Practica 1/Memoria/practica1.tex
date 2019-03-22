@@ -322,6 +322,12 @@ Podemos ver además que el algoritmo SGD va mejorando a cada iteración el error
 \end{figure}
 aunque como se puede percibir, la mejora en el error disminuye de forma notable a partir de la iteración 300 aproximadamente.
 
+Como añadido a los resultados, cabe decir cómo he representado la recta. Los puntos del conjunto de datos son de la forma $(1,x,y)$ y son multiplicados por $w^T$, veamos entonces la ecuación de la recta obtenida:
+
+$$w^T(1,x,y) = (w_1,w_2,w_3)^T(1,x,y) = w_1 + w_2\cdot x + w_3\cdot y = 0$$
+
+Despejando la y obtenemos $y = \frac{w_1 + w_2\cdot x}{w_3}$. Ahora observemos que podemos pintar la recta por ejemplo entre los puntos 0 y 1, para ello tenemos que ver por dónde pasa la recta por estos puntos, es decir, sustituir x por 0 y por 1. De esta forma obtendremos dos puntos por los que pasa la recta y por tanto dos puntos por donde podremos pasar la función plot de matplotlib. Estos puntos serán $(0,\frac{w_1}{w_3})$ y $(1,\frac{w_1 + w_2}{w_3})$.
+
 \subsection{Apartado 2}
 Lo primero que se nos pide en el experimento es que muestreemos 1000 puntos en el espacio 2-dimensional $[-1,1]\times [-1,1]$ mediante una distribución uniforme. Veamos la nube de puntos generada:
 
@@ -350,7 +356,7 @@ Tras esto debemos introducir ruido en el conjunto, es decir, cambiar a la etique
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.8]{./Imagenes/ej2-2-2.png}
-	\caption{Conjunto de datos depués de añadirle ruido}
+	\caption{Conjunto de datos después de añadirle ruido}
 	\label{ej2-2-2}
 \end{figure}
 
