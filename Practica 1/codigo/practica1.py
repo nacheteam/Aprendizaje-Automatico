@@ -466,7 +466,7 @@ def newton(max_iter,w_init,E,x,y,tasa_aprendizaje=0.01):
     '''
     iter = 0
     w=w_init
-    # Inicializamos la lista de valores de la función
+    # Inicializamos la lista de valores de la función y ws
     hist_values = [evaluate(E,[x,y],w)]
     hist_w = [list(w)]
     # Hasta que agotemos el numero de iteraciones
@@ -499,6 +499,8 @@ def bonus():
         plt.legend()
         plt.show()
     input("Presione ENTER para continuar")
+
+    # Plot 3d de los resultados del metodo de newton
     muestra = simula_unif(3000,2,1.2)
     fig = plt.figure()
     ax = fig.gca(projection='3d')
