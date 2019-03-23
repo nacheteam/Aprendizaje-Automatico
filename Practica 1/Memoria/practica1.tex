@@ -437,6 +437,42 @@ Aquí podemos ver que la convergencia es mucho más lenta que en el caso de grad
 
 Este hecho es el que nos ha llevado a la obtención de peores resultados, pues a mismo número de iteraciones el algoritmo de gradiente descendente consigue mejor resultado que el método de Newton.
 
+Si por contra consideramos ahora $\eta=0.1$ obtenemos resultados mejores pero que siguen sin ser tan satisfactorios como los que nos proporciona gradiente descendente, veamos los resultados obtenidos:
+
+\begin{table}[H]
+	\begin{tabular}{|l|c|l|}
+		\hline
+		{\textbf{Punto inicial}} & {\textbf{Mínimo encontrado}}            & {\textbf{Valor en el mínimo}} \\ \hline \hline
+		{[}0.1 0.1{]}                & {[}0.000331244760829602 0.000327706859870783{]}  & 8.89535208376675e-6                          \\ \hline
+		{[}1 1{]}                    & {[}0.949380622715943 0.974700533836422{]}    & 2.90040704776242                          \\ \hline
+		{[}-0.5 -0.5{]}              & {[}-0.475230636355934 -0.487862825996409{]} & 0.725482618291771                          \\ \hline
+		{[}-1 -1{]}                  & {[}-0.949380622715943 -0.974700533836422{]}  & 2.90040704776242                          \\ \hline
+	\end{tabular}
+\end{table}
+
+En el ámbito que si hemos mejorado es en el de la convergencia como podemos ver en las gráficas de convergencia:
+
+\begin{figure}[H]
+	\begin{subfigure}{0.24\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{./Imagenes/bonus8.png}
+	\end{subfigure}
+	\begin{subfigure}{0.24\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{./Imagenes/bonus9.png}
+	\end{subfigure}
+	\begin{subfigure}{0.24\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{./Imagenes/bonus10.png}
+	\end{subfigure}
+	\begin{subfigure}{0.24\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{./Imagenes/bonus11.png}
+	\end{subfigure}
+	\caption{Convergencia de los valores de la función con el método de Newton}
+	\label{convergenciaNewton2}
+\end{figure}
+
 Esto no quiere decir que siempre sea mejor el uso de gradiente descendente. Pudieramos encontrar una función en la que el mínimo fuera localizado de forma más eficiente por el método de Newton debido a que su avance es más lento que el que nos da el método de gradiente descendente. Visualicemos por ejemplo esta función:
 
 \begin{figure}[H]
@@ -448,18 +484,44 @@ Esto no quiere decir que siempre sea mejor el uso de gradiente descendente. Pudi
 
 Como podemos ver esta función tiene un mínimo muy claro pero concentrado en un punto muy concreto de la función. El método de Newton nos proporciona de por sí (a misma tasa de aprendizaje) un avance más lento que gradiente descendente. Este hecho podría ser aprovechado para detectar mínimos de este tipo en funciones pues es más fácil hacer que el método de Newton caiga en este mínimo que lo haga el algoritmo de gradiente descendente a misma tasa de aprendizaje.
 
-Cabe decir que el método de Newton funciona bien cuando la matriz hessiana es definida positiva, esto ocurre (aplicando el llamado criterio de Sylvester) cuando los menores principales de la matriz tienen determinante positivo. Esto en nuestro caso particular se traduce en que $\frac{\partial^2 f(x_1,x_2)}{\partial x_{1}^{2}}>0$ y que el determinante de la matriz hessiana sea positivo. Esto no ocurre en todo punto, es decir, existen conjuntos de puntos donde la matriz hessiana no es definida positiva. Bajo estas condiciones se sabe que el método de Newton converge a puntos de silla y no a mínimos, tal y como nos está ocurriendo. Visualicemos este comportamiento:
+Cabe decir que el método de Newton funciona bien cuando la matriz hessiana es definida positiva, esto ocurre (aplicando el llamado criterio de Sylvester) cuando los menores principales de la matriz tienen determinante positivo. Esto en nuestro caso particular se traduce en que $\frac{\partial^2 f(x_1,x_2)}{\partial x_{1}^{2}}>0$ y que el determinante de la matriz hessiana sea positivo. Esto no ocurre en todo punto, es decir, existen conjuntos de puntos donde la matriz hessiana no es definida positiva. Bajo estas condiciones se sabe que el método de Newton converge a puntos de silla y no a mínimos, tal y como nos está ocurriendo. Visualicemos este comportamiento con $\eta=0.01$:
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.42]{./Imagenes/bonus6.png}
-	\caption{Movimiento descrito por el algoritmo de Newton desde el lateral}
+	\includegraphics[scale=0.4]{./Imagenes/bonus6.png}
+	\caption{Movimiento descrito por el algoritmo de Newton desde el lateral con $\eta=0.01$}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.42]{./Imagenes/bonus7.png}
-	\caption{Movimiento descrito por el algoritmo de Newton desde arriba}
+	\includegraphics[scale=0.4]{./Imagenes/bonus7.png}
+	\caption{Movimiento descrito por el algoritmo de Newton desde arriba con $\eta=0.01$}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.8]{./Imagenes/bonus12.png}
+	\caption{Trayectorias con $\eta=0.01$}
+\end{figure}
+
+Veamos que  esto no cambia cuando $\eta=0.1$:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.8]{./Imagenes/bonus14.png}
+	\caption{Movimiento descrito por el algoritmo de Newton desde el lateral con $\eta=0.1$}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.8]{./Imagenes/bonus15.png}
+	\caption{Movimiento descrito por el algoritmo de Newton desde arriba con $\eta=0.1$}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.8]{./Imagenes/bonus13.png}
+	\caption{Trayectorias con $\eta=0.1$}
 \end{figure}
 
 Como podemos observar el comportamiento es exactamente el que la teoría nos predijo, converge a puntos de silla en vez de mínimos debido a que la matriz hessiana no es definida positiva.
