@@ -174,7 +174,7 @@ Como podemos ver una aproximación no realiza ``saltos'' alrededor del mínimo, 
 
 Si estudiamos la dependencia del comportamiento del algoritmo en función de la tasa de aprendizaje $\eta$ vemos que la magnitud del salto del punto actual al siguiente viene dada exactamente por $\eta$ en la dirección del gradiente de la función.
 
-En nuestro caso, con $\eta = 0.01$ podemos observar en la gráfica \textbf{\ref{3a1}} que la convergencia es de forma gradual y sin saltos alrededor del mínimo, pues siempre que se progresa en cada iteración se hace obteniendo un valor menor de la función, es decir estaríamos en el primero de los casos expuestos de la figura \textbf{\ref{descripcionEta}}.
+En nuestro caso, con $\eta = 0.01$ podemos osbervar en la gráfica \textbf{\ref{3a1}} que la convergencia es de forma gradual y sin saltos alrededor del mínimo, pues siempre que se progresa en cada iteración se hace obteniendo un valor menor de la función, es decir estaríamos en el primero de los casos expuestos de la figura \textbf{\ref{descripcionEta}}.
 
 En el segundo caso con $\eta=0.1$ podemos observar en la gráfica \textbf{\ref{3a2}} que el comportamiento es errático. Si observamos la evolución entre iteraciones podemos observar que no mejora si no que oscila alrededor del mínimo sin llegar a él. Esto es debido a que la longitud del salto, es decir, el valor de $\eta$ es demasiado grande y hace que avance demasiado entre iteraciones. Esto comparado con nuestro ejemplo de la figura \textbf{\ref{descripcionEta}} se correspondería con el segundo de los casos, en el que el camino hacia el mínimo de la función se hace oscilando entorno a él.
 
@@ -240,7 +240,7 @@ Si observamos todos los resultados que hemos obtenido hasta ahora podemos obtene
 \subsubsection{Algoritmos}
 Vamos en primer lugar a estudiar los algoritmos que se nos proponen para implementar.
 
-El primero de los algoritmos implementados es el algoritmo de la pseudo inversa. Este algoritmo se basa en la resolución del método de mínimos cuadrados lineal, es decir, resolver el problema de ajustar una serie de datos mediante una función lineal minimizando el cuadrado de los errores a dicha función. Esto se puede visualizar con ejemplos clásicos como:
+El primero de los algoritmos implementados es el algoritmo de la pseudoinversa. Este algoritmo se basa en la resolución del método de mínimos cuadrados lineal, es decir, resolver el problema de ajustar una serie de datos mediante una función lineal minimizando el cuadrado de los errores a dicha función. Esto se puede visualizar con ejemplos clásicos como:
 
 \begin{figure}[H]
 	\centering
@@ -261,7 +261,7 @@ Entonces podemos expresar $w$ como $w = X^{\dagger}y$ donde $X^{\dagger} = (X^T 
 
 Pero no tenemos la certeza de que podamos calcular siempre $(X^T X)^{-1}$, por lo que acudimos a lo que se define como la pseudo inversa de Moore-Penrose.
 
-Partimos de la descomposición en valores singulares de la matriz $X = UDV^T$, entonces podemos obtener que $X^TX = VDDV^T$.
+Partimos de la descomposición en valores singulares de la matrix $X = UDV^T$, entonces podemos obtener que $X^TX = VDDV^T$.
 
 Si intentamos obtener la inversa de aquí entonces obtenemos $(X^TX)^{-1} = (V^T)^{-1}(D^2)^{-1}V^T$. Observemos que D sí es una matriz invertible pues contiene los valores singulares no nulos de $X$ y por tanto tiene determinante no nulo.
 
@@ -471,7 +471,7 @@ En el ámbito que si hemos mejorado es en el de la convergencia como podemos ver
 	\label{convergenciaNewton2}
 \end{figure}
 
-Esto no quiere decir que siempre sea mejor el uso de gradiente descendente. Pudiéramos encontrar una función en la que el mínimo fuera localizado de forma más eficiente por el método de Newton debido a que su avance es más lento que el que nos da el método de gradiente descendente. Visualicemos por ejemplo esta función:
+Esto no quiere decir que siempre sea mejor el uso de gradiente descendente. Pudieramos encontrar una función en la que el mínimo fuera localizado de forma más eficiente por el método de Newton debido a que su avance es más lento que el que nos da el método de gradiente descendente. Visualicemos por ejemplo esta función:
 
 \begin{figure}[H]
 	\centering
