@@ -485,30 +485,87 @@ def bonus():
     expr = x**2 + 2*y**2 + 2*sin(2*pi*x)*sin(2*pi*y)
     # Vector de puntos iniciales
     ws_init = [np.array([0.1,0.1]),np.array([1,1]),np.array([-0.5,-0.5]),np.array([-1,-1])]
-    hists_w = []
-    hists_values = []
+    hists_w1 = []
+    hists_values1 = []
+
     # Para cada punto inicial
+    print("Generamos los gráficos y resultados con tasa_aprendizaje=0.01")
     for w_init in ws_init:
         # Calculamos w empleando el método de newton
-        w,iter,hist_values,hist_w = newton(50,w_init,expr,x,y)
-        hists_w.append(hist_w)
-        hists_values.append(hist_values)
+        w,iter,hist_values,hist_w = newton(50,w_init,expr,x,y,tasa_aprendizaje=0.01)
+        hists_w1.append(hist_w)
+        hists_values1.append(hist_values)
         print("w: " + str(w) + " valor: " + str(evaluate(expr,[x,y],w)))
         # Hacemos una gráfica de los valores de la función para cada w de cada iteración
         plt.plot(list(range(len(hist_values))),hist_values,label="Punto inicial " + str(w_init))
+        plt.title("Tasa de aprendizaje 0.01")
         plt.legend()
         plt.show()
+        input("Presione ENTER para continuar")
+
+    hists_w2 = []
+    hists_values2 = []
+    # Para cada punto inicial
+    print("Generamos los gráficos y resultados con tasa_aprendizaje=0.1")
+    for w_init in ws_init:
+        # Calculamos w empleando el método de newton
+        w,iter,hist_values,hist_w = newton(50,w_init,expr,x,y,tasa_aprendizaje=0.1)
+        hists_w2.append(hist_w)
+        hists_values2.append(hist_values)
+        print("w: " + str(w) + " valor: " + str(evaluate(expr,[x,y],w)))
+        # Hacemos una gráfica de los valores de la función para cada w de cada iteración
+        plt.plot(list(range(len(hist_values))),hist_values,label="Punto inicial " + str(w_init))
+        plt.title("Tasa de aprendizaje 0.1")
+        plt.legend()
+        plt.show()
+        input("Presione ENTER para continuar")
+
+    muestra = simula_unif(1000,2,1.2)
+
+    # Plot por niveles de la función con las trazas de los w seguidos
+    x = np.linspace(-1.2,1.2,200)
+    y = np.linspace(-1.2,1.2,200)
+    xx,yy = np.meshgrid(x,y)
+    z = xx**2 + 2*yy**2 + 2*np.sin(2*np.pi*xx)*np.sin(2*np.pi*yy)
+    plt.contourf(x,y,z)
+    plt.plot(hists_w1[0][:,0:1],hists_w1[0][:,1:],c="r")
+    plt.plot(hists_w1[1][:,0:1],hists_w1[1][:,1:],c="r")
+    plt.plot(hists_w1[2][:,0:1],hists_w1[2][:,1:],c="r")
+    plt.plot(hists_w1[3][:,0:1],hists_w1[3][:,1:],c="r")
+    plt.title("Trayectorias con tasa_aprendizaje=0.01")
+    plt.show()
+    input("Presione ENTER para continuar")
+
+    plt.contourf(x,y,z)
+    plt.plot(hists_w2[0][:,0:1],hists_w2[0][:,1:],c="r")
+    plt.plot(hists_w2[1][:,0:1],hists_w2[1][:,1:],c="r")
+    plt.plot(hists_w2[2][:,0:1],hists_w2[2][:,1:],c="r")
+    plt.plot(hists_w2[3][:,0:1],hists_w2[3][:,1:],c="r")
+    plt.title("Trayectorias con tasa_aprendizaje=0.1")
+    plt.show()
     input("Presione ENTER para continuar")
 
     # Plot 3d de los resultados del metodo de newton
-    muestra = simula_unif(3000,2,1.2)
     fig = plt.figure()
     ax = fig.gca(projection='3d')
     ax.plot_trisurf(muestra[:,0:1].reshape(-1),muestra[:,1:].reshape(-1),np.array(list(map(lambda x: x[0]**2 + 2*x[1]**2 + 2*sin(2*np.pi*x[0])*sin(2*np.pi*x[1]),muestra)),dtype=np.float64),linewidth=0.2, antialiased=True)
-    ax.plot(hists_w[0][:,0:1],hists_w[0][:,1:],hists_values[0],c="r")
-    ax.plot(hists_w[1][:,0:1],hists_w[1][:,1:],hists_values[1],c="r")
-    ax.plot(hists_w[2][:,0:1],hists_w[2][:,1:],hists_values[2],c="r")
-    ax.plot(hists_w[3][:,0:1],hists_w[3][:,1:],hists_values[3],c="r")
+    ax.plot(hists_w1[0][:,0:1],hists_w1[0][:,1:],hists_values1[0],c="r")
+    ax.plot(hists_w1[1][:,0:1],hists_w1[1][:,1:],hists_values1[1],c="r")
+    ax.plot(hists_w1[2][:,0:1],hists_w1[2][:,1:],hists_values1[2],c="r")
+    ax.plot(hists_w1[3][:,0:1],hists_w1[3][:,1:],hists_values1[3],c="r")
+    plt.title("Trayectorias con tasa_aprendizaje = 0.01")
     plt.show()
+    input("Presione ENTER para continuar")
+
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    ax.plot_trisurf(muestra[:,0:1].reshape(-1),muestra[:,1:].reshape(-1),np.array(list(map(lambda x: x[0]**2 + 2*x[1]**2 + 2*sin(2*np.pi*x[0])*sin(2*np.pi*x[1]),muestra)),dtype=np.float64),linewidth=0.2, antialiased=True)
+    ax.plot(hists_w2[0][:,0:1],hists_w2[0][:,1:],hists_values2[0],c="r")
+    ax.plot(hists_w2[1][:,0:1],hists_w2[1][:,1:],hists_values2[1],c="r")
+    ax.plot(hists_w2[2][:,0:1],hists_w2[2][:,1:],hists_values2[2],c="r")
+    ax.plot(hists_w2[3][:,0:1],hists_w2[3][:,1:],hists_values2[3],c="r")
+    plt.title("Trayectorias con tasa_aprendizaje = 0.1")
+    plt.show()
+    input("Presione ENTER para continuar")
 
 bonus()
