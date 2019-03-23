@@ -49,7 +49,7 @@ $$w_{i+1} = w_i - \eta \cdot \nabla f(x_1,...,x_n)$$
 
 Donde $f(x_1,...,x_n)$ es la función que queremos minimizar.
 
-De esta forma lo que vamos a hacer en la práctica es comprobar lo siguiente: vamos a actualizar de esta forma el valor de $w$ hasta que agotemos un número de iteraciones máximas fijadas o hasta que el valor absoluto de la diferencia de $f(w_i))$ y $f(w_{i+1})$ sea menor que una cierta tolerancia, esto es que la imagen de los $w_i$ y $w_{i+1}$ no hayan experimentado un cambio apreciable entre dos iteraciones consecutivas.
+De esta forma lo que vamos a hacer en la práctica es comprobar lo siguiente: vamos a actualizar de esta forma el valor de $w$ hasta que agotemos un número de iteraciones máximas fijadas o hasta que el valor absoluto de la diferencia de $f(w_i)$ y $f(w_{i+1})$ sea menor que una cierta tolerancia, esto es que la imagen de los $w_i$ y $w_{i+1}$ no hayan experimentado un cambio apreciable entre dos iteraciones consecutivas.
 
 Cabe destacar que en mi caso he generalizado la implementación del algoritmo mediante el uso de la librería SymPy. Mediante esta librería he implementado una función que generaliza el cálculo del gradiente en un punto, de tal forma que no tengo que programar explícitamente la función que calcula el gradiente de la función que queremos minimizar. Esto se plasma en las funciones ``evaluate'' y ``gradiente'' de mi código.
 
@@ -263,11 +263,9 @@ Pero no tenemos la certeza de que podamos calcular siempre $(X^T X)^{-1}$, por l
 
 Partimos de la descomposición en valores singulares de la matrix $X = UDV^T$, entonces podemos obtener que $X^TX = VDDV^T$.
 
-Si intentamos obtener la inversa de aquí entonces obtenemos $(X^TX)^{-1} = (V^T)^{-1}(D^2)^{-1}V^T$. Observemos que en general tampoco podemos considerar la inversa de la matriz diagonal $D$, pero en nuestra implementación de Python, al obtener la descomposición en valores singulares con NumPy se nos devuelve únicamente los elementos de D que no son cero. Con ellos podemos crear una matriz diagonal $D$ que sí es cuadrada y que es la que emplearemos y a la que sí le podemos encontrar la inversa.
+Si intentamos obtener la inversa de aquí entonces obtenemos $(X^TX)^{-1} = (V^T)^{-1}(D^2)^{-1}V^T$. Observemos que D sí es una matriz invertible pues contiene los valores singulares no nulos de $X$ y por tanto tiene determinante no nulo.
 
-Visto ya todo esto sólo resta volver al punto anterior a la disertación sobre la inversa y ver que podemos definir $X^{\dagger} = (X^T X)^{-1}X^T$ calculado como se ha descrito previamente y observar que podemos por tanto expresar $w = X^{\dagger}y$.
-
-Con este comportamiento descrito es como se ha implementado el algoritmo de la pseudo inversa.
+Visto ya todo esto sólo resta volver al punto anterior a la disertación sobre la inversa y ver que podemos definir $X^{\dagger} = (X^T X)^{-1}X^T$. Con este comportamiento es con el que se ha implementado el algoritmo de la pseudo inversa.
 
 Para gradiente descendente estocástico partimos de la base conocida del algoritmo gradiente descendente aplicado a regresión lineal.
 
@@ -322,11 +320,11 @@ Podemos ver además que el algoritmo SGD va mejorando a cada iteración el error
 \end{figure}
 aunque como se puede percibir, la mejora en el error disminuye de forma notable a partir de la iteración 300 aproximadamente.
 
-Como añadido a los resultados, cabe decir cómo he representado la recta. Los puntos del conjunto de datos son de la forma $(1,x,y)$ y son multiplicados por $w^T$, veamos entonces la ecuación de la recta obtenida:
+Como añadido a los resultados, cabe explicar cómo he representado la recta. Los puntos del conjunto de datos son de la forma $(1,x,y)$ y son multiplicados por $w^T$, veamos entonces la ecuación de la recta obtenida:
 
 $$w^T(1,x,y) = (w_1,w_2,w_3)^T(1,x,y) = w_1 + w_2\cdot x + w_3\cdot y = 0$$
 
-Despejando la y obtenemos $y = \frac{w_1 + w_2\cdot x}{w_3}$. Ahora observemos que podemos pintar la recta por ejemplo entre los puntos 0 y 1, para ello tenemos que ver por dónde pasa la recta por estos puntos, es decir, sustituir x por 0 y por 1. De esta forma obtendremos dos puntos por los que pasa la recta y por tanto dos puntos por donde podremos pasar la función plot de matplotlib. Estos puntos serán $(0,\frac{w_1}{w_3})$ y $(1,\frac{w_1 + w_2}{w_3})$.
+Despejando la y obtenemos $y = \frac{-w_1 - w_2\cdot x}{w_3}$. Ahora observemos que podemos pintar la recta por ejemplo entre los puntos 0 y 1, para ello tenemos que ver por dónde pasa la recta por estos puntos, es decir, sustituir x por 0 y por 1. De esta forma obtendremos dos puntos por los que pasa la recta y por tanto dos puntos por donde podremos pasar la función plot de matplotlib. Estos puntos serán $(0,\frac{-w_1}{w_3})$ y $(1,\frac{-w_1 - w_2}{w_3})$.
 
 \subsection{Apartado 2}
 Lo primero que se nos pide en el experimento es que muestreemos 1000 puntos en el espacio 2-dimensional $[-1,1]\times [-1,1]$ mediante una distribución uniforme. Veamos la nube de puntos generada:
@@ -351,7 +349,7 @@ Ahora hemos considerado la función $f(x_1,x_2) = sign((x_1-0.2)^2 + x_{2}^{2}-0
 
 Como podemos observar la geometría del conjunto de datos es difícil de ajustar mediante una transformación lineal, de hecho sabemos que la frontera del conjunto tiene forma cuadrática y por ello presumiblemente al obtener la frontera mediante una función lineal el error será alto en este ejemplo.
 
-Tras esto debemos introducir ruido en el conjunto, es decir, cambiar a la etiqueta opuesta al $10\%$ de puntos de conjunto. Tras hacer esto obtenemos el conjunto de datos siguiente:
+Tras esto debemos introducir ruido en el conjunto, es decir, cambiar a la etiqueta opuesta al $10\%$ de puntos de conjunto, de donde obtenemos el conjunto de datos siguiente:
 
 \begin{figure}[H]
 	\centering
@@ -525,5 +523,7 @@ Veamos que  esto no cambia cuando $\eta=0.1$:
 \end{figure}
 
 Como podemos observar el comportamiento es exactamente el que la teoría nos predijo, converge a puntos de silla en vez de mínimos debido a que la matriz hessiana no es definida positiva.
+
+La ventaja que presenta el algoritmo de Newton frente a gradiente descendente es que, bajo condiciones de convexidad, esto es que la hessiana sea definida positiva, la convergencia del algoritmo de Newton es cuadrática (más rápido que lo que nos proporciona gradiente descendente). De esta forma una estrategia bajo la cual podría ser útil emplear el algoritmo de Newton sería utilizar un algoritmo como gradiente descendente en la primera fase de la ejecución para poder utilizar en la última el algoritmo de Newton. Si la primera fase acaba con un punto cercano a un mínimo el algoritmo de Newton se lanzará con velocidad cuadrática hacia él ajustando mucho más rápido el valor mínimo que gradiente descendente.
 
 \end{document}
