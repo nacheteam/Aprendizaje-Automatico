@@ -279,7 +279,7 @@ Donde M es el tamaño del minibatch y tomamos los índices correspondientes al m
 
 $$w_j = w_j - \eta \frac{\partial E_{in}(w)}{\partial w_j}$$
 
-Por tanto el algoritmo recibirá un número de iteraciones, para cada una de las cuales calcularemos un minibatch y actualizaremos el valor de $w$ tal y como acabamos de describir.
+Por tanto el algoritmo recibirá un número de iteraciones, para cada una de las cuales calcularemos una secuencia de índices de donde obtendremos los minibatches y actualizaremos el valor de $w$ tal y como acabamos de describir. Cada una de estas iteraciones es normalmente llamada época.
 
 \subsubsection{Resultados}
 
@@ -302,8 +302,8 @@ Además si observamos los errores obtenemos los siguientes datos:
 	\begin{tabular}{|l|l|l|}
 		\hline
 		& \textbf{Gradiente Descendente Estocástico} & \textbf{Pseudo Inversa}      \\ \hline \hline
-		$\mathbf{E_{in}}$  & 0.08211846978544149               & 0.07918658628900395 \\ \hline
-		$\mathbf{E_{out}}$ & 0.13797854740774448               & 0.13095383720052572 \\ \hline
+		$\mathbf{E_{in}}$  & 0.07953827330086667               & 0.07918658628900395 \\ \hline
+		$\mathbf{E_{out}}$ & 0.1319506351366829               & 0.13095383720052572 \\ \hline
 	\end{tabular}
 \end{table}
 
@@ -360,7 +360,7 @@ Tras esto debemos introducir ruido en el conjunto, es decir, cambiar a la etique
 
 Como podemos observar la tendencia general de los datos sigue siendo la distribución en una  transformación no lineal (cuadrática) y ahora con algunos puntos mas mezclados entre las clases por culpa del 10\% añadido con el ruido.
 
-Usando este conjunto de datos obtenemos un error de $E_{in} = 0.9644280378022521$ y $E_{out} = 0.9516984833453794$ que es bastante elevado. Observemos en la figura el por qué de este error tan alto:
+Usando este conjunto de datos obtenemos un error de $E_{in} = 0.9285857795136097$ y $E_{out} = 0.8900691837207613$ que es bastante elevado. Observemos en la figura el por qué de este error tan alto:
 
 \begin{figure}[H]
 	\centering
@@ -371,7 +371,7 @@ Usando este conjunto de datos obtenemos un error de $E_{in} = 0.9644280378022521
 
 Como podemos ver la separación no es nada satisfactoria pues deja muchos puntos mezclados.
 
-Ahora el experimento se repite haciendo 1000 veces esta generación aleatoria uniforme, produciendo el ruido e intentando ajustar la función lineal que separa los datos por etiquetas. Veamos la media de los errores en el experimento han sido $E_{in} = 0.9628429069146025$ y $E_{out} = 0.954638048152815$. Como podemos observar la tendencia no es del ejemplo concreto descrito anteriormente, si no que en media, en este tipo de conjuntos, el comportamiento de las transformaciones lineales no es satisfactorio.
+Ahora el experimento se repite haciendo 1000 veces esta generación aleatoria uniforme, produciendo el ruido e intentando ajustar la función lineal que separa los datos por etiquetas. Veamos la media de los errores en el experimento han sido $E_{in} = 0.9268179758401789$ y $E_{out} = 0.8973487193216161$. Como podemos observar la tendencia no es del ejemplo concreto descrito anteriormente, si no que en media, en este tipo de conjuntos, el comportamiento de las transformaciones lineales no es satisfactorio.
 
 \section{Bonus}
 El algoritmo implementado para el ejercicio bonus es el algoritmo de Newton o Método de Newton. En el algoritmo de gradiente descendente empleamos como aproximación el gradiente de la función de la que queríamos obtener el mínimo. Este hecho viene determinado de que el gradiente nos da la tendencia o dirección del cambio de una función. En análisis multivariante o análisis de varias variables la Hessiana cuenta con un papel muy relevante también a la hora del estudio de los puntos de mínimo y máximo valor de una función de varias variables. En concreto, por ejemplo, sabemos que si la función tiene Hessiana definida positiva, entonces la función cuenta con un mínimo en el punto en el que se produzca la convexidad. Veamos la forma de la matriz hessiana en general para nuestra función $f(x_1,x_2)$ de dos variables:
