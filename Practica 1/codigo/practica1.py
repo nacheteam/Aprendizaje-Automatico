@@ -427,7 +427,7 @@ def Ej2apartado2(niter=1000):
     # Visualizamos la recta generada sobre este conjunto de datos
     plt.scatter(muestra_lab1[:,0],muestra_lab1[:,1],c="b",label="Clase con etiqueta -1")
     plt.scatter(muestra_lab2[:,0],muestra_lab2[:,1],c="g",label="Clase con etiqueta 1")
-    plt.plot([0,1],[(-w[0]+w[1])/w[2],(-w[0]-w[1])/w[2]],c="r",label="Recta obtenida por SGD")
+    plt.plot([-1,1],[(-w[0]+w[1])/w[2],(-w[0]-w[1])/w[2]],c="r",label="Recta obtenida por SGD")
     plt.axis((-1,1,-1,1))
     plt.legend()
     plt.show()
