@@ -210,15 +210,31 @@ def Error(w,X,y):
     '''
     return (1/len(X))*np.sum(np.square(X.dot(w)-y))
 
-def stochasticGradientDescent(max_iter,tasa_aprendizaje,X,y,tol,minibatch_size=64,return_errors=False):
+def updateW(X,y,w,minibatch,tasa_aprendizaje):
+    '''
+    @brief Función dedicada a actualizar el w como se pide en el algoritmo SGD
+    @param X conjunto de datos
+    @param y conjunto de etiquetas
+    @param minibatch conjunto de indices que representan el minibatch
+    @param tasa_aprendizaje Tasa de aprendizaje usada en SGD
+    '''
+    # Obtenemos los datos y etiquetas asociados al minibatch que hemos calculado
+    X_minibatch = X[minibatch,:]
+    y_minibatch = y[minibatch]
+    # Calculamos el factor que vamos a restar a w
+    substraction = X_minibatch.T.dot(np.dot(X_minibatch,w)-y_minibatch)
+    # Actualizamos el valor de w multiplicando por la tasa de aprendizaje y como indican las
+    # transparencias de teoría
+    w = w-tasa_aprendizaje*substraction*(2/len(minibatch))
+    return w
+
+def stochasticGradientDescent(num_epocas,tasa_aprendizaje,X,y,minibatch_size=64,return_errors=False):
     '''
     @brief Función que implementa el algoritmo gradiente descendente estocástico
-    @param max_iter Número máximo de iteraciones a emplear
+    @param num_epocas Número de épocas que se emplean en el algoritmo
     @param tasa_aprendizaje Tasa de aprendizaje que multiplica al factor con el que se actualiza w
     @param X Conjunto de datos de entrenamiento
     @param y etiquetas de los datos de entrenamiento
-    @param tol Tolerancia asociada al error, se considera una solución admisible cuando
-    el error es menor que esta tolerancia
     @param minibatch_size Tamaño del minibatch, por defecto 64
     @param return_errors Condición booleana, que de ser cierta hace que la función devuelva
     un vector con la evolución del error a cada iteración
@@ -228,32 +244,39 @@ def stochasticGradientDescent(max_iter,tasa_aprendizaje,X,y,tol,minibatch_size=6
     '''
     # Obtenemos la dimensión de los datos
     dimension = len(X[0])
-    iter = 0
+    data_size = len(X)
     # Inicializamos el vector w inicial a ceros
     w = np.zeros(dimension)
     # Si se requieren los errores los computamos
     if return_errors:
         error_hist = [Error(w,X,y)]
-    # Hasta que agotemos las iteraciones máximas o el error sea menor que la tolerancia
-    while iter<=max_iter and Error(w,X,y)>=tol:
-        # Calculamos un conjunto de índices de tamaño minibatch_size que serán nuestro minibatch
-        minibatch = np.random.choice(len(X), size=minibatch_size, replace=False)
-        # Obtenemos los datos y etiquetas asociados al minibatch que hemos calculado
-        X_minibatch = X[minibatch,:]
-        y_minibatch = y[minibatch]
-        # Calculamos el factor que vamos a restar a w
-        substraction = X_minibatch.T.dot(np.dot(X_minibatch,w)-y_minibatch)
-        # Actualizamos el valor de w multiplicando por la tasa de aprendizaje y como indican las
-        # transparencias de teoría
-        w = w-tasa_aprendizaje*substraction*(2/minibatch_size)
-        if return_errors:
-            error_hist.append(Error(w,X,y))
-        iter+=1
+    for j in range(num_epocas):
+        # Calculamos un conjunto de índices aleatorizados
+        indexes = np.random.choice(data_size, size=data_size, replace=False)
+        # Hasta que agotemos las iteraciones máximas o el error sea menor que la tolerancia
+        for i in range(int(data_size/minibatch_size)-1):
+            # Calculamos los indices del minibatch
+            minibatch = indexes[i*minibatch_size:(i+1)*minibatch_size]
+            # Actualizamos según el esquema de las transparencias
+            w = updateW(X,y,w,minibatch,tasa_aprendizaje)
+            if return_errors:
+                error_hist.append(Error(w,X,y))
+
+        if data_size%minibatch_size!=0:
+            # Calculamos los indices del minibatch que nos quedan por ver
+            resto = (data_size%minibatch_size)*minibatch_size
+            # Añadimos también los del principio hasta completar
+            minibatch = np.append(indexes[-resto:],indexes[:minibatch_size-resto])
+            # Actualizamos según el esquema de las transparencias
+            w = updateW(X,y,w,minibatch,tasa_aprendizaje)
+            if return_errors:
+                error_hist.append(Error(w,X,y))
+
     # Devolvemos w, el número de iteraciones y los errores si es necesario
     if not return_errors:
-        return w,iter
+        return w
     else:
-        return w,iter,error_hist
+        return w,error_hist
 
 # Funcion para leer los datos
 def readData(file_x, file_y):
@@ -284,7 +307,7 @@ def Ej2apartado1():
     X_test, y_test = readData("./datos/X_test.npy","./datos/y_test.npy")
 
     # Calculamos w con gradiente descendente estocastico y con el algoritmo de la pseudo inversa
-    w_sgd,iter,ein_hist = stochasticGradientDescent(1000,0.01,X_train,y_train,1e-10,return_errors=True)
+    w_sgd,ein_hist = stochasticGradientDescent(1000,0.01, X_train, y_train, return_errors=True)
     w_pseudo = pseudoInversa(X_train,y_train)
 
     # Separamos el conjunto de train por clases para poder hacer el plot de forma visual por colores
@@ -391,7 +414,7 @@ def Ej2apartado2(niter=1000):
     # Generamos la muestra de la forma (1,x,y) donde x e y pertenecen a la muestra con ruido
     vec_caract = np.hstack((np.ones(shape=(1000,1)),muestra))
     # Calculamos el w que nos da gradiente descendente estocástico para la muestra de la forma (1,x,y) con ruido
-    w,it = stochasticGradientDescent(50,0.01,vec_caract,labels,1e-10)
+    w = stochasticGradientDescent(50,0.01,vec_caract,labels)
 
     # Calculamos para el w anterior el error fuera y dentro de la muestra
     # Para ello calculamos un nuevo conjunto de datos uniformes con simula_unif y calculamos el error
@@ -404,7 +427,7 @@ def Ej2apartado2(niter=1000):
     # Visualizamos la recta generada sobre este conjunto de datos
     plt.scatter(muestra_lab1[:,0],muestra_lab1[:,1],c="b",label="Clase con etiqueta -1")
     plt.scatter(muestra_lab2[:,0],muestra_lab2[:,1],c="g",label="Clase con etiqueta 1")
-    plt.plot([0,1],[-w[0]/w[2],(-w[0]-w[1])/w[2]],c="r",label="Recta obtenida por SGD")
+    plt.plot([0,1],[(-w[0]+w[1])/w[2],(-w[0]-w[1])/w[2]],c="r",label="Recta obtenida por SGD")
     plt.axis((-1,1,-1,1))
     plt.legend()
     plt.show()
@@ -424,7 +447,7 @@ def Ej2apartado2(niter=1000):
         # Cambiamos las etiquetas de estos índices por las opuestas
         labels[ind_noise] = -labels[ind_noise]
         # Calculamos el w que nos da gradiente descendente estocastico sobre este conjunto de datos
-        w,it = stochasticGradientDescent(50,0.01,vec_caract,labels,1e-10)
+        w = stochasticGradientDescent(50,0.01,vec_caract,labels)
         # Actualizamos el vector de errores dentro y fuera de la muestra
         hist_ein = np.append(hist_ein,Error(w,vec_caract,labels))
         muestra_out = np.hstack((np.ones(shape=(1000,1)),simula_unif(1000,2,1)))
