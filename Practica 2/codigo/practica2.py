@@ -93,9 +93,11 @@ def ej1ap2(N=50):
     for punto in nube_unif:
         labels = np.append(labels,fAp2(punto[0],punto[1],a,b))
 
+    # Separamos los datos según las etiquetas
     datosA = np.array([nube_unif[i] for i in range(len(nube_unif)) if labels[i]==-1])
     datosB = np.array([nube_unif[i] for i in range(len(nube_unif)) if labels[i]==1])
 
+    # Dibujamos los datos por colores según etiquetas
     plt.scatter(datosA[:,0], datosA[:,1], c="green", label="Datos con etiqueta -1")
     plt.scatter(datosB[:,0], datosB[:,1], c="red", label="Datos con etiqueta 1")
     plt.plot(list(range(-51,51)),list(map(lambda x,a=a,b=b:a*x+b, list(range(-51,51)))),c="blue", label="Recta divisora")
@@ -103,19 +105,22 @@ def ej1ap2(N=50):
     plt.legend()
     plt.show()
 
-    labelsPos = np.array([labels[i] for i in range(len(labels)) if labels[i]==1])
-    labelsNeg = np.array([labels[i] for i in range(len(labels)) if labels[i]==-1])
+    # Cogemos los índices de los datos con etiquetas positivas y negativas
+    labelsPos = np.array([i for i in range(len(labels)) if labels[i]==1])
+    labelsNeg = np.array([i for i in range(len(labels)) if labels[i]==-1])
 
+    # Calculamos un conjunto de subindices de etiquetas positivas y negativas
     ind1 = np.random.choice(len(labelsPos),int(0.1*len(labelsPos)), replace=False)
     ind2 = np.random.choice(len(labelsNeg),int(0.1*len(labelsNeg)), replace=False)
-    labelsPos[ind1] = -labelsPos[ind1]
-    labelsNeg[ind2] = -labelsNeg[ind2]
+    # Introducimos ruido
+    labels[labelsPos[ind1]] = -labels[labelsPos[ind1]]
+    labels[labelsNeg[ind2]] = -labels[labelsNeg[ind2]]
 
-    labels = np.append(labelsPos, labelsNeg)
-
+    # Separamos los datos de nuevo por etiquetas
     datosA = np.array([nube_unif[i] for i in range(len(nube_unif)) if labels[i]==-1])
     datosB = np.array([nube_unif[i] for i in range(len(nube_unif)) if labels[i]==1])
 
+    # Pintamos los datos con ruido
     plt.scatter(datosA[:,0], datosA[:,1], c="green", label="Datos con etiqueta -1")
     plt.scatter(datosB[:,0], datosB[:,1], c="red", label="Datos con etiqueta 1")
     plt.plot(list(range(-51,51)),list(map(lambda x,a=a,b=b:a*x+b, list(range(-51,51)))),c="blue", label="Recta divisora")
