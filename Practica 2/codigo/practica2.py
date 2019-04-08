@@ -3,6 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+np.random.seed(123456789)
 
 ################################################################################
 ##                             Ejercicio 1                                    ##
@@ -57,7 +58,7 @@ def simula_recta(intervalo):
 
     return a,b
 
-def ej1(N=50):
+def ej1ap1(N=50):
     # Simulamos datos según una distribución uniforme
     nube_unif = simula_unif(N,2,[-50,50])
     # Simulamos datos según una distribución Gaussiana
@@ -73,4 +74,53 @@ def ej1(N=50):
     plt.title("Nube con la normal")
     plt.show()
 
-ej1()
+#ej1ap1()
+
+#------------------------------------------------------------------------------#
+##                              Apartado 2                                    ##
+#------------------------------------------------------------------------------#
+
+def fAp2(x,y,a,b):
+    return np.sign(y-a*x-b)
+
+def ej1ap2(N=50):
+    # Generamos una nube de puntos según una uniforme
+    nube_unif = simula_unif(N,2,[-50,50])
+    # Simulamos una recta
+    a,b = simula_recta([-50,50])
+    # Calculamos las etiquetas usando la función f(x,y) = y-a*x -b
+    labels = np.array([])
+    for punto in nube_unif:
+        labels = np.append(labels,fAp2(punto[0],punto[1],a,b))
+
+    datosA = np.array([nube_unif[i] for i in range(len(nube_unif)) if labels[i]==-1])
+    datosB = np.array([nube_unif[i] for i in range(len(nube_unif)) if labels[i]==1])
+
+    plt.scatter(datosA[:,0], datosA[:,1], c="green", label="Datos con etiqueta -1")
+    plt.scatter(datosB[:,0], datosB[:,1], c="red", label="Datos con etiqueta 1")
+    plt.plot(list(range(-51,51)),list(map(lambda x,a=a,b=b:a*x+b, list(range(-51,51)))),c="blue", label="Recta divisora")
+    plt.title("Nube uniforme separada")
+    plt.legend()
+    plt.show()
+
+    labelsPos = np.array([labels[i] for i in range(len(labels)) if labels[i]==1])
+    labelsNeg = np.array([labels[i] for i in range(len(labels)) if labels[i]==-1])
+
+    ind1 = np.random.choice(len(labelsPos),int(0.1*len(labelsPos)), replace=False)
+    ind2 = np.random.choice(len(labelsNeg),int(0.1*len(labelsNeg)), replace=False)
+    labelsPos[ind1] = -labelsPos[ind1]
+    labelsNeg[ind2] = -labelsNeg[ind2]
+
+    labels = np.append(labelsPos, labelsNeg)
+
+    datosA = np.array([nube_unif[i] for i in range(len(nube_unif)) if labels[i]==-1])
+    datosB = np.array([nube_unif[i] for i in range(len(nube_unif)) if labels[i]==1])
+
+    plt.scatter(datosA[:,0], datosA[:,1], c="green", label="Datos con etiqueta -1")
+    plt.scatter(datosB[:,0], datosB[:,1], c="red", label="Datos con etiqueta 1")
+    plt.plot(list(range(-51,51)),list(map(lambda x,a=a,b=b:a*x+b, list(range(-51,51)))),c="blue", label="Recta divisora")
+    plt.title("Nube uniforme con ruido")
+    plt.legend()
+    plt.show()
+
+ej1ap2()
