@@ -5,6 +5,12 @@ import matplotlib.pyplot as plt
 
 np.random.seed(123456789)
 
+# VARIABLES GLOBALES
+#--------------------------------------
+nube_unif = None
+labels_sin_ruido = None
+labels_con_ruido = None
+
 ################################################################################
 ##                             Ejercicio 1                                    ##
 ################################################################################
@@ -84,6 +90,8 @@ def fAp2(x,y,a,b):
     return np.sign(y-a*x-b)
 
 def ej1ap2(N=50):
+    # Declaramos las variables globales para su uso
+    global nube_unif, labels_sin_ruido, labels_con_ruido
     # Generamos una nube de puntos según una uniforme
     nube_unif = simula_unif(N,2,[-50,50])
     # Simulamos una recta
@@ -92,6 +100,9 @@ def ej1ap2(N=50):
     labels = np.array([])
     for punto in nube_unif:
         labels = np.append(labels,fAp2(punto[0],punto[1],a,b))
+
+    # Actualizamos la variable global
+    labels_sin_ruido = np.copy(labels)
 
     # Separamos los datos según las etiquetas
     datosA = np.array([nube_unif[i] for i in range(len(nube_unif)) if labels[i]==-1])
@@ -116,6 +127,9 @@ def ej1ap2(N=50):
     labels[labelsPos[ind1]] = -labels[labelsPos[ind1]]
     labels[labelsNeg[ind2]] = -labels[labelsNeg[ind2]]
 
+    # Actualizamos la variable global
+    labels_con_ruido = np.copy(labels)
+
     # Separamos los datos de nuevo por etiquetas
     datosA = np.array([nube_unif[i] for i in range(len(nube_unif)) if labels[i]==-1])
     datosB = np.array([nube_unif[i] for i in range(len(nube_unif)) if labels[i]==1])
@@ -129,3 +143,57 @@ def ej1ap2(N=50):
     plt.show()
 
 ej1ap2()
+
+#------------------------------------------------------------------------------#
+##                              Apartado 3                                    ##
+#------------------------------------------------------------------------------#
+
+def f1(x):
+    return (x[0]-10)**2 + (x[1]-20)**2 - 400
+
+def f2(x):
+    return 0.5*(x[0]+10)**2 + (x[1]-20)**2 - 400
+
+def f3(x):
+    return 0.5*(x[0]-10)**2 - (x[1]+20)**2 - 400
+
+def f4(x):
+    return x[1] - 20*x[0]**2 - 5*x[0] + 3
+
+def ej1ap3():
+    datosA = np.array([nube_unif[i] for i in range(len(nube_unif)) if labels_con_ruido[i]==-1])
+    datosB = np.array([nube_unif[i] for i in range(len(nube_unif)) if labels_con_ruido[i]==1])
+
+    x = np.arange(-50,50,0.1)
+    y = np.arange(-50,50,0.1)
+    xx,yy = np.meshgrid(x,y)
+
+    plt.scatter(datosA[:,0], datosA[:,1], c="green", label="Datos con etiqueta -1")
+    plt.scatter(datosB[:,0], datosB[:,1], c="red", label="Datos con etiqueta 1")
+    plt.contour(x,y,f1([xx,yy]),[0])
+    plt.title("Nube uniforme con ruido usando la función 1")
+    plt.legend()
+    plt.show()
+
+    plt.scatter(datosA[:,0], datosA[:,1], c="green", label="Datos con etiqueta -1")
+    plt.scatter(datosB[:,0], datosB[:,1], c="red", label="Datos con etiqueta 1")
+    plt.contour(x,y,f2([xx,yy]),[0])
+    plt.title("Nube uniforme con ruido usando la función 2")
+    plt.legend()
+    plt.show()
+
+    plt.scatter(datosA[:,0], datosA[:,1], c="green", label="Datos con etiqueta -1")
+    plt.scatter(datosB[:,0], datosB[:,1], c="red", label="Datos con etiqueta 1")
+    plt.contour(x,y,f3([xx,yy]),[0])
+    plt.title("Nube uniforme con ruido usando la función 3")
+    plt.legend()
+    plt.show()
+
+    plt.scatter(datosA[:,0], datosA[:,1], c="green", label="Datos con etiqueta -1")
+    plt.scatter(datosB[:,0], datosB[:,1], c="red", label="Datos con etiqueta 1")
+    plt.contour(x,y,f4([xx,yy]),[0])
+    plt.title("Nube uniforme con ruido usando la función 4")
+    plt.legend()
+    plt.show()
+
+ej1ap3()
