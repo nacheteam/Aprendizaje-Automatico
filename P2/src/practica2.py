@@ -201,3 +201,82 @@ ej1ap3()
 ################################################################################
 ##                             Ejercicio 2                                    ##
 ################################################################################
+
+#------------------------------------------------------------------------------#
+##                              Apartado 1                                    ##
+#------------------------------------------------------------------------------#
+
+def ajusta_PLA(datos, label, max_iter, vini):
+    w = vini
+    for i in range(max_iter):
+        w_old = w
+        for d,l in zip(datos, label):
+            if np.sign(w.dot(d))!=l:
+                w = w+l*d
+        if np.all(np.equal(w, w_old)):
+            return w, i
+    return w,max_iter
+
+def evaluaRecta(w, punto):
+    return (-w[0]-w[1]*punto)/w[2]
+
+def ej2ap1SinRuido():
+    print("Primero sin ruido")
+    nube_sin_ruido3d = np.hstack((np.ones(shape=(len(nube_unif),1)),nube_unif))
+
+    w,it = ajusta_PLA(nube_sin_ruido3d, labels_sin_ruido, 10000, np.array([0,0,0]))
+    print("Estamos utilizando w_ini = " + str(np.array([0,0,0])))
+    print("El número de iteraciones que ha necesitado ha sido: " + str(it))
+
+    nube1 = np.array([nube_sin_ruido3d[i] for i in range(len(nube_sin_ruido3d)) if labels_sin_ruido[i]==1])
+    nube2 = np.array([nube_sin_ruido3d[i] for i in range(len(nube_sin_ruido3d)) if labels_sin_ruido[i]==-1])
+
+    plt.scatter(nube1[:,1],nube1[:,2],c="b",label="Clase con etiqueta 1")
+    plt.scatter(nube2[:,1],nube2[:,2],c="g",label="Clase con etiqueta -1")
+    plt.plot([-51,51],[evaluaRecta(w,-51),evaluaRecta(w,51)],c="r",label="Recta obtenida por PLA con w=[0,0,0]")
+    plt.legend()
+    plt.show()
+
+
+    for i in range(10):
+        w = np.random.uniform(low=0, high=1, size=3)
+        print("Estamos utilizando w_ini = " + str(w))
+        w,it = ajusta_PLA(nube_sin_ruido3d, labels_sin_ruido, 10000, w)
+        print("El número de iteraciones que ha necesitado ha sido: " + str(it))
+        plt.scatter(nube1[:,1],nube1[:,2],c="b",label="Clase con etiqueta 1")
+        plt.scatter(nube2[:,1],nube2[:,2],c="g",label="Clase con etiqueta -1")
+        plt.plot([-51,51],[evaluaRecta(w,-51),evaluaRecta(w,51)],c="r",label="Recta obtenida por PLA")
+        plt.legend()
+        plt.show()
+
+def ej2ap1ConRuido():
+    print("Ahora con ruido")
+    nube_con_ruido3d = np.hstack((np.ones(shape=(len(nube_unif),1)),nube_unif))
+
+    w,it = ajusta_PLA(nube_con_ruido3d, labels_con_ruido, 10000, np.array([0,0,0]))
+    print("Estamos utilizando w_ini = " + str(np.array([0,0,0])))
+    print("El número de iteraciones que ha necesitado ha sido: " + str(it))
+
+    nube1 = np.array([nube_con_ruido3d[i] for i in range(len(nube_con_ruido3d)) if labels_con_ruido[i]==1])
+    nube2 = np.array([nube_con_ruido3d[i] for i in range(len(nube_con_ruido3d)) if labels_con_ruido[i]==-1])
+
+    plt.scatter(nube1[:,1],nube1[:,2],c="b",label="Clase con etiqueta 1")
+    plt.scatter(nube2[:,1],nube2[:,2],c="g",label="Clase con etiqueta -1")
+    plt.plot([-51,51],[evaluaRecta(w,-51),evaluaRecta(w,51)],c="r",label="Recta obtenida por PLA con w=[0,0,0]")
+    plt.legend()
+    plt.show()
+
+
+    for i in range(10):
+        w = np.random.uniform(low=0, high=1, size=3)
+        print("Estamos utilizando w_ini = " + str(w))
+        w,it = ajusta_PLA(nube_con_ruido3d, labels_con_ruido, 10000, w)
+        print("El número de iteraciones que ha necesitado ha sido: " + str(it))
+        plt.scatter(nube1[:,1],nube1[:,2],c="b",label="Clase con etiqueta 1")
+        plt.scatter(nube2[:,1],nube2[:,2],c="g",label="Clase con etiqueta -1")
+        plt.plot([-51,51],[evaluaRecta(w,-51),evaluaRecta(w,51)],c="r",label="Recta obtenida por PLA")
+        plt.legend()
+        plt.show()
+
+ej2ap1SinRuido()
+ej2ap1ConRuido()
