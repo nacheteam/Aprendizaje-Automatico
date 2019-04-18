@@ -304,34 +304,23 @@ def updateW(X,y,w,minibatch,tasa_aprendizaje):
     return w
 
 def regresionLogisticaSGD(num_epocas_max,X,y,minibatch_size=64,tasa_aprendizaje=0.01, tol=0.01):
-    # Obtenemos la dimensión de los datos
     dimension = len(X[0])
     data_size = len(X)
-    # Inicializamos el vector w inicial a ceros
     w = np.zeros(dimension)
     w_old = np.ones(dimension)
     num_epocas = 0
     while num_epocas<num_epocas_max and np.linalg.norm(w_old,w):
         w_old=w
-        # Calculamos un conjunto de índices aleatorizados
         indexes = np.random.choice(data_size, size=data_size, replace=False)
-        # Hasta que agotemos las iteraciones máximas o el error sea menor que la tolerancia
         for i in range(int(data_size/minibatch_size)-1):
-            # Calculamos los indices del minibatch
             minibatch = indexes[i*minibatch_size:(i+1)*minibatch_size]
-            # Actualizamos según el esquema de las transparencias
             w = updateW(X,y,w,minibatch,tasa_aprendizaje)
 
         if data_size%minibatch_size!=0:
-            # Calculamos los indices del minibatch que nos quedan por ver
             resto = (data_size%minibatch_size)*minibatch_size
-            # Añadimos también los del principio hasta completar
             minibatch = np.append(indexes[-resto:],indexes[:minibatch_size-resto])
-            # Actualizamos según el esquema de las transparencias
             w = updateW(X,y,w,minibatch,tasa_aprendizaje)
 
-    # Devolvemos w, el número de iteraciones y los errores si es necesario
     return w,num_epocas
 
 def ej2ap2():
-    
