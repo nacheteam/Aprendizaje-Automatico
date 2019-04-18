@@ -297,19 +297,17 @@ def updateW(X,y,w,minibatch,tasa_aprendizaje):
     X_minibatch = X[minibatch,:]
     y_minibatch = y[minibatch]
     # Calculamos el factor que vamos a restar a w
-    substraction = (-y_minibatch.dot(X_minibatch))/(1+np.exp(y_minibatch.dot(w.T.dot(X_minibatch))))
-    # Actualizamos el valor de w multiplicando por la tasa de aprendizaje y como indican las
-    # transparencias de teoría
-    w = w-tasa_aprendizaje*substraction*(1/len(minibatch))
+    for x,y in zip(X_minibatch, y_minibatch):
+        w = w-tasa_aprendizaje*((-y*x)/(1+np.exp(y*w.T.dot(x))))
     return w
 
-def regresionLogisticaSGD(num_epocas_max,X,y,minibatch_size=64,tasa_aprendizaje=0.01, tol=0.01):
+def regresionLogisticaSGD(num_epocas_max,X,y,minibatch_size=8,tasa_aprendizaje=0.01, tol=0.01):
     dimension = len(X[0])
     data_size = len(X)
     w = np.zeros(dimension)
     w_old = np.ones(dimension)
     num_epocas = 0
-    while num_epocas<num_epocas_max and np.linalg.norm(w_old,w):
+    while num_epocas<num_epocas_max and np.linalg.norm(w_old-w)>=tol:
         w_old=w
         indexes = np.random.choice(data_size, size=data_size, replace=False)
         for i in range(int(data_size/minibatch_size)-1):
@@ -320,7 +318,30 @@ def regresionLogisticaSGD(num_epocas_max,X,y,minibatch_size=64,tasa_aprendizaje=
             resto = (data_size%minibatch_size)*minibatch_size
             minibatch = np.append(indexes[-resto:],indexes[:minibatch_size-resto])
             w = updateW(X,y,w,minibatch,tasa_aprendizaje)
+        num_epocas+=1
 
     return w,num_epocas
 
+def puntoSobreRecta(a,b,punto):
+    valor=punto[1]*a+b
+    if valor>=punto[2]:
+        return True
+    else:
+        return False
+
 def ej2ap2():
+    puntos_uniforme = np.hstack((np.ones(shape=(100,1)),simula_unif(100,2,[0,2])))
+    a,b = simula_recta([0,2])
+    labels = np.array([0 if puntoSobreRecta(a,b,puntos_uniforme[i]) else 1 for i in range(len(puntos_uniforme))])
+    w,iters = regresionLogisticaSGD(10000, puntos_uniforme, labels)
+
+    puntos_uniforme1 = np.array([puntos_uniforme[i] for i in range(len(puntos_uniforme)) if labels[i]==0])
+    puntos_uniforme2 = np.array([puntos_uniforme[i] for i in range(len(puntos_uniforme)) if labels[i]==1])
+
+    plt.scatter(puntos_uniforme1[:,1], puntos_uniforme1[:,2],c="blue", label="Puntos con etiqueta 0")
+    plt.scatter(puntos_uniforme2[:,1], puntos_uniforme2[:,2],c="green", label="Puntos con etiqueta 1")
+    plt.plot([0,2],[b, 2*a+b], c="red", label="Recta frontera")
+    plt.legend()
+    plt.show()
+
+ej2ap2()
