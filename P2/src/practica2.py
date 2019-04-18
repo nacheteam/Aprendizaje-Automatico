@@ -280,3 +280,58 @@ def ej2ap1ConRuido():
 
 ej2ap1SinRuido()
 ej2ap1ConRuido()
+
+#------------------------------------------------------------------------------#
+##                              Apartado 2                                    ##
+#------------------------------------------------------------------------------#
+
+def updateW(X,y,w,minibatch,tasa_aprendizaje):
+    '''
+    @brief Función dedicada a actualizar el w como se pide en el algoritmo SGD
+    @param X conjunto de datos
+    @param y conjunto de etiquetas
+    @param minibatch conjunto de indices que representan el minibatch
+    @param tasa_aprendizaje Tasa de aprendizaje usada en SGD
+    '''
+    # Obtenemos los datos y etiquetas asociados al minibatch que hemos calculado
+    X_minibatch = X[minibatch,:]
+    y_minibatch = y[minibatch]
+    # Calculamos el factor que vamos a restar a w
+    substraction = (-y_minibatch.dot(X_minibatch))/(1+np.exp(y_minibatch.dot(w.T.dot(X_minibatch))))
+    # Actualizamos el valor de w multiplicando por la tasa de aprendizaje y como indican las
+    # transparencias de teoría
+    w = w-tasa_aprendizaje*substraction*(1/len(minibatch))
+    return w
+
+def regresionLogisticaSGD(num_epocas_max,X,y,minibatch_size=64,tasa_aprendizaje=0.01, tol=0.01):
+    # Obtenemos la dimensión de los datos
+    dimension = len(X[0])
+    data_size = len(X)
+    # Inicializamos el vector w inicial a ceros
+    w = np.zeros(dimension)
+    w_old = np.ones(dimension)
+    num_epocas = 0
+    while num_epocas<num_epocas_max and np.linalg.norm(w_old,w):
+        w_old=w
+        # Calculamos un conjunto de índices aleatorizados
+        indexes = np.random.choice(data_size, size=data_size, replace=False)
+        # Hasta que agotemos las iteraciones máximas o el error sea menor que la tolerancia
+        for i in range(int(data_size/minibatch_size)-1):
+            # Calculamos los indices del minibatch
+            minibatch = indexes[i*minibatch_size:(i+1)*minibatch_size]
+            # Actualizamos según el esquema de las transparencias
+            w = updateW(X,y,w,minibatch,tasa_aprendizaje)
+
+        if data_size%minibatch_size!=0:
+            # Calculamos los indices del minibatch que nos quedan por ver
+            resto = (data_size%minibatch_size)*minibatch_size
+            # Añadimos también los del principio hasta completar
+            minibatch = np.append(indexes[-resto:],indexes[:minibatch_size-resto])
+            # Actualizamos según el esquema de las transparencias
+            w = updateW(X,y,w,minibatch,tasa_aprendizaje)
+
+    # Devolvemos w, el número de iteraciones y los errores si es necesario
+    return w,num_epocas
+
+def ej2ap2():
+    
