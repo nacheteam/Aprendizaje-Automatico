@@ -285,19 +285,7 @@ ej2ap1ConRuido()
 ##                              Apartado 2                                    ##
 #------------------------------------------------------------------------------#
 
-def updateW(X,y,w,tasa_aprendizaje):
-    '''
-    @brief Función dedicada a actualizar el w como se pide en el algoritmo SGD
-    @param X conjunto de datos
-    @param y conjunto de etiquetas
-    @param tasa_aprendizaje Tasa de aprendizaje usada en SGD
-    '''
-    # Calculamos el factor que vamos a restar a w
-    for x,y in zip(X, y):
-        w = w-tasa_aprendizaje*((-y*x)/(1+np.exp(y*w.T.dot(x))))
-    return w
-
-def regresionLogisticaSGD(num_epocas_max,X,y,minibatch_size=8,tasa_aprendizaje=0.01, tol=0.01):
+def regresionLogisticaSGD(num_epocas_max,X,y,tasa_aprendizaje=0.01, tol=0.01):
     dimension = len(X[0])
     data_size = len(X)
     w = np.zeros(dimension)
