@@ -209,7 +209,7 @@ ej1ap3()
 def ajusta_PLA(datos, label, max_iter, vini):
     w = vini
     for i in range(max_iter):
-        w_old = w
+        w_old = np.copy(w)
         for d,l in zip(datos, label):
             if np.sign(w.dot(d))!=l:
                 w = w+l*d
@@ -285,19 +285,15 @@ ej2ap1ConRuido()
 ##                              Apartado 2                                    ##
 #------------------------------------------------------------------------------#
 
-def updateW(X,y,w,minibatch,tasa_aprendizaje):
+def updateW(X,y,w,tasa_aprendizaje):
     '''
     @brief Función dedicada a actualizar el w como se pide en el algoritmo SGD
     @param X conjunto de datos
     @param y conjunto de etiquetas
-    @param minibatch conjunto de indices que representan el minibatch
     @param tasa_aprendizaje Tasa de aprendizaje usada en SGD
     '''
-    # Obtenemos los datos y etiquetas asociados al minibatch que hemos calculado
-    X_minibatch = X[minibatch,:]
-    y_minibatch = y[minibatch]
     # Calculamos el factor que vamos a restar a w
-    for x,y in zip(X_minibatch, y_minibatch):
+    for x,y in zip(X, y):
         w = w-tasa_aprendizaje*((-y*x)/(1+np.exp(y*w.T.dot(x))))
     return w
 
@@ -308,17 +304,10 @@ def regresionLogisticaSGD(num_epocas_max,X,y,minibatch_size=8,tasa_aprendizaje=0
     w_old = np.ones(dimension)
     num_epocas = 0
     while num_epocas<num_epocas_max and np.linalg.norm(w_old-w)>=tol:
-        w_old=w
+        w_old=np.copy(w)
         indexes = np.random.choice(data_size, size=data_size, replace=False)
-        for i in range(int(data_size/minibatch_size)-1):
-            minibatch = indexes[i*minibatch_size:(i+1)*minibatch_size]
-            w = updateW(X,y,w,minibatch,tasa_aprendizaje)
-
-        if data_size%minibatch_size!=0:
-            resto = (data_size%minibatch_size)*minibatch_size
-            minibatch = np.append(indexes[-resto:],indexes[:minibatch_size-resto])
-            w = updateW(X,y,w,minibatch,tasa_aprendizaje)
-        num_epocas+=1
+        for id in indexes:
+            w = w-tasa_aprendizaje*((-y[id]*X[id])/(1+np.exp(y[id]*w.dot(X[id]))))
 
     return w,num_epocas
 
@@ -332,16 +321,35 @@ def puntoSobreRecta(a,b,punto):
 def ej2ap2():
     puntos_uniforme = np.hstack((np.ones(shape=(100,1)),simula_unif(100,2,[0,2])))
     a,b = simula_recta([0,2])
-    labels = np.array([0 if puntoSobreRecta(a,b,puntos_uniforme[i]) else 1 for i in range(len(puntos_uniforme))])
+    labels = np.array([1 if puntoSobreRecta(a,b,puntos_uniforme[i]) else -1 for i in range(len(puntos_uniforme))])
     w,iters = regresionLogisticaSGD(10000, puntos_uniforme, labels)
 
-    puntos_uniforme1 = np.array([puntos_uniforme[i] for i in range(len(puntos_uniforme)) if labels[i]==0])
-    puntos_uniforme2 = np.array([puntos_uniforme[i] for i in range(len(puntos_uniforme)) if labels[i]==1])
+    puntos_uniforme1 = np.array([puntos_uniforme[i] for i in range(len(puntos_uniforme)) if labels[i]==1])
+    puntos_uniforme2 = np.array([puntos_uniforme[i] for i in range(len(puntos_uniforme)) if labels[i]==-1])
 
-    plt.scatter(puntos_uniforme1[:,1], puntos_uniforme1[:,2],c="blue", label="Puntos con etiqueta 0")
-    plt.scatter(puntos_uniforme2[:,1], puntos_uniforme2[:,2],c="green", label="Puntos con etiqueta 1")
+    plt.scatter(puntos_uniforme1[:,1], puntos_uniforme1[:,2],c="blue", label="Puntos con etiqueta 1")
+    plt.scatter(puntos_uniforme2[:,1], puntos_uniforme2[:,2],c="green", label="Puntos con etiqueta -1")
     plt.plot([0,2],[b, 2*a+b], c="red", label="Recta frontera")
     plt.legend()
     plt.show()
+
+    plt.scatter(puntos_uniforme1[:,1], puntos_uniforme1[:,2],c="blue", label="Puntos con etiqueta 1")
+    plt.scatter(puntos_uniforme2[:,1], puntos_uniforme2[:,2],c="green", label="Puntos con etiqueta -1")
+    plt.plot([0,2],[evaluaRecta(w,0), evaluaRecta(w,2)], c="red", label="Recta Regresión Logística SGD")
+    plt.legend()
+    plt.show()
+
+    for num_puntos in [1000,2000,3000,4000,5000]:
+        puntos_uniforme = np.hstack((np.ones(shape=(num_puntos,1)),simula_unif(num_puntos,2,[0,2])))
+        labels = np.array([1 if puntoSobreRecta(a,b,puntos_uniforme[i]) else -1 for i in range(len(puntos_uniforme))])
+
+        puntos_uniforme1 = np.array([puntos_uniforme[i] for i in range(len(puntos_uniforme)) if labels[i]==1])
+        puntos_uniforme2 = np.array([puntos_uniforme[i] for i in range(len(puntos_uniforme)) if labels[i]==-1])
+
+        plt.scatter(puntos_uniforme1[:,1], puntos_uniforme1[:,2],c="blue", label="Puntos con etiqueta 1")
+        plt.scatter(puntos_uniforme2[:,1], puntos_uniforme2[:,2],c="green", label="Puntos con etiqueta -1")
+        plt.plot([0,2],[evaluaRecta(w,0), evaluaRecta(w,2)], c="red", label="Recta Regresión Logística SGD")
+        plt.legend()
+        plt.show()
 
 ej2ap2()
