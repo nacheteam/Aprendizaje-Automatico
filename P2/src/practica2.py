@@ -65,6 +65,8 @@ def simula_recta(intervalo):
     return a,b
 
 def ej1ap1(N=50):
+    print("#################################\nEjercicio 1, apartado 1\n#################################\n\n")
+
     # Simulamos datos según una distribución uniforme
     nube_unif = simula_unif(N,2,[-50,50])
     # Simulamos datos según una distribución Gaussiana
@@ -75,12 +77,16 @@ def ej1ap1(N=50):
     plt.title("Nube con la uniforme")
     plt.show()
 
+    input("Presione ENTER para continuar")
+
     # Pintamos la nube de puntos según una normal
     plt.scatter(nube_normal[:,0], nube_normal[:,1])
     plt.title("Nube con la normal")
     plt.show()
 
-#ej1ap1()
+    input("Presione ENTER para continuar")
+
+ej1ap1()
 
 #------------------------------------------------------------------------------#
 ##                              Apartado 2                                    ##
@@ -90,6 +96,7 @@ def fAp2(x,y,a,b):
     return np.sign(y-a*x-b)
 
 def ej1ap2(N=50):
+    print("#################################\nEjercicio 1, apartado 2\n#################################\n\n")
     # Declaramos las variables globales para su uso
     global nube_unif, labels_sin_ruido, labels_con_ruido
     # Generamos una nube de puntos según una uniforme
@@ -115,6 +122,8 @@ def ej1ap2(N=50):
     plt.title("Nube uniforme separada")
     plt.legend()
     plt.show()
+
+    input("Presione ENTER para continuar")
 
     # Cogemos los índices de los datos con etiquetas positivas y negativas
     labelsPos = np.array([i for i in range(len(labels)) if labels[i]==1])
@@ -142,6 +151,8 @@ def ej1ap2(N=50):
     plt.legend()
     plt.show()
 
+    input("Presione ENTER para continuar")
+
 ej1ap2()
 
 #------------------------------------------------------------------------------#
@@ -161,6 +172,7 @@ def f4(x):
     return x[1] - 20*x[0]**2 - 5*x[0] + 3
 
 def ej1ap3():
+    print("#################################\nEjercicio 1, apartado 3\n#################################\n\n")
     datosA = np.array([nube_unif[i] for i in range(len(nube_unif)) if labels_con_ruido[i]==-1])
     datosB = np.array([nube_unif[i] for i in range(len(nube_unif)) if labels_con_ruido[i]==1])
 
@@ -175,12 +187,16 @@ def ej1ap3():
     plt.legend()
     plt.show()
 
+    input("Presione ENTER para continuar")
+
     plt.scatter(datosA[:,0], datosA[:,1], c="green", label="Datos con etiqueta -1")
     plt.scatter(datosB[:,0], datosB[:,1], c="red", label="Datos con etiqueta 1")
     plt.contour(x,y,f2([xx,yy]),[0])
     plt.title("Nube uniforme con ruido usando la función 2")
     plt.legend()
     plt.show()
+
+    input("Presione ENTER para continuar")
 
     plt.scatter(datosA[:,0], datosA[:,1], c="green", label="Datos con etiqueta -1")
     plt.scatter(datosB[:,0], datosB[:,1], c="red", label="Datos con etiqueta 1")
@@ -189,12 +205,16 @@ def ej1ap3():
     plt.legend()
     plt.show()
 
+    input("Presione ENTER para continuar")
+
     plt.scatter(datosA[:,0], datosA[:,1], c="green", label="Datos con etiqueta -1")
     plt.scatter(datosB[:,0], datosB[:,1], c="red", label="Datos con etiqueta 1")
     plt.contour(x,y,f4([xx,yy]),[0])
     plt.title("Nube uniforme con ruido usando la función 4")
     plt.legend()
     plt.show()
+
+    input("Presione ENTER para continuar")
 
 ej1ap3()
 
@@ -221,7 +241,7 @@ def evaluaRecta(w, punto):
     return (-w[0]-w[1]*punto)/w[2]
 
 def ej2ap1SinRuido():
-    print("Primero sin ruido")
+    print("#################################\nEjercicio 2, apartado 1 sin ruido\n#################################\n\n")
     nube_sin_ruido3d = np.hstack((np.ones(shape=(len(nube_unif),1)),nube_unif))
 
     w,it = ajusta_PLA(nube_sin_ruido3d, labels_sin_ruido, 10000, np.array([0,0,0]))
@@ -233,24 +253,26 @@ def ej2ap1SinRuido():
 
     plt.scatter(nube1[:,1],nube1[:,2],c="b",label="Clase con etiqueta 1")
     plt.scatter(nube2[:,1],nube2[:,2],c="g",label="Clase con etiqueta -1")
-    plt.plot([-51,51],[evaluaRecta(w,-51),evaluaRecta(w,51)],c="r",label="Recta obtenida por PLA con w=[0,0,0]")
+    plt.plot([-51,51],[evaluaRecta(w,-51),evaluaRecta(w,51)],c="r",label="Recta obtenida por PLA sin ruido con w=[0,0,0]")
     plt.legend()
     plt.show()
 
+    input("Presione ENTER para continuar")
 
     for i in range(10):
         w = np.random.uniform(low=0, high=1, size=3)
-        print("Estamos utilizando w_ini = " + str(w))
+        print("\nEstamos utilizando w_ini = " + str(w))
         w,it = ajusta_PLA(nube_sin_ruido3d, labels_sin_ruido, 10000, w)
         print("El número de iteraciones que ha necesitado ha sido: " + str(it))
         plt.scatter(nube1[:,1],nube1[:,2],c="b",label="Clase con etiqueta 1")
         plt.scatter(nube2[:,1],nube2[:,2],c="g",label="Clase con etiqueta -1")
-        plt.plot([-51,51],[evaluaRecta(w,-51),evaluaRecta(w,51)],c="r",label="Recta obtenida por PLA")
+        plt.plot([-51,51],[evaluaRecta(w,-51),evaluaRecta(w,51)],c="r",label="Recta obtenida por PLA sin ruido " + str(i))
         plt.legend()
         plt.show()
+        input("Presione ENTER para continuar")
 
 def ej2ap1ConRuido():
-    print("Ahora con ruido")
+    print("#################################\nEjercicio 2, apartado 1 con ruido\n#################################\n\n")
     nube_con_ruido3d = np.hstack((np.ones(shape=(len(nube_unif),1)),nube_unif))
 
     w,it = ajusta_PLA(nube_con_ruido3d, labels_con_ruido, 10000, np.array([0,0,0]))
@@ -262,21 +284,23 @@ def ej2ap1ConRuido():
 
     plt.scatter(nube1[:,1],nube1[:,2],c="b",label="Clase con etiqueta 1")
     plt.scatter(nube2[:,1],nube2[:,2],c="g",label="Clase con etiqueta -1")
-    plt.plot([-51,51],[evaluaRecta(w,-51),evaluaRecta(w,51)],c="r",label="Recta obtenida por PLA con w=[0,0,0]")
+    plt.plot([-51,51],[evaluaRecta(w,-51),evaluaRecta(w,51)],c="r",label="Recta obtenida por PLA con ruido con w=[0,0,0]")
     plt.legend()
     plt.show()
 
+    input("Presione ENTER para continuar")
 
     for i in range(10):
         w = np.random.uniform(low=0, high=1, size=3)
-        print("Estamos utilizando w_ini = " + str(w))
+        print("\nEstamos utilizando w_ini = " + str(w))
         w,it = ajusta_PLA(nube_con_ruido3d, labels_con_ruido, 10000, w)
         print("El número de iteraciones que ha necesitado ha sido: " + str(it))
         plt.scatter(nube1[:,1],nube1[:,2],c="b",label="Clase con etiqueta 1")
         plt.scatter(nube2[:,1],nube2[:,2],c="g",label="Clase con etiqueta -1")
-        plt.plot([-51,51],[evaluaRecta(w,-51),evaluaRecta(w,51)],c="r",label="Recta obtenida por PLA")
+        plt.plot([-51,51],[evaluaRecta(w,-51),evaluaRecta(w,51)],c="r",label="Recta obtenida por PLA con ruido " + str(i))
         plt.legend()
         plt.show()
+        input("Presione ENTER para continuar")
 
 ej2ap1SinRuido()
 ej2ap1ConRuido()
@@ -315,10 +339,13 @@ def Eout(datos, labels, w):
     return error/tam_datos
 
 def ej2ap2():
+    print("#################################\nEjercicio 2, apartado 2\n#################################\n\n")
     puntos_uniforme = np.hstack((np.ones(shape=(100,1)),simula_unif(100,2,[0,2])))
     a,b = simula_recta([0,2])
     labels = np.array([1 if puntoSobreRecta(a,b,puntos_uniforme[i]) else -1 for i in range(len(puntos_uniforme))])
     w,iters = regresionLogisticaSGD(10000, puntos_uniforme, labels)
+
+    print("El algoritmo ha convergido en " + str(iters) + " iteraciones")
 
     error = Eout(puntos_uniforme, labels, w)
     print("El error dentro de la muestra es: " + str(error))
@@ -332,11 +359,15 @@ def ej2ap2():
     plt.legend()
     plt.show()
 
+    input("Presione ENTER para continuar")
+
     plt.scatter(puntos_uniforme1[:,1], puntos_uniforme1[:,2],c="blue", label="Puntos con etiqueta 1")
     plt.scatter(puntos_uniforme2[:,1], puntos_uniforme2[:,2],c="green", label="Puntos con etiqueta -1")
     plt.plot([0,2],[evaluaRecta(w,0), evaluaRecta(w,2)], c="red", label="Recta Regresión Logística SGD")
     plt.legend()
     plt.show()
+
+    input("Presione ENTER para continuar")
 
     for num_puntos in [1000,2000,3000,4000,5000]:
         puntos_uniforme = np.hstack((np.ones(shape=(num_puntos,1)),simula_unif(num_puntos,2,[0,2])))
@@ -353,5 +384,6 @@ def ej2ap2():
         plt.plot([0,2],[evaluaRecta(w,0), evaluaRecta(w,2)], c="red", label="Recta Regresión Logística SGD")
         plt.legend()
         plt.show()
+        input("Presione ENTER para continuar")
 
 ej2ap2()
