@@ -296,6 +296,7 @@ def regresionLogisticaSGD(num_epocas_max,X,y,tasa_aprendizaje=0.01, tol=0.01):
         indexes = np.random.choice(data_size, size=data_size, replace=False)
         for id in indexes:
             w = w-tasa_aprendizaje*((-y[id]*X[id])/(1+np.exp(y[id]*w.dot(X[id]))))
+        num_epocas+=1
 
     return w,num_epocas
 
@@ -306,11 +307,21 @@ def puntoSobreRecta(a,b,punto):
     else:
         return False
 
+def Eout(datos, labels, w):
+    tam_datos = len(datos)
+    error = 0
+    for d,l in zip(datos,labels):
+        error+=np.log(1+np.exp(-l*w.dot(d)))
+    return error/tam_datos
+
 def ej2ap2():
     puntos_uniforme = np.hstack((np.ones(shape=(100,1)),simula_unif(100,2,[0,2])))
     a,b = simula_recta([0,2])
     labels = np.array([1 if puntoSobreRecta(a,b,puntos_uniforme[i]) else -1 for i in range(len(puntos_uniforme))])
     w,iters = regresionLogisticaSGD(10000, puntos_uniforme, labels)
+
+    error = Eout(puntos_uniforme, labels, w)
+    print("El error dentro de la muestra es: " + str(error))
 
     puntos_uniforme1 = np.array([puntos_uniforme[i] for i in range(len(puntos_uniforme)) if labels[i]==1])
     puntos_uniforme2 = np.array([puntos_uniforme[i] for i in range(len(puntos_uniforme)) if labels[i]==-1])
@@ -330,6 +341,9 @@ def ej2ap2():
     for num_puntos in [1000,2000,3000,4000,5000]:
         puntos_uniforme = np.hstack((np.ones(shape=(num_puntos,1)),simula_unif(num_puntos,2,[0,2])))
         labels = np.array([1 if puntoSobreRecta(a,b,puntos_uniforme[i]) else -1 for i in range(len(puntos_uniforme))])
+
+        error = Eout(puntos_uniforme, labels, w)
+        print("El error con " + str(num_puntos) + " datos ha sido: " + str(error))
 
         puntos_uniforme1 = np.array([puntos_uniforme[i] for i in range(len(puntos_uniforme)) if labels[i]==1])
         puntos_uniforme2 = np.array([puntos_uniforme[i] for i in range(len(puntos_uniforme)) if labels[i]==-1])
