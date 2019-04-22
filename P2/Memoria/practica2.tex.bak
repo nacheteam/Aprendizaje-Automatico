@@ -105,7 +105,7 @@ Ahora el enunciado nos propone la utilización de funciones más sofisticadas pa
 
 Como podemos observar estas funciones son más sofisticadas que una línea. Las regiones obtenidas son mucho peores que las obtenidas por la recta original, pues los datos iniciales son datos que están muy cerca de ser separables y por tanto divisibles mediante una recta como frontera. Es por esto que en este tipo de casos en los que los datos son separables o muy cercanos a serlos las funciones más complejas o de mayor orden no nos aportan una ventaja con respecto a las lineales.
 
-Si tuviéramos que extraer una ventaja de este tipo de funciones es la versatilidad que tienen pues, con coeficientes adecuados pueden obtenerse funciones tanto lineales como de orden superior, por ejemplo si tuviéramos en la función 4 los parámetros $f(x,y) = ay-bx^2 - cx + d$ tomando $b=0$ obtendríamos una función de tipo lineal, por lo tanto con este tipo de funciones abarcaríamos los casos lineales y casos cuadráticos en un eje.
+Si tuvieramos que extraer una ventaja de este tipo de funciones es la versatilidad que tienen pues, con coeficientes adecuados pueden obtenerse funciones tanto lineales como de orden superior, por ejemplo si tuviéramos en la función 4 los parámetros $f(x,y) = ay-bx^2 - cx + d$ tomando $b=0$ obtendríamos una función de tipo lineal, por lo tanto con este tipo de funciones abarcaríamos los casos lineales y casos cuadráticos en un eje.
 
 Por tanto y como conclusión final, estas nuevas funciones no representan una mejoría con respecto a la función lineal debido a que los datos originales eran separables o muy cercanos a serlo y en estos casos las funciones lineales dan mejores resultados.
 
@@ -117,7 +117,7 @@ En este apartado lo primero que se nos pide es implementar el algoritmo Perceptr
 
 En primer lugar partimos de un valor inicial de w. Para cada dato y etiqueta verdadera de dicho dato comprobamos si la clasificación que nuestro w da para dicho dato es correcta. En caso de no serlo aplicamos una corrección de w en el sentido correcto, esto es, actualizamos w sumando el dato por su etiqueta. De esta forma garantizamos que en la siguiente iteración o lo clasificamos bien o estamos más cerca de hacerlo. El algoritmo se repite hasta que se agoten el número de iteraciones o bien no se modifique w en una pasada completa por el conjunto de datos.
 
-Vamos a observar en primer lugar el comportamiento partiendo del w inicial $w=(0,0,0)$:
+Vamos a observar en primer lugar el comportamiento partiendo del w incial $w=(0,0,0)$:
 
 \begin{figure}[H]
 	\centering
@@ -259,7 +259,7 @@ La tendencia en todos los intentos es la misma pues el problema es el mismo. No 
 
 En este apartado se nos pide la implementación del algoritmo Gradiente Descendente Estocástico para Regresión Logística,veamos la implementación realizada de este algoritmo.
 
-En primer lugar partimos de un vector $(0,0,0)$ como valor inicial. Mientras que la diferencia entre el w anterior y el w actual en norma sea mayor o igual que $0.01$ y no excedamos el número máximo de iteraciones entonces calculamos un conjunto de índices del conjunto de datos aleatorio y recorremos el dataset en ese orden aleatorio. Para cada dato actualizamos w con la fórmula:
+En primer lugar partimos de un vector $(0,0,0)$ como valor incial. Mientras que la diferencia entre el w anterior y el w actual en norma sea mayor o igual que $0.01$ y no excedamos el número máximo de iteraciones entonces calculamos un conjunto de índices del conjunto de datos aleatorio y recorremos el dataset en ese orden aleatorio. Para cada dato actualizamos w con la fórmula:
 
 $$w_{nuevo} = w_{antiguo}-\eta \frac{-y_n\cdot x_n}{1+e^{y_n w^T_{antiguo}x_n}}$$
 
