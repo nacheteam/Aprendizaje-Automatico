@@ -158,9 +158,13 @@ def pruebaPerceptron(train_data, test_data, train_labels, test_labels):
     clf.fit(train_data, train_labels)
     return clf.score(test_data, test_labels)
 
+def pruebaAlgoritmos():
+    algoritmos = [pruebaMinimosCuadradosRL, pruebaRidge, pruebaLasso, pruebaLARSLasso, pruebaSGDClassifier, pruebaLogisticRegression, pruebaPassiveAgressive, pruebaPerceptron]
+    nombre_algoritmos = ["Mínimos cuadrados", "Ridge", "Lasso", "LARS Lasso", "SGD", "Logistic Regression", "Passive-Agressive", "Perceptron"]
+    dataset, labels=readData()
+    train_data, test_data, train_labels, test_labels = train_test_split(dataset, labels, stratify=labels, train_size=0.2, test_size=0.8)
+    for algoritmo,nombre in zip(algoritmos,nombre_algoritmos):
+        score=algoritmo(train_data, test_data, train_labels, test_labels)
+        print("El score obtenido por el algoritmo " + nombre + " es: " + str(score))
 
-
-dataset, labels=readData()
-train_data, test_data, train_labels, test_labels = train_test_split(dataset, labels, stratify=labels, train_size=0.2, test_size=0.8)
-score=pruebaPerceptron(train_data, test_data, train_labels, test_labels)
-print(score)
+pruebaAlgoritmos()
