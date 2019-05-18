@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from sklearn import linear_model
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
+from sklearn import decomposition
 
 # Inicializamos la semilla
 np.random.seed(123456789)
@@ -43,6 +44,54 @@ def readData(path="./datos/optdigits"):
         labels.append(int(line.split(",")[-1]))
     return np.array(dataset), np.array(labels)
 
+################################################################################
+##                       REDUCCIÓN DE DIMENSIONALIDAD                         ##
+################################################################################
+
+def nComponentsCriterion(vratio, explained_var=0.95):
+    index = 0
+    sum_var = 0
+    for i in range(len(vratio)):
+        sum_var+=vratio[i]
+        if sum_var>=explained_var:
+            index=i
+            break
+    return index
+
+def reducePCA(dataset):
+    pca = decomposition.PCA().fit(dataset)
+    n_comp = nComponentsCriterion(pca.explained_variance_ratio_)
+    pca = decomposition.PCA(n_components=n_comp).fit(dataset)
+    return pca.transform(dataset)
+
+def reduceIncrementalPCA(dataset):
+    ipca = decomposition.IncrementalPCA().fit(dataset)
+    n_comp = nComponentsCriterion(ipca.explained_variance_ratio_)
+    ipca = decomposition.IncrementalPCA(n_components=n_comp).fit(dataset)
+    return ipca.transform(dataset)
+
+def reduceKernelPCA(dataset):
+    kpca = decomposition.KernelPCA().fit(dataset)
+    kpca_transform = kpca.fit_transform(dataset)
+    explained_variance = np.var(kpca_transform, axis=0)
+    explained_variance_ratio = explained_variance / np.sum(explained_variance)
+    n_comp = nComponentsCriterion(explained_variance_ratio)
+    kpca = decomposition.KernelPCA(n_components=n_comp).fit(dataset)
+    return kpca.transform(dataset)
+
+def reduceFactorAnalysis(dataset):
+    fa = decomposition.FactorAnalysis().fit(dataset)
+    fa_transform = fa.fit_transform(dataset)
+    explained_variance = np.var(fa_transform, axis=0)
+    explained_variance_ratio = explained_variance / np.sum(explained_variance)
+    n_comp = nComponentsCriterion(explained_variance_ratio)
+    fa = decomposition.FactorAnalysis(n_components=n_comp).fit(dataset)
+    return fa.transform(dataset)
+
+def pruebaReduccion(dataset):
+    nombres = ["PCA", "Incremental PCA", "Kernel PCA", "Factor Analysis"]
+    datasets = [reducePCA(dataset), reduceIncrementalPCA(dataset), reduceKernelPCA(dataset), reduceFactorAnalysis(dataset)]
+    return nombres, datasets
 
 ################################################################################
 ##                            PREPROCESAMIENTO                                ##
@@ -74,7 +123,7 @@ def pruebaPreprocesamiento(dataset):
     @return Devuelve dos listas, una con las cadenas correspondientes al preprocesado
     aplicado y otra con la lista de conjuntos tras aplicar el preprocesado
     '''
-    nombres = ["Estandarización", "Normalización", "Nomalización y después estandarización"]
+    nombres = ["Estandarización", "Normalización", "Normalización y después estandarización"]
     datasets = [scaleData(dataset), normalizeData(dataset), scaleData(normalizeData(dataset))]
     return nombres, datasets
 
@@ -203,13 +252,31 @@ def pruebaAlgoritmos(dataset,labels):
         print("El score obtenido por el algoritmo " + nombre + " es: " + str(score))
 
 data,labels = readData()
-nombres_preprocesamiento, datasets = pruebaPreprocesamiento(data)
+
+nombres_preprocesamiento, datasets_preprocesados = pruebaPreprocesamiento(data)
 print("########################################################################")
+print("Sin reducción de dimensionalidad")
 print("Sin preprocesamiento")
 print("########################################################################")
 pruebaAlgoritmos(data,labels)
-for n,d in zip(nombres_preprocesamiento,datasets):
+for nom_pre,dataset_pre in zip(nombres_preprocesamiento,datasets_preprocesados):
     print("\n########################################################################")
-    print("Aplicado el preprocesamiento: " + n)
+    print("Sin reducción de dimensionalidad")
+    print("Aplicado el preprocesamiento: " + nom_pre)
     print("########################################################################")
-    pruebaAlgoritmos(d,labels)
+    pruebaAlgoritmos(dataset_pre,labels)
+
+nombres_reduccion, reduced_datasets = pruebaReduccion(data)
+for nom_red,dataset_red in zip(nombres_reduccion,reduced_datasets):
+    nombres_preprocesamiento, datasets_preprocesados = pruebaPreprocesamiento(dataset_red)
+    print("########################################################################")
+    print("Con reducción de dimensionalidad de tipo: " + nom_red)
+    print("Sin preprocesamiento")
+    print("########################################################################")
+    pruebaAlgoritmos(dataset_red,labels)
+    for nom_pre,dataset_pre in zip(nombres_preprocesamiento,datasets_preprocesados):
+        print("\n########################################################################")
+        print("Con reducción de dimensionalidad de tipo: " + nom_red)
+        print("Aplicado el preprocesamiento: " + nom_pre)
+        print("########################################################################")
+        pruebaAlgoritmos(dataset_pre,labels)
