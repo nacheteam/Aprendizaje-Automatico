@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 from sklearn import linear_model
 from sklearn.model_selection import train_test_split
+from sklearn import preprocessing
 
 # Inicializamos la semilla
 np.random.seed(123456789)
@@ -41,6 +42,41 @@ def readData(path="./datos/optdigits"):
         dataset.append(row)
         labels.append(int(line.split(",")[-1]))
     return np.array(dataset), np.array(labels)
+
+
+################################################################################
+##                            PREPROCESAMIENTO                                ##
+################################################################################
+
+def scaleData(dataset):
+    '''
+    @brief Función que realiza una estandarización de los conjuntos de test y train
+    a media cero y escalados según la varianza.
+    @param dataset Conjunto de datos
+    @return Devuelve dos conjuntos de datos estandarizados
+    '''
+    return preprocessing.scale(dataset)
+
+def normalizeData(dataset):
+    '''
+    @brief Función que realiza una normalización de los datos para que tengan
+    norma 1 según la norma L2 o euclídea
+    @param dataset Conjunto de datos
+    @return Devuelve el conjunto de datos normalizado
+    '''
+    return preprocessing.normalize(dataset,norm="l2")
+
+def pruebaPreprocesamiento(dataset):
+    '''
+    @brief Función que devuelve todas las combinaciones interesantes de conjuntos
+    preprocesados para aplicar los modelos
+    @param dataset Conjunto de datos
+    @return Devuelve dos listas, una con las cadenas correspondientes al preprocesado
+    aplicado y otra con la lista de conjuntos tras aplicar el preprocesado
+    '''
+    nombres = ["Estandarización", "Normalización", "Nomalización y después estandarización"]
+    datasets = [scaleData(dataset), normalizeData(dataset), scaleData(normalizeData(dataset))]
+    return nombres, datasets
 
 ################################################################################
 ##                 FUNCIONES DE PRUEBA DE ALGORITMOS                          ##
@@ -158,13 +194,22 @@ def pruebaPerceptron(train_data, test_data, train_labels, test_labels):
     clf.fit(train_data, train_labels)
     return clf.score(test_data, test_labels)
 
-def pruebaAlgoritmos():
+def pruebaAlgoritmos(dataset,labels):
     algoritmos = [pruebaMinimosCuadradosRL, pruebaRidge, pruebaLasso, pruebaLARSLasso, pruebaSGDClassifier, pruebaLogisticRegression, pruebaPassiveAgressive, pruebaPerceptron]
     nombre_algoritmos = ["Mínimos cuadrados", "Ridge", "Lasso", "LARS Lasso", "SGD", "Logistic Regression", "Passive-Agressive", "Perceptron"]
-    dataset, labels=readData()
     train_data, test_data, train_labels, test_labels = train_test_split(dataset, labels, stratify=labels, train_size=0.2, test_size=0.8)
     for algoritmo,nombre in zip(algoritmos,nombre_algoritmos):
         score=algoritmo(train_data, test_data, train_labels, test_labels)
         print("El score obtenido por el algoritmo " + nombre + " es: " + str(score))
 
-pruebaAlgoritmos()
+data,labels = readData()
+nombres_preprocesamiento, datasets = pruebaPreprocesamiento(data)
+print("########################################################################")
+print("Sin preprocesamiento")
+print("########################################################################")
+pruebaAlgoritmos(data,labels)
+for n,d in zip(nombres_preprocesamiento,datasets):
+    print("\n########################################################################")
+    print("Aplicado el preprocesamiento: " + n)
+    print("########################################################################")
+    pruebaAlgoritmos(d,labels)
