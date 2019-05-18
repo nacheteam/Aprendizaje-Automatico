@@ -1,10 +1,11 @@
-\BOOKMARK [1][-]{section.1}{Problema a resolver}{}% 1
-\BOOKMARK [1][-]{section.2}{Preprocesado de los datos}{}% 2
-\BOOKMARK [1][-]{section.3}{Selecci\363n de clases de funciones}{}% 3
-\BOOKMARK [1][-]{section.4}{Conjuntos de training, test y validaci\363n}{}% 4
-\BOOKMARK [1][-]{section.5}{Regularizaci\363n, necesidad e implementaci\363n}{}% 5
-\BOOKMARK [1][-]{section.6}{Modelos usados y par\341metros empleados}{}% 6
-\BOOKMARK [1][-]{section.7}{Selecci\363n y ajuste del modelo final}{}% 7
-\BOOKMARK [1][-]{section.8}{Idoneidad de la m\351trica usada en el ajuste}{}% 8
-\BOOKMARK [1][-]{section.9}{Estimaci\363n de Eout}{}% 9
-\BOOKMARK [1][-]{section.10}{Justificaci\363n del modelo y calidad del mismo}{}% 10
+\BOOKMARK [1][-]{section.1}{Problema optdigits: clasificaci\363n}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Problema a resolver}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Preprocesado de los datos}{section.1}% 3
+\BOOKMARK [2][-]{subsection.1.3}{Selecci\363n de clases de funciones}{section.1}% 4
+\BOOKMARK [2][-]{subsection.1.4}{Conjuntos de training, test y validaci\363n}{section.1}% 5
+\BOOKMARK [2][-]{subsection.1.5}{Regularizaci\363n, necesidad e implementaci\363n}{section.1}% 6
+\BOOKMARK [2][-]{subsection.1.6}{Modelos usados y par\341metros empleados}{section.1}% 7
+\BOOKMARK [2][-]{subsection.1.7}{Selecci\363n y ajuste del modelo final}{section.1}% 8
+\BOOKMARK [2][-]{subsection.1.8}{Idoneidad de la m\351trica usada en el ajuste}{section.1}% 9
+\BOOKMARK [2][-]{subsection.1.9}{Estimaci\363n de Eout}{section.1}% 10
+\BOOKMARK [2][-]{subsection.1.10}{Justificaci\363n del modelo y calidad del mismo}{section.1}% 11

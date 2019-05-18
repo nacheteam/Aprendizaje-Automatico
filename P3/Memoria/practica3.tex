@@ -34,25 +34,37 @@
 	\tableofcontents
 
 	\newpage
+	
+\section{Problema optdigits: clasificación}
 
-\section{Problema a resolver}
+\subsection{Problema a resolver}
 
-\section{Preprocesado de los datos}
+El problema que debemos resolver consta de un conjunto de datos llamado Optical Recognition of Handwritten digits. Contiene en total 5620 instancias con 64 variables más su correspondiente clase. Las clases son 10 (del 0 al 9) indicando el número con el que se identifica la instancia.
 
-\section{Selección de clases de funciones}
+Si leemos la descripción del conjunto de datos vemos que todos los datos son numéricos y que no tenemos ningún valor perdido en ninguna instancia. Esto será útil de cara a realizar preprocesamiento de los datos.
 
-\section{Conjuntos de training, test y validación}
+Además se provee al final del fichero de descripción del conjunto de datos cómo acierta un modelo K-NN utilizando k desde 1 a 11 donde se puede observar que el porcentaje de acierto es de más del 97\%. Esta información es muy útil, pues si pensamos en cómo funciona el algoritmo K-NN podemos deducir sin pintar ni representar información del conjunto de datos que los mismos están aglomerados de forma clara en clusters. Esto será también relevante a la hora de probar ciertos algoritmos como perceptrón, pues podemos saber más o menos la estructura del conjunto de datos e intuir que va a funcionar correctamente si la separación de los clusters entre sí es suficiente.
 
-\section{Regularización, necesidad e implementación}
+Además el número de instancias totales de cada clase está más o menos balanceado, es decir tenemos más o menos el mismo número de instancias de cada uno de los dígitos y por tanto no tenemos ninguno descompensado con respecto al resto.
 
-\section{Modelos usados y parámetros empleados}
+Por tanto tras este primer análisis del conjunto de datos el problema que tenemos que resolver es, dado este conjunto de datos, ser capaces de proveer un modelo que ajuste lo mejor posible la clasificación de las instancias y obtenga el mejor score posible en el conjunto de test.
 
-\section{Selección y ajuste del modelo final}
+\subsection{Preprocesado de los datos}
 
-\section{Idoneidad de la métrica usada en el ajuste}
+\subsection{Selección de clases de funciones}
 
-\section{Estimación de $E_{out}$}
+\subsection{Conjuntos de training, test y validación}
 
-\section{Justificación del modelo y calidad del mismo}
+\subsection{Regularización, necesidad e implementación}
+
+\subsection{Modelos usados y parámetros empleados}
+
+\subsection{Selección y ajuste del modelo final}
+
+\subsection{Idoneidad de la métrica usada en el ajuste}
+
+\subsection{Estimación de $E_{out}$}
+
+\subsection{Justificación del modelo y calidad del mismo}
 
 \end{document}
