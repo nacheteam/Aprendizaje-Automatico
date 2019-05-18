@@ -49,6 +49,14 @@ def readData(path="./datos/optdigits"):
 ################################################################################
 
 def nComponentsCriterion(vratio, explained_var=0.95):
+    '''
+    @brief Función que da el número de componentes que explican al menos un 95%
+    de la varianza dado el resultado de un PCA o FA.
+    @param vratio Porcentaje de varianza explicada para cada componente
+    @param explained_var Mínimo que requerimos de varianza explicada
+    @return Devuelve el número de componentes que explican al menos un
+    95% de la varianza
+    '''
     index = 0
     sum_var = 0
     for i in range(len(vratio)):
@@ -59,18 +67,36 @@ def nComponentsCriterion(vratio, explained_var=0.95):
     return index
 
 def reducePCA(dataset):
+    '''
+    @brief Función que aplica una reducción PCA al conjunto de datos
+    @param dataset Conjunto de datos
+    @return Devuelve el conjunto de datos reducido usando como número de componentes
+    aquel que explique al menos un 95% de la varianza
+    '''
     pca = decomposition.PCA().fit(dataset)
     n_comp = nComponentsCriterion(pca.explained_variance_ratio_)
     pca = decomposition.PCA(n_components=n_comp).fit(dataset)
     return pca.transform(dataset)
 
 def reduceIncrementalPCA(dataset):
+    '''
+    @brief Función que aplica una reducción Incremental PCA al conjunto de datos
+    @param dataset Conjunto de datos
+    @return Devuelve el conjunto de datos reducido usando como número de componentes
+    aquel que explique al menos un 95% de la varianza
+    '''
     ipca = decomposition.IncrementalPCA().fit(dataset)
     n_comp = nComponentsCriterion(ipca.explained_variance_ratio_)
     ipca = decomposition.IncrementalPCA(n_components=n_comp).fit(dataset)
     return ipca.transform(dataset)
 
 def reduceKernelPCA(dataset):
+    '''
+    @brief Función que aplica una reducción Kernel PCA al conjunto de datos
+    @param dataset Conjunto de datos
+    @return Devuelve el conjunto de datos reducido usando como número de componentes
+    aquel que explique al menos un 95% de la varianza
+    '''
     kpca = decomposition.KernelPCA().fit(dataset)
     kpca_transform = kpca.fit_transform(dataset)
     explained_variance = np.var(kpca_transform, axis=0)
@@ -80,6 +106,12 @@ def reduceKernelPCA(dataset):
     return kpca.transform(dataset)
 
 def reduceFactorAnalysis(dataset):
+    '''
+    @brief Función que aplica una reducción usando Factor Analysis al conjunto de datos
+    @param dataset Conjunto de datos
+    @return Devuelve el conjunto de datos reducido usando como número de componentes
+    aquel que explique al menos un 95% de la varianza
+    '''
     fa = decomposition.FactorAnalysis().fit(dataset)
     fa_transform = fa.fit_transform(dataset)
     explained_variance = np.var(fa_transform, axis=0)
@@ -89,6 +121,13 @@ def reduceFactorAnalysis(dataset):
     return fa.transform(dataset)
 
 def pruebaReduccion(dataset):
+    '''
+    @brief Función que devuelve todos los conjuntos de datos que surgen al aplicar
+    reducciones PCA, Incremental PCA, Kernel PCA y Factor Analisys.
+    @param dataset Conjunto de datos
+    @return Devuelve una lista de nombres de los algoritmos empleados en la reducción
+    y una lista con los conjuntos de datos resultantes.
+    '''
     nombres = ["PCA", "Incremental PCA", "Kernel PCA", "Factor Analysis"]
     datasets = [reducePCA(dataset), reduceIncrementalPCA(dataset), reduceKernelPCA(dataset), reduceFactorAnalysis(dataset)]
     return nombres, datasets
