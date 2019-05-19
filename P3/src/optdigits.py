@@ -211,20 +211,6 @@ def pruebaLasso(train_data, test_data, train_labels, test_labels):
     reg.fit(train_data, train_labels)
     return reg.score(test_data, test_labels)
 
-def pruebaLARSLasso(train_data, test_data, train_labels, test_labels):
-    '''
-    @brief Función que aplica LARS Lasso y obtiene la valoración del ajuste.
-    @param train_data Datos de entrenamiento
-    @param test_data Datos de test
-    @param train_labels Etiquetas de los datos de entrenamiento
-    @param test_labels Etiquetas de los datos de test
-    @return Devuelve el score del ajuste con los datos de entrenamiento valorados
-    con los de test
-    '''
-    reg = linear_model.LassoLars(alpha=0.1)
-    reg.fit(train_data, train_labels)
-    return reg.score(test_data, test_labels)
-
 def pruebaSGDClassifier(train_data, test_data, train_labels, test_labels):
     '''
     @brief Función que aplica Gradiente Descendente Estocástico y obtiene la
@@ -282,9 +268,7 @@ def pruebaPerceptron(train_data, test_data, train_labels, test_labels):
     clf.fit(train_data, train_labels)
     return clf.score(test_data, test_labels)
 
-def pruebaAlgoritmos(dataset,labels):
-    algoritmos = [pruebaMinimosCuadradosRL, pruebaRidge, pruebaLasso, pruebaLARSLasso, pruebaSGDClassifier, pruebaLogisticRegression, pruebaPassiveAgressive, pruebaPerceptron]
-    nombre_algoritmos = ["Mínimos cuadrados", "Ridge", "Lasso", "LARS Lasso", "SGD", "Logistic Regression", "Passive-Agressive", "Perceptron"]
+def pruebaAlgoritmos(dataset,labels,algoritmos = [pruebaMinimosCuadradosRL, pruebaRidge, pruebaLasso, pruebaSGDClassifier, pruebaLogisticRegression, pruebaPassiveAgressive, pruebaPerceptron], nombre_algoritmos = ["Mínimos cuadrados", "Ridge", "Lasso", "SGD", "Logistic Regression", "Passive-Agressive", "Perceptron"]):
     train_data, test_data, train_labels, test_labels = train_test_split(dataset, labels, stratify=labels, train_size=0.2, test_size=0.8)
     for algoritmo,nombre in zip(algoritmos,nombre_algoritmos):
         score=algoritmo(train_data, test_data, train_labels, test_labels)
@@ -292,12 +276,15 @@ def pruebaAlgoritmos(dataset,labels):
 
 data,labels = readData()
 
-nombres_preprocesamiento, datasets_preprocesados = pruebaPreprocesamiento(data)
+# Primero probamos sólo los algoritmos sin preprocesamiento ni reducción de dimensionalidad
 print("########################################################################")
 print("Sin reducción de dimensionalidad")
 print("Sin preprocesamiento")
 print("########################################################################")
 pruebaAlgoritmos(data,labels)
+
+'''
+nombres_preprocesamiento, datasets_preprocesados = pruebaPreprocesamiento(data)
 for nom_pre,dataset_pre in zip(nombres_preprocesamiento,datasets_preprocesados):
     print("\n########################################################################")
     print("Sin reducción de dimensionalidad")
@@ -319,3 +306,4 @@ for nom_red,dataset_red in zip(nombres_reduccion,reduced_datasets):
         print("Aplicado el preprocesamiento: " + nom_pre)
         print("########################################################################")
         pruebaAlgoritmos(dataset_pre,labels)
+'''
