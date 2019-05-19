@@ -237,8 +237,54 @@ Como resultado final he conseguido obtener 0.9521 de score lo cual es un poco me
 
 \subsection{Idoneidad de la métrica usada en el ajuste}
 
+La métrica usada para la evaluación de los resultados es tomar el conjunto de train y entrenar el modelo seleccionado y realizar una predicción de los datos de test para posterior comparación. 
+
+Por tanto la métrica de evaluación es comparar las etiquetas reales con las predichas por el modelo y obtener el tanto por 1 de acierto de la predicción sobre los datos reales.
+
+Esta métrica no es una métrica del todo idónea pues no se tienen en cuenta los fallos de los falsos positivos contra los falsos negativos.
+
+Para entender esta métrica debemos primero definir los conceptos de precisión y exhaustividad.
+
+$$precision = \frac{tp}{tp+fp}$$
+
+$$exhaustividad = \frac{tp}{tp+fn}$$
+
+Donde $tp$ es los verdaderos positivos, $fp$ falsos positivos y $fn$ falsos negativos.
+
+El score F1 es la media armónica de la precisión y la exhaustividad, esto es:
+
+$$F_1 = 2\cdot \frac{precision\cdot exhaustividad}{precision + exhaustividad}$$
+
+Esto se realiza para cada una de las clases, por lo que podemos obtener el score separado o hacer la media. Veamos los resultados:
+
+\begin{table}[H]
+	\begin{tabular}{|c|c|c|}
+		\hline
+		\multirow{2}{*}{{\ul Algoritmo}} & \multicolumn{2}{c|}{{\ul Medidas}} \\ \cline{2-3} 
+		& {\ul Acierto}   & {\ul Media F1}   \\ \hline
+		\textbf{Logistic Regression}     & 0.9521          & 0.9583           \\ \hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[H]
+	\begin{tabular}{|c|c|c|l|l|l|l|l|l|l|l|}
+		\hline
+		\multirow{2}{*}{{\ul Algoritmo}} & \multicolumn{10}{c|}{{\ul Medidas}}                                                                                                       \\ \cline{2-11} 
+		& {\ul F1 C0} & {\ul F1 C1} & {\ul F1 C2} & {\ul F1 C3} & {\ul F1 C4} & {\ul F1 C5} & {\ul F1 C6} & {\ul F1 C7} & {\ul F1 C8} & {\ul F1 C9} \\ \hline
+		\textbf{LR}                      & 0.9909      & 0.9343      & 0.9673      & 0.9516      & 0.9510      & 0.9638      & 0.9810      & 0.9800      & 0.9311      & 0.9583      \\ \hline
+	\end{tabular}
+\end{table}
+
+Como podemos observar aquí tenemos el score desgranado por clases. Podemos deducir que hemos acertado más en la clase 0 y en la clase 7, por lo que suponemos que la complejidad de detectar estos dígitos es menor para el clasificador. Los dígitos más complejos y por tanto en los que más fallamos son el 1 y el 8, por lo que suponemos que son los que más complejidad presentan. El score F1 medio ha sido de 0.9583 por lo que el score que nos provee sklearn y el propio F1 nos arrojan una información similar. 
+
 \subsection{Estimación de $E_{out}$}
 
+La estimación del error fuera de la muestra la podemos obtener a partir del acierto que hemos obtenido en el apartado anterior. En el caso de regresión logística que ha resultado ser el mejor de nuestros modelos hemos obtenido un tanto por uno de acierto de 0.9521 en el conjunto de test. En nuestro caso el conjunto de train es el tomado como la muestra y por tanto para poder calcular el error fuera de la muestra nos basaremos en el conjunto de test. Si el acierto fuera de la muestra es de 0.9521 entonces el error fuera de la muestra será $1-0.9521 = 0.0479$.
+
 \subsection{Justificación del modelo y calidad del mismo}
+
+Por tanto, por los resultados obtenidos considero que el modelo ofrece una buena calidad pues obtenemos un error fuera de la muestra pequeño, o lo que es lo mismo,  un acierto fuera de la muestra alto.
+
+La calidad del modelo, viene del hecho de que, como ya hemos razonado anteriormente, el conjunto de datos era fácilmente separable por lo que casi todos los algoritmos que hemos estudiado en clase han dado unos resultados parejos siendo quizás el más descolgado el algoritmo Perceptrón.
 
 \end{document}

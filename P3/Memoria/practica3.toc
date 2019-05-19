@@ -7,6 +7,6 @@
 \contentsline {subsection}{\numberline {1.5}Regularizaci\IeC {\'o}n, necesidad e implementaci\IeC {\'o}n}{4}{subsection.1.5}
 \contentsline {subsection}{\numberline {1.6}Modelos usados y par\IeC {\'a}metros empleados}{4}{subsection.1.6}
 \contentsline {subsection}{\numberline {1.7}Selecci\IeC {\'o}n y ajuste del modelo final}{6}{subsection.1.7}
-\contentsline {subsection}{\numberline {1.8}Idoneidad de la m\IeC {\'e}trica usada en el ajuste}{8}{subsection.1.8}
-\contentsline {subsection}{\numberline {1.9}Estimaci\IeC {\'o}n de $E_{out}$}{8}{subsection.1.9}
-\contentsline {subsection}{\numberline {1.10}Justificaci\IeC {\'o}n del modelo y calidad del mismo}{8}{subsection.1.10}
+\contentsline {subsection}{\numberline {1.8}Idoneidad de la m\IeC {\'e}trica usada en el ajuste}{9}{subsection.1.8}
+\contentsline {subsection}{\numberline {1.9}Estimaci\IeC {\'o}n de $E_{out}$}{9}{subsection.1.9}
+\contentsline {subsection}{\numberline {1.10}Justificaci\IeC {\'o}n del modelo y calidad del mismo}{10}{subsection.1.10}
