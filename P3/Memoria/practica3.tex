@@ -16,6 +16,7 @@
 \usepackage{pgfplots}
 
 % Para la tabla
+\usepackage{multirow}
 \usepackage[normalem]{ulem}
 \useunder{\uline}{\ul}{}
 
@@ -87,7 +88,152 @@ Por tanto al no existir un sobreajuste que nos deje en una posición desventajos
 
 \subsection{Modelos usados y parámetros empleados}
 
+Lo primero que he realizado es un estudio de los posibles algoritmos a probar para determinar el comportamiento de los mismos y poder escoger a posteriori un algoritmo o unos algoritmos que merezca la pena pararse a configurar y probar.
+
+La batería inicial de algoritmos a probar es:
+
+\begin{itemize}
+	\item Mínimos cuadrados
+	\item Ridge
+	\item Lasso
+	\item SGD
+	\item Logistic Regression
+	\item Passive-Aggresive
+	\item Perceptron
+\end{itemize}
+
+Entre estos algoritmos tenemos tanto algoritmos de clasificación como algoritmos de regresión. La intención de probar algoritmos de regresión en este tipo de problemas es que un algoritmo de regresión podría aprender la función que asigna clases a cada instancia por lo que en un principio son válidos para aplicar aunque veremos que funcionan de forma muy deficiente.
+
+Veamos para empezar los resultados con estos algoritmos sin ningún tipo de reducción de dimensionalidad ni preprocesamiento:
+
+\begin{itemize}
+	\item Mínimos cuadrados: 0.5124410858401369
+	\item Ridge: 0.5126173886330556
+	\item Lasso: 0.5283626936997821
+	\item SGD: 0.9317170818505338
+	\item Logistic Regression: 0.953959074733096
+	\item Passive-Aggresive: 0.9377224199288257
+	\item Perceptron: 0.8876779359430605
+\end{itemize}
+
+Cabe decir que el algoritmo Mínimos cuadrados, Ridge y Lasso son algoritmos de regresión por lo que su unidad de medida es la métrica $R^2$ que mide la bondad del ajuste de forma que cuanto más cercano sea el valor a -1 o +1 mejor será dicho ajuste y cuanto más cerca de 0 peor. De esta forma podemos ver que el ajuste provisto es muy pobre y por tanto es normal descartar estos algoritmos frente al resto pues hemos conseguido unos resultados mucho mejores con el resto de algoritmos. 
+
+Cabe decir que el espacio parece bastante separable pues el algoritmo perceptrón ha sido capaz de separar y clasificar de forma satisfactoria el 88.77\% de los datos del conjunto de test con lo que, entre la información del propio conjunto de datos y la información que nos da el resultado del algoritmo perceptrón podemos imaginar que el conjunto de datos está conformado por clusters que además tienen una separación notable entre ellos.
+
+Por tanto vamos a explicar el funcionamiento de los distintos modelos y posteriormente acabaremos eligiendo un solo algoritmo de los de clasificación que han funcionado bien.
+
+\begin{itemize}
+	\item SGD: Gradiente Descendente Estocástico es el mismo algoritmo que hemos aprendido y discutido en clase con la única diferencia de que se tiene un comportamiento definido y compatible con escenarios de clasificación multietiqueta. Este hecho se logra gracias a que se toma el algoritmo definido para el caso binario y se enfrentan 2 a 2 todas las clases entre sí de forma que se puede dibujar un escenario de varias $w$ que dividen el espacio para cada pareja de clases. Así se pueden tomar las regiones que dividen el espacio según cada una de las clases. Recordemos que nuestro escenario es de clusters muy agrupados entre sí. Este hecho es muy significativo pues hace que el algoritmo SGD sea muy ventajoso al tener regiones muy claras y definidas en el espacio y por tanto obteniendo un resultado muy bueno con este algoritmo.
+	\item Logistic Regression: el algoritmo de regresión logística para clasificación sigue el mismo esquema que el visto en clase. Se basa en seleccionar probabilidades mediante una función sigmoidal de forma que nos de la probabilidad de que una instancia pertenezca o no a una clase. La única diferencia nuevamente con respecto a lo que conocemos de teoría es el escenario de varias clases. En este caso el modelo o comportamiento definido para obtener un resultado es enfrentar una clase contra el resto. De esta forma lo que obtenemos es la probabilidad de que un elemento pertenezca a una clase o al resto de las clases y así obtendremos tantas funciones sigmoidales como número de clases tengamos y con ello podremos clasificar el total de las clases para cada instancia. Por defecto la implementación de este algoritmo incluye regularización por lo que nos dará la ventaja de que no se producirá sobreajuste que nos penalice en el conjunto de test o al menos lo intentaremos evitar.
+	\item Passive-Aggressive: este algoritmo es en realidad una familia de algoritmos que no tienen parámetros y que incorporan por defecto regularización para no cometer overfitting. Estos algoritmos tienen como origen el algoritmo Perceptrón partiendo de la base de un espacio separable con ciertas mejoras.
+	\item Perceptrón: de igual forma que con SGD o Logistic Regression este algoritmo ya nos es conocido de clase e incluso de haberlo implementado en prácticas anteriores para el caso de clasificación binaria. La única diferencia que tenemos ahora es que el escenario es de clasificación con varias etiquetas por lo que necesitamos estudiar cómo funciona para este escenario concreto. El modelo es muy parecido a la estrategia empleada con SGD. Lo que intentamos hacer es lanzar algoritmos Perceptrón de clasificación binaria que nos den una separación lineal lo mejor posible entre cada una de las clases y el resto. De forma que con varias funciones lineales podamos separar el espacio. Cuando queramos predecir una instancia tendremos gracias a todas las funciones lineales definidas una serie de regiones que se corresponden con cada una de las clases.
+\end{itemize}
+
 \subsection{Selección y ajuste del modelo final}
+
+Vamos a estudiar los resultados obtenidos para todos los tipos de preprocesamiento y reducción de dimensionalidad de los algoritmos que hemos seleccionado:
+
+\begin{table}[H]
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		\multirow{2}{*}{{\ul Algoritmo}} & \multicolumn{4}{c|}{{\ul Sin reducción de dimensionalidad}}         \\ \cline{2-5} 
+		& {\ul Sin} & {\ul Estandarización} & {\ul Normalización} & {\ul N+E} \\ \hline
+		\textbf{SGD}                     & 0.9506    & 0.9470                & 0.9381              & 0.9435    \\ \hline
+		\textbf{Logistic Regression}     & 0.9548    & 0.9601                & 0.9439              & 0.9541    \\ \hline
+		\textbf{Passive-Aggressive}      & 0.9443    & 0.9375                & 0.9430              & 0.9432    \\ \hline
+		\textbf{Perceptrón}              & 0.9463    & 0.9292                & 0.9368              & 0.9243    \\ \hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[H]
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		\multirow{2}{*}{{\ul Algoritmo}} & \multicolumn{4}{c|}{{\ul Reducción: PCA 28 variables}}              \\ \cline{2-5} 
+		& {\ul Sin} & {\ul Estandarización} & {\ul Normalización} & {\ul N+E} \\ \hline
+		\textbf{SGD}                     & 0.9346    & 0.9408                & 0.9439              & 0.9250    \\ \hline
+		\textbf{Logistic Regression}     & 0.9419    & 0.9475                & 0.9410              & 0.9479    \\ \hline
+		\textbf{Passive-Aggressive}      & 0.9074    & 0.9328                & 0.9392              & 0.9359    \\ \hline
+		\textbf{Perceptrón}              & 0.8133    & 0.9214                & 0.9263              & 0.9190    \\ \hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[H]
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		\multirow{2}{*}{{\ul Algoritmo}} & \multicolumn{4}{c|}{{\ul Reducción: PCA Incremental 28 variables}}  \\ \cline{2-5} 
+		& {\ul Sin} & {\ul Estandarización} & {\ul Normalización} & {\ul N+E} \\ \hline
+		\textbf{SGD}                     & 0.9452    & 0.9361                & 0.9470              & 0.9361    \\ \hline
+		\textbf{Logistic Regression}     & 0.9450    & 0.9492                & 0.9403              & 0.9537    \\ \hline
+		\textbf{Passive-Aggressive}      & 0.9252    & 0.9279                & 0.9441              & 0.9370    \\ \hline
+		\textbf{Perceptrón}              & 0.8451    & 0.9268                & 0.9417              & 0.9219    \\ \hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[H]
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		\multirow{2}{*}{{\ul Algoritmo}} & \multicolumn{4}{c|}{{\ul Reducción: Kernel PCA 28 variables}}       \\ \cline{2-5} 
+		& {\ul Sin} & {\ul Estandarización} & {\ul Normalización} & {\ul N+E} \\ \hline
+		\textbf{SGD}                     & 0.9459    & 0.9354                & 0.9381              & 0.9277    \\ \hline
+		\textbf{Logistic Regression}     & 0.9455    & 0.9512                & 0.9401              & 0.9461    \\ \hline
+		\textbf{Passive-Aggressive}      & 0.9217    & 0.9323                & 0.9357              & 0.9266    \\ \hline
+		\textbf{Perceptrón}              & 0.8867    & 0.9221                & 0.8943              & 0.9121    \\ \hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[H]
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		\multirow{2}{*}{{\ul Algoritmo}} & \multicolumn{4}{c|}{{\ul Reducción: Factor Analysis 47 variables}}  \\ \cline{2-5} 
+		& {\ul Sin} & {\ul Estandarización} & {\ul Normalización} & {\ul N+E} \\ \hline
+		\textbf{SGD}                     & 0.9326    & 0.9314                & 0.9381              & 0.9223    \\ \hline
+		\textbf{Logistic Regression}     & 0.9510    & 0.9501                & 0.9430              & 0.9475    \\ \hline
+		\textbf{Passive-Aggressive}      & 0.9399    & 0.9328                & 0.9386              & 0.9359    \\ \hline
+		\textbf{Perceptrón}              & 0.9301    & 0.9232                & 0.9223              & 0.9194    \\ \hline
+	\end{tabular}
+\end{table}
+
+Como podemos observar en la tabla para cada algoritmo los mejores resultados que hemos obtenido son:
+
+\begin{table}[H]
+	\begin{tabular}{|l|l|l|l|}
+		\hline
+		\multirow{2}{*}{{\ul Algoritmo}} & \multicolumn{3}{l|}{{\ul Mejor combinación}}           \\ \cline{2-4} 
+		& {\ul Reducción} & {\ul Preprocesamiento} & {\ul Score} \\ \hline
+		\textbf{SGD}                     & Sin             & Sin                    & 0.9506      \\ \hline
+		\textbf{Logistic Regression}     & Sin             & Estandarización        & 0.9601      \\ \hline
+		\textbf{Passive-Aggressive}      & Sin             & Sin                    & 0.9443      \\ \hline
+		\textbf{Perceptrón}              & Sin             & Sin                    & 0.9463      \\ \hline
+	\end{tabular}
+\end{table}
+
+Como podemos observar el ganador de forma ligera con respecto al resto es el algoritmo Logistic Regression y además resulta especialmente curioso el hecho de que como mejor funcionan los algoritmos es sin preprocesamiento. Vamos a intentar observar el conjunto de datos proyectado sobre dos dimensiones para razonar el por qué de estos resultados.
+
+En primer lugar cabe decir que la ténica de reducción de dimensionalidad que estoy aplicando es TSNE que es una técnica ampliamente utilizada en reducción de dimensionalidad orientada a visualización de datos. En este caso he reducido a dos dimensiones y como resultado he obtenido la siguiente imagen:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.8]{./Imagenes/datos_tsne.png}
+	\caption{Datos dibujados como proyección 2D}
+\end{figure}
+
+Como podemos observar en el intento de dibujo de los datos éstos están claramente bien separados en clusters y el espacio queda separable de forma muy satisfactoria. Es por esto que el preprocesamiento no se hace necesario en este caso pues los datos de por sí ya son suficientemente buenos como para la aplicación de todas las técnicas que conocemos y hemos estudiado.
+
+Por tanto el modelo final que he decido ajustar es Regresión Logística y por tanto este es en el que vamos a ajustar los parámetros.
+
+Yo he decidido tomar los siguientes:
+
+\begin{itemize}
+	\item max\_iter: Número máximo de iteraciones tomado 10.000
+	\item tol: tolerancia, tomado $10^-5$
+	\item C: parámetro de regularización, tomado 1.0
+	\item random\_state: semilla de generación aleatoria, tomada 123456789
+	\item solver: algoritmo usado para la minimización interna del error. En este caso lbfgs.
+	\item multi\_class: tipo de esquema para clasificación con varias clases, tomado multinomial.
+	\item verbose: información por pantalla del algoritmo.
+\end{itemize}
+
+Como resultado final he conseguido obtener 0.9521 de score lo cual es un poco menor que en el caso anterior (probablemente por cuestiones de generación aleatoria). 
 
 \subsection{Idoneidad de la métrica usada en el ajuste}
 
