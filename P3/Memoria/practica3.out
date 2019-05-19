@@ -9,3 +9,14 @@
 \BOOKMARK [2][-]{subsection.1.8}{Idoneidad de la m\351trica usada en el ajuste}{section.1}% 9
 \BOOKMARK [2][-]{subsection.1.9}{Estimaci\363n de Eout}{section.1}% 10
 \BOOKMARK [2][-]{subsection.1.10}{Justificaci\363n del modelo y calidad del mismo}{section.1}% 11
+\BOOKMARK [1][-]{section.2}{Problema airfoil: regresi\363n}{}% 12
+\BOOKMARK [2][-]{subsection.2.1}{Problema a resolver}{section.2}% 13
+\BOOKMARK [2][-]{subsection.2.2}{Preprocesado de los datos}{section.2}% 14
+\BOOKMARK [2][-]{subsection.2.3}{Selecci\363n de clases de funciones}{section.2}% 15
+\BOOKMARK [2][-]{subsection.2.4}{Conjuntos de training, test y validaci\363n}{section.2}% 16
+\BOOKMARK [2][-]{subsection.2.5}{Regularizaci\363n, necesidad e implementaci\363n}{section.2}% 17
+\BOOKMARK [2][-]{subsection.2.6}{Modelos usados y par\341metros empleados}{section.2}% 18
+\BOOKMARK [2][-]{subsection.2.7}{Selecci\363n y ajuste del modelo final}{section.2}% 19
+\BOOKMARK [2][-]{subsection.2.8}{Idoneidad de la m\351trica usada en el ajuste}{section.2}% 20
+\BOOKMARK [2][-]{subsection.2.9}{Estimaci\363n de Eout}{section.2}% 21
+\BOOKMARK [2][-]{subsection.2.10}{Justificaci\363n del modelo y calidad del mismo}{section.2}% 22
