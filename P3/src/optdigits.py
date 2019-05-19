@@ -7,7 +7,7 @@ from sklearn import linear_model
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 from sklearn import decomposition
-
+from sklearn import metrics
 from sklearn.manifold import TSNE
 
 # Inicializamos la semilla
@@ -303,11 +303,10 @@ def pruebaAlgoritmos(dataset,labels,algoritmos = [pruebaMinimosCuadradosRL, prue
 ##                       AJUSTE DEL ALGORITMO RL                              ##
 ################################################################################
 
-def regresionLogistica(data,labels):
-    train_data, test_data, train_labels, test_labels = train_test_split(data, labels, stratify=labels, train_size=0.2, test_size=0.8)
+def regresionLogistica(train_data, test_data, train_labels, test_labels):
     clf = linear_model.LogisticRegression(max_iter=10000, tol=1e-5, C=1.0, random_state=123456789, solver='lbfgs', multi_class='multinomial', verbose=1)
     clf.fit(train_data, train_labels)
-    return clf.score(test_data, test_labels)
+    return clf
 
 ################################################################################
 ##                     FUNCIONES DE VISUALIZACIÓN                             ##
@@ -335,15 +334,10 @@ def visualizacionTSNE(data,labels):
 
 data,labels = readData()
 
-s = regresionLogistica(scaleData(data),labels)
-print("Score: " + str(s))
-
-'''
 visualizacionTSNE(data,labels)
 input("PULSE ENTER PARA CONTINUAR")
-'''
 
-'''
+
 # Primero probamos todos los algoritmos sin preprocesamiento ni reducción de dimensionalidad
 print("TODOS LOS ALGORITMOS")
 print("########################################################################")
@@ -389,4 +383,13 @@ for nom_red,dataset_red in zip(nombres_reduccion,reduced_datasets):
         print("########################################################################")
         pruebaAlgoritmos(dataset_pre,labels,algoritmos,nombre_algoritmos)
     print("------------------------------------------------------------------------\n\n")
-'''
+
+input("PULSE ENTER PARA CONTINUAR")
+
+# Computamos los scores
+train_data, test_data, train_labels, test_labels = train_test_split(scaleData(data), labels, stratify=labels, train_size=0.2, test_size=0.8)
+clf = regresionLogistica(train_data, test_data, train_labels, test_labels)
+print("Score: " + str(clf.score(test_data,test_labels)))
+labels_pred = clf.predict(test_data)
+print("Score F1: " + str(metrics.f1_score(test_labels,labels_pred,average=None)))
+print("Media score F1: "  + str(np.mean(metrics.f1_score(test_labels,labels_pred,average=None))))
