@@ -8,8 +8,30 @@ from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 from sklearn import decomposition
 
+from sklearn.manifold import TSNE
+
 # Inicializamos la semilla
 np.random.seed(123456789)
+
+################################################################################
+##                                COLORES RGB                                 ##
+################################################################################
+
+AMARILLO = (1,1,0.2)
+ROJO = (1,0,0)
+NARANJA = (1,0.5,0)
+VERDE = (0.5,1,0)
+VERDE_AZULADO = (0,1,0.5)
+AZUL_CLARO = (0,1,1)
+AZUL = (0,0,1)
+MORADO = (0.5,0,1)
+ROSA = (1,0,1)
+GRIS = (0.5,0.5,0.5)
+NEGRO = (0,0,0)
+
+# Se usan para colorear los puntos según la clase
+COLORES = [AMARILLO,ROJO,NARANJA,VERDE,VERDE_AZULADO,AZUL_CLARO,AZUL,MORADO,ROSA,GRIS,NEGRO]
+COLORES_LABEL = ["Amarillo","Rojo","Naranja","Verde","Verde azulado","Azul claro","Azul","Morado","Rosa","Gris","Negro"]
 
 ################################################################################
 ##                           FUNCIONES AUXILIARES                             ##
@@ -277,8 +299,51 @@ def pruebaAlgoritmos(dataset,labels,algoritmos = [pruebaMinimosCuadradosRL, prue
         print("El score obtenido por el algoritmo " + nombre + " es: " + str(score))
     return scores
 
+################################################################################
+##                       AJUSTE DEL ALGORITMO RL                              ##
+################################################################################
+
+def regresionLogistica(data,labels):
+    train_data, test_data, train_labels, test_labels = train_test_split(data, labels, stratify=labels, train_size=0.2, test_size=0.8)
+    clf = linear_model.LogisticRegression(max_iter=10000, tol=1e-5, C=1.0, random_state=123456789, solver='lbfgs', multi_class='multinomial', verbose=1)
+    clf.fit(train_data, train_labels)
+    return clf.score(test_data, test_labels)
+
+################################################################################
+##                     FUNCIONES DE VISUALIZACIÓN                             ##
+################################################################################
+
+def visualizacionTSNE(data,labels):
+    data_red = TSNE(n_components=2).fit_transform(data)
+    data_divided = [[],[],[],[],[],[],[],[],[],[]]
+    colores = []
+    for d,l in zip(data_red,labels):
+        data_divided[l].append(list(d))
+    clase = 0
+    for i in range(len(data_divided)):
+        data_divided[i]=np.array(data_divided[i])
+    for data,col in zip(data_divided,COLORES[:10]):
+        plt.scatter(data[:,0], data[:,1], c=col, label="Clase " + str(clase))
+        clase+=1
+    plt.legend()
+    plt.title("Conjunto optdigits")
+    plt.show()
+
+################################################################################
+##                                MAIN                                        ##
+################################################################################
+
 data,labels = readData()
 
+s = regresionLogistica(scaleData(data),labels)
+print("Score: " + str(s))
+
+'''
+visualizacionTSNE(data,labels)
+input("PULSE ENTER PARA CONTINUAR")
+'''
+
+'''
 # Primero probamos todos los algoritmos sin preprocesamiento ni reducción de dimensionalidad
 print("TODOS LOS ALGORITMOS")
 print("########################################################################")
@@ -324,3 +389,4 @@ for nom_red,dataset_red in zip(nombres_reduccion,reduced_datasets):
         print("########################################################################")
         pruebaAlgoritmos(dataset_pre,labels,algoritmos,nombre_algoritmos)
     print("------------------------------------------------------------------------\n\n")
+'''
