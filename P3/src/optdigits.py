@@ -276,7 +276,7 @@ def pruebaAlgoritmos(dataset,labels,algoritmos = [pruebaMinimosCuadradosRL, prue
 
 data,labels = readData()
 
-# Primero probamos sólo los algoritmos sin preprocesamiento ni reducción de dimensionalidad
+# Primero probamos todos los algoritmos sin preprocesamiento ni reducción de dimensionalidad
 print("########################################################################")
 print("Sin reducción de dimensionalidad")
 print("Sin preprocesamiento")
