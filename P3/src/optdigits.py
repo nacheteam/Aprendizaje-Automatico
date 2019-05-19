@@ -270,40 +270,57 @@ def pruebaPerceptron(train_data, test_data, train_labels, test_labels):
 
 def pruebaAlgoritmos(dataset,labels,algoritmos = [pruebaMinimosCuadradosRL, pruebaRidge, pruebaLasso, pruebaSGDClassifier, pruebaLogisticRegression, pruebaPassiveAgressive, pruebaPerceptron], nombre_algoritmos = ["Mínimos cuadrados", "Ridge", "Lasso", "SGD", "Logistic Regression", "Passive-Agressive", "Perceptron"]):
     train_data, test_data, train_labels, test_labels = train_test_split(dataset, labels, stratify=labels, train_size=0.2, test_size=0.8)
+    scores = []
     for algoritmo,nombre in zip(algoritmos,nombre_algoritmos):
         score=algoritmo(train_data, test_data, train_labels, test_labels)
+        scores.append(score)
         print("El score obtenido por el algoritmo " + nombre + " es: " + str(score))
+    return scores
 
 data,labels = readData()
 
 # Primero probamos todos los algoritmos sin preprocesamiento ni reducción de dimensionalidad
+print("TODOS LOS ALGORITMOS")
 print("########################################################################")
 print("Sin reducción de dimensionalidad")
 print("Sin preprocesamiento")
 print("########################################################################")
 pruebaAlgoritmos(data,labels)
+print("\n\n\n\n")
 
-'''
+# Probamos sólo los algoritmos que funcionan bien con todas las posibilidades
+algoritmos = [pruebaSGDClassifier, pruebaLogisticRegression, pruebaPassiveAgressive, pruebaPerceptron]
+nombre_algoritmos = ["SGD", "Logistic Regression", "Passive-Agressive", "Perceptron"]
+print("SÓLO LOS ALGORITMOS QUE FUNCIONAN BIEN")
+print("Algoritmos: " + str(nombre_algoritmos))
+
+print("\n########################################################################")
+print("Sin reducción de dimensionalidad")
+print("Sin preprocesamiento")
+print("########################################################################")
+pruebaAlgoritmos(data,labels,algoritmos,nombre_algoritmos)
+
 nombres_preprocesamiento, datasets_preprocesados = pruebaPreprocesamiento(data)
 for nom_pre,dataset_pre in zip(nombres_preprocesamiento,datasets_preprocesados):
     print("\n########################################################################")
     print("Sin reducción de dimensionalidad")
     print("Aplicado el preprocesamiento: " + nom_pre)
     print("########################################################################")
-    pruebaAlgoritmos(dataset_pre,labels)
+    pruebaAlgoritmos(dataset_pre,labels,algoritmos,nombre_algoritmos)
+print("------------------------------------------------------------------------\n\n")
 
 nombres_reduccion, reduced_datasets = pruebaReduccion(data)
 for nom_red,dataset_red in zip(nombres_reduccion,reduced_datasets):
     nombres_preprocesamiento, datasets_preprocesados = pruebaPreprocesamiento(dataset_red)
-    print("########################################################################")
-    print("Con reducción de dimensionalidad de tipo: " + nom_red)
+    print("\n########################################################################")
+    print("Con reducción de dimensionalidad de tipo: " + nom_red + " con número de variables: " + str(len(dataset_red[0])))
     print("Sin preprocesamiento")
     print("########################################################################")
-    pruebaAlgoritmos(dataset_red,labels)
+    pruebaAlgoritmos(dataset_red,labels,algoritmos,nombre_algoritmos)
     for nom_pre,dataset_pre in zip(nombres_preprocesamiento,datasets_preprocesados):
         print("\n########################################################################")
-        print("Con reducción de dimensionalidad de tipo: " + nom_red)
+        print("Con reducción de dimensionalidad de tipo: " + nom_red + " con número de variables: " + str(len(dataset_red[0])))
         print("Aplicado el preprocesamiento: " + nom_pre)
         print("########################################################################")
-        pruebaAlgoritmos(dataset_pre,labels)
-'''
+        pruebaAlgoritmos(dataset_pre,labels,algoritmos,nombre_algoritmos)
+    print("------------------------------------------------------------------------\n\n")
