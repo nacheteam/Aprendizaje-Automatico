@@ -10,6 +10,9 @@ from sklearn import decomposition
 from sklearn import metrics
 from sklearn.manifold import TSNE
 
+import pandas as pd
+import seaborn as sns
+
 # Inicializamos la semilla
 np.random.seed(123456789)
 
@@ -161,26 +164,72 @@ def pruebaLasso(train_data, test_data, train_out, test_out):
     return reg.score(test_data, test_out)
 
 def pruebaElasticNet(train_data, test_data, train_out, test_out):
+    '''
+    @brief Función que aplica ElasticNet y obtiene la valoración del ajuste
+    @param train_data Datos de entrenamiento
+    @param test_data Datos de test
+    @param train_out Output de los datos de entrenamiento
+    @param test_out Output de los datos de test
+    @return Devuelve el score del ajuste con los datos de entrenamiento valorados
+    con los de test
+    '''
     clf = linear_model.ElasticNet(random_state=0, max_iter=1000000)
     clf.fit(train_data, train_out)
     return clf.score(test_data, test_out)
 
 def pruebaLars(train_data, test_data, train_out, test_out):
+    '''
+    @brief Función que aplica Lars y obtiene la valoración del ajuste.
+    @param train_data Datos de entrenamiento
+    @param test_data Datos de test
+    @param train_out Output de los datos de entrenamiento
+    @param test_out Output de los datos de test
+    @return Devuelve el score del ajuste con los datos de entrenamiento valorados
+    con los de test
+    '''
     clf = linear_model.Lars(n_nonzero_coefs=1)
     clf.fit(train_data, train_out)
     return clf.score(test_data, test_out)
 
 def pruebaLassoLars(train_data, test_data, train_out, test_out):
+    '''
+    @brief Función que aplica LASSO-LARS y obtiene la valoración del ajuste.
+    @param train_data Datos de entrenamiento
+    @param test_data Datos de test
+    @param train_out Output de los datos de entrenamiento
+    @param test_out Output de los datos de test
+    @return Devuelve el score del ajuste con los datos de entrenamiento valorados
+    con los de test
+    '''
     clf = linear_model.LassoLars(alpha=0.01, max_iter=1000000)
     clf.fit(train_data, train_out)
     return clf.score(test_data, test_out)
 
 def pruebaBayesianRidge(train_data, test_data, train_out, test_out):
+    '''
+    @brief Función que aplica Bayesian Ridge y obtiene la valoración del ajuste.
+    @param train_data Datos de entrenamiento
+    @param test_data Datos de test
+    @param train_out Output de los datos de entrenamiento
+    @param test_out Output de los datos de test
+    @return Devuelve el score del ajuste con los datos de entrenamiento valorados
+    con los de test
+    '''
     clf = linear_model.BayesianRidge()
     clf.fit(train_data, train_out)
     return clf.score(test_data, test_out)
 
 def pruebaAlgoritmos(data, out,algoritmos = [pruebaMinimosCuadradosRL, pruebaRidge, pruebaLasso, pruebaElasticNet, pruebaLars, pruebaLassoLars, pruebaBayesianRidge], nombre_algoritmos = ["Mínimos cuadrados", "Ridge", "Lasso", "ElasticNet", "Lars", "Lasso-Lars", "Bayesian Ridge"]):
+    '''
+    @brief Función que se encarga de probar todos los algoritmos pasados por la lista
+    algoritmos dividiendo el conjunto de datos en train y test y pasando estos argumentos
+    a las funciones que implementan cada algoritmo.
+    @param dataset Conjunto de datos
+    @param out Salida de los datos
+    @param algoritmos Nombres de las funciones que implementan los algoritmos
+    @param nombre_algoritmos Cadenas de texto que contienen los nombres de los algoritmos.
+    @return Devuelve una lista de scores de los algoritmos.
+    '''
     train_data, test_data, train_out, test_out = train_test_split(data, out, train_size=0.2, test_size=0.8)
     scores = []
     for algoritmo,nombre in zip(algoritmos,nombre_algoritmos):
@@ -189,32 +238,53 @@ def pruebaAlgoritmos(data, out,algoritmos = [pruebaMinimosCuadradosRL, pruebaRid
         print("El score obtenido por el algoritmo " + nombre + " es: " + str(score))
     return scores
 
+################################################################################
+##                            AJUSTA EL MODELO                                ##
+################################################################################
+
+def minimosCuadradosRL(train_data, test_data, train_out, test_out):
+    '''
+    @brief Función que aplica mínimos cuadrados y obtiene la valoración del ajuste.
+    @param train_data Datos de entrenamiento
+    @param test_data Datos de test
+    @param train_out Output de los datos de entrenamiento
+    @param test_out Output de los datos de test
+    @return Devuelve el score del ajuste con los datos de entrenamiento valorados
+    con los de test
+    '''
+    reg = linear_model.LinearRegression().fit(train_data,train_out)
+    return reg
 
 ################################################################################
 ##                     FUNCIONES DE VISUALIZACIÓN                             ##
 ################################################################################
 
-def visualizacionTSNE(data,labels):
-    data_red = TSNE(n_components=2).fit_transform(data)
-    data_divided = [[],[],[],[],[],[],[],[],[],[]]
-    colores = []
-    for d,l in zip(data_red,labels):
-        data_divided[l].append(list(d))
-    clase = 0
-    for i in range(len(data_divided)):
-        data_divided[i]=np.array(data_divided[i])
-    for data,col in zip(data_divided,COLORES[:10]):
-        plt.scatter(data[:,0], data[:,1], c=col, label="Clase " + str(clase))
-        clase+=1
-    plt.legend()
-    plt.title("Conjunto optdigits")
-    plt.show()
+def pairPlotDatos(dataset, title):
+    '''
+    @brief Función que realiza un pairplot de los datos para visualización
+    @param dataset Conjunto de datos
+    @param title Título del plot
+    '''
+    data_frame = pd.DataFrame(data=dataset, columns=["Frequency", "Angle-attack", "Chord-length", "Free-stream vel", "Suc. displacement thick."])
+    g = sns.pairplot(data_frame, kind="reg", palette="husl",plot_kws={'line_kws':{'color':'red'}})
+    g.fig.suptitle(title, size=16)
+    g.fig.subplots_adjust(top=.93)
+    g.fig.show()
 
 ################################################################################
 ##                                MAIN                                        ##
 ################################################################################
 
 data,out = readData()
+
+# Visualización
+datasets = [data, raizDatos(data), scaleData(data), normalizeData(data), logDatos(data)]
+nombres = ["Sin preprocesado", "Raíz cuadrada", "Estandarizados", "Normalizados", "Logaritmo(1+x)"]
+for n,d in zip(nombres,datasets):
+    if not "polinomicos" in n and not "polinómicos" in n and not "polinomico" in n and not "polinómico" in n:
+        print("Pairplot con el preprocesamiento: " + n)
+        pairPlotDatos(d,n)
+        input("PRESIONE ENTER PARA CONTINUAR")
 
 # Con todos los algoritmos
 print("TODOS LOS ALGORITMOS")
@@ -243,3 +313,12 @@ for dataset,nombre in zip(datasets, nombres):
 print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n\n\n\n")
+
+
+# Computamos los scores
+train_data, test_data, train_out, test_out = train_test_split(scaleData(polyData(raizDatos(data))), out, train_size=0.2, test_size=0.8)
+clf = minimosCuadradosRL(train_data, test_data, train_out, test_out)
+print("Score: " + str(clf.score(test_data,test_out)))
+out_pred = clf.predict(test_data)
+print("Mean Squared Error: " + str(metrics.mean_squared_error(test_out,out_pred)))
+print("Explained variance score: "  + str(np.mean(metrics.explained_variance_score(test_out,out_pred))))
