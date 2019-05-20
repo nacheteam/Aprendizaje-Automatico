@@ -86,6 +86,23 @@ def polyData(dataset):
     '''
     return preprocessing.PolynomialFeatures(degree=3).fit_transform(dataset)
 
+def raizDatos(dataset):
+    '''
+    @brief Función que aplica la raíz cuadrada a los datos
+    @return Devuelve el conjunto de datos transformados
+    '''
+    transformer = preprocessing.FunctionTransformer(np.sqrt)
+    return transformer.transform(dataset)
+
+def logDatos(dataset):
+    '''
+    @brief Función que aplica la raíz cuadrada a los datos
+    @return Devuelve el conjunto de datos transformados
+    '''
+    transformer = preprocessing.FunctionTransformer(np.log1p)
+    return transformer.transform(dataset)
+
+
 def pruebaPreprocesamiento(dataset):
     '''
     @brief Función que devuelve todas las combinaciones interesantes de conjuntos
@@ -94,8 +111,8 @@ def pruebaPreprocesamiento(dataset):
     @return Devuelve dos listas, una con las cadenas correspondientes al preprocesado
     aplicado y otra con la lista de conjuntos tras aplicar el preprocesado
     '''
-    nombres = ["Estandarización", "Normalización", "Datos polinómicos", "Datos polinómicos estandarizados", "Datos polinómicos normalizados", "Datos polinómicos estandarizados y normalizados","Normalización y después estandarización"]
-    datasets = [scaleData(dataset), normalizeData(dataset), polyData(dataset), scaleData(polyData(dataset)), normalizeData(polyData(dataset)), scaleData(normalizeData(dataset)), scaleData(normalizeData(polyData(dataset)))]
+    nombres = ["Sin preprocesamiento", "Raíz cuadrada", "Logaritmo", "Logaritmo+estandarizado","Raíz cuadrada + estandarizado", "Datos polinomicos+raiz cuadrada+estandarizado", "Datos polinomicos+logaritmo+estandarizado","Estandarización", "Normalización", "Datos polinómicos", "Datos polinómicos estandarizados", "Datos polinómicos normalizados", "Datos polinómicos estandarizados y normalizados","Normalización y después estandarización"]
+    datasets = [dataset, raizDatos(dataset), logDatos(dataset), scaleData(logDatos(dataset)),scaleData(raizDatos(dataset)), scaleData(polyData(raizDatos(dataset))), scaleData(polyData(logDatos(dataset))),scaleData(dataset), normalizeData(dataset), polyData(dataset), scaleData(polyData(dataset)), normalizeData(polyData(dataset)), scaleData(normalizeData(dataset)), scaleData(normalizeData(polyData(dataset)))]
     return nombres, datasets
 
 ################################################################################
@@ -199,6 +216,8 @@ def visualizacionTSNE(data,labels):
 
 data,out = readData()
 
+# Con todos los algoritmos
+print("TODOS LOS ALGORITMOS")
 nombres, datasets = pruebaPreprocesamiento(data)
 for dataset,nombre in zip(datasets, nombres):
     print("#####################################################################")
@@ -206,3 +225,21 @@ for dataset,nombre in zip(datasets, nombres):
     print("#####################################################################")
     pruebaAlgoritmos(dataset,out)
     print("\n\n")
+print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n\n\n\n")
+
+# Eliminamos Lars
+nombres, datasets = pruebaPreprocesamiento(data)
+algoritmos = [pruebaMinimosCuadradosRL, pruebaRidge, pruebaLasso, pruebaElasticNet, pruebaLassoLars, pruebaBayesianRidge]
+nombre_algoritmos = ["Mínimos cuadrados", "Ridge", "Lasso", "ElasticNet", "Lasso-Lars", "Bayesian Ridge"]
+print("SOLO LOS ALGORITMOS QUE FUNCIONAN BIEN")
+for dataset,nombre in zip(datasets, nombres):
+    print("#####################################################################")
+    print("Preprocesamiento: " + nombre)
+    print("#####################################################################")
+    pruebaAlgoritmos(dataset,out,algoritmos,nombre_algoritmos)
+    print("\n\n")
+print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n\n\n\n")
