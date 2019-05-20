@@ -291,7 +291,33 @@ La calidad del modelo, viene del hecho de que, como ya hemos razonado anteriorme
 
 \subsection{Problema a resolver}
 
+Tenemos un conjunto de datos llamado ``Airfoil Self-Noise'' que contiene datos de tests aerodinámicos y acústicos. Tiene 5 atributos y una salida continua. Nuestro objetivo a resolver en este problema es intentar ajustar una función que prediga los valores de esta salida continua.
+
+En este conjunto de datos no tenemos tantos datos en la descripción como en el caso de clasificación. Sabemos que todos los atributos son reales, que tiene 1503 instancias con 6 atributos cada una. Este hecho será de relevancia en el estudio pues tenemos muy pocos atributos y deberemos pensar en alguna técnica de aumento de atributos.
+
 \subsection{Preprocesado de los datos}
+
+En este caso no podemos aplicar la reducción de dimensionalidad del ejercicio anterior pues carcería de sentido al disponer ya de muy pocos atributos. Por contra necesitaremos aplicar alguna técnica que nos permita añadir información.
+
+En primer lugar he probado tres procesamientos que son la estandarización, la normalización y la combinación de estos dos de la forma estandarización y después normalización. 
+
+Tal y como he explicado anteriormente la normalización es un preprocesado que nos hace que cada vector que representa una instancia tenga norma 1 y la estandarización nos hace que el conjunto tenga media 0 y lo escalamos mediante la varianza.
+
+Es decir, $z = \frac{x-\bar{x}}{\sigma}$ donde $\bar{x}$ es la media del conjunto y $\sigma$ es la varianza.
+
+Por último y en referencia a añadir nuevos atributos he decidido aplicar una generación polinómica de atributos. Esta generación hace lo siguiente, toma los atributos como variables independientes y añade todos los polinomios de orden el grado que le pasemos como atributo y de orden inferior.
+
+Por ejemplo si tenemos $(X_1 , X_2)$ como vector de características entonces se convierte en $(1,X_1,X_2,X_1^2,X_1\cdot X_2,X_2^2)$
+
+De igual forma si tuviéramos tres características $(X_1,X_2,X_3)$ se convierte en:
+
+$(1,X_1,X_2,X_3,X_1\cdot X_2,X_1\cdot X_3,X_2\cdot X_3,X_1\cdot X_2\cdot X_3, X_1^2, X_1^2\cdot X_2, X_1^2\cdot X_3, X_2^2\cdot X_1, X_2^3\cdot X_3, X_3^2\cdot X_1, X_3^2\cdot X_2, X_1^3, X_2^3, X_3^3)$
+
+Esta construcción no está pensada al tuntún. El hecho de haber incluído no sólo las potencias de los valores, si no además los polinomios mixtos constituye una estructura de anillo de polinomios sobre las variables $(X_1, X_2, X_3)$. Esta construcción además resulta de alto interés porque no sólo añade información extra de cada una de las variables, si no que también añade información interrelacionada de las variables entre sí gracias a los polinomios de variables mixtas.
+
+Tras el estudio de esta aplicación he decidido que el mejor grado es 3 para este conjunto de datos, pues si ponemos menor grado no obtenemos beneficio alguno al aplicar la técnica y si tomamos un grado mayor añadimos complejidad excesiva e información redundante que hace que los regresores obtengan resultados de peor calidad. Además tenemos la capacidad de elegir si tomar sólamente los polinomios mixtos o todos incluídos los que tengan alguna potencia de una variable. En este caso he tomado todos los polinomios porque parece que la información que aportan las potencias es de mayor valor que la que aportan los términos mixtos.
+
+Tras aplicar este proceso he decidido estudiar también el comportamiento de los regresores con este conjunto de datos tras la transformación polinómica y aplicando un esquema de normalización, estandarización y estandarización+normalización.
 
 \subsection{Selección de clases de funciones}
 
