@@ -40,7 +40,7 @@ COLORES_LABEL = ["Amarillo","Rojo","Naranja","Verde","Verde azulado","Azul claro
 ##                           FUNCIONES AUXILIARES                             ##
 ################################################################################
 
-def readData(path="./datos/airfoil"):
+def readData(path="./datos/"):
     '''
     @brief Función que lee los ficheros de airfoil y los unifica en una matriz de
     datos y un vector de labels
@@ -304,6 +304,7 @@ nombres, datasets = pruebaPreprocesamiento(data)
 algoritmos = [pruebaMinimosCuadradosRL, pruebaRidge, pruebaLasso, pruebaElasticNet, pruebaLassoLars, pruebaBayesianRidge]
 nombre_algoritmos = ["Mínimos cuadrados", "Ridge", "Lasso", "ElasticNet", "Lasso-Lars", "Bayesian Ridge"]
 print("SOLO LOS ALGORITMOS QUE FUNCIONAN BIEN")
+print("Algoritmos: " + str(nombre_algoritmos))
 for dataset,nombre in zip(datasets, nombres):
     print("#####################################################################")
     print("Preprocesamiento: " + nombre)

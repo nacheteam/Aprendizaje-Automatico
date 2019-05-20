@@ -37,7 +37,7 @@ COLORES_LABEL = ["Amarillo","Rojo","Naranja","Verde","Verde azulado","Azul claro
 ##                           FUNCIONES AUXILIARES                             ##
 ################################################################################
 
-def readData(path="./datos/optdigits"):
+def readData(path="./datos/"):
     '''
     @brief Función que lee los ficheros de test y train de optdigits y los unifica en
     una matriz de datos y un vector de labels
