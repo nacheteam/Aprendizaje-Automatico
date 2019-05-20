@@ -319,6 +319,10 @@ Tras el estudio de esta aplicación he decidido que el mejor grado es 3 para est
 
 Tras aplicar este proceso he decidido estudiar también el comportamiento de los regresores con este conjunto de datos tras la transformación polinómica y aplicando un esquema de normalización, estandarización y estandarización+normalización.
 
+Como preprocesado extra he decidido aplicar transformaciones de tipo logarítmicas y raíces cuadradas a los datos para estudiar si el comportamiento mejora tras el procesado. 
+
+Con estas tranformaciones he probado a ponerlas solas, junto con estandarizado y junto con generación polinómica de valores.
+
 \subsection{Selección de clases de funciones}
 
 En este caso se nos pide por parte del enunciado del problema que empleemos modelos lineales, esto es modelos que intenten ajustar una función que sea una transformación lineal de los atributos. Por tanto la clase de funciones viene prefijada y por tanto $\mathcal{H}$ viene dada por las fuciones de la forma $h(x) = w_0 + w_1 x_1 + ... + w_d x_d \in \mathcal{H}$.
@@ -334,6 +338,93 @@ No necesitamos regularización pues como veremos el modelo no consigue unos dato
 En algunos modelos viene ya implementado por defecto un parámetro de regularización que luego estudiaremos cuando seleccionemos el modelo y deberemos ajustar pues en un principio puede que requiramos una regularización más débil para intentar ajustar un poco mejor los datos.
 
 \subsection{Modelos usados y parámetros empleados}
+
+Para empezar he probado muchos modelos distintos de regresión para intentar ajustar un poco mejor el modelo que mejor se comporta y poder mejorar sus parámetros. Veamos primero cómo se comportan estos modelos sin ningún tipo de preprocesamiento ni ajuste sobre ellos para estudiar un grupo en el que nos debamos de centrar.
+
+En primer lugar cabe decir que los modelos que he considerado inicialmente son:
+
+\begin{itemize}
+	\item Mínimos cuadrados
+	\item Ridge
+	\item Lasso
+	\item ElascticNet
+	\item Lars
+	\item Lasso-Lars
+	\item Bayesian Ridge
+\end{itemize}
+
+Los resultados base sin preprocesamiento que he obtenido han sido:
+
+\begin{itemize}
+	\item Mínimos cuadrados: 0.5258141274677205
+	\item Ridge: 0.49993986395648293
+	\item Lasso: 0.32299676200104666
+	\item ElascticNet: 0.274949699291239
+	\item Lars: 0.02588676498032294
+	\item Lasso-Lars: 0.5138949582589636
+	\item Bayesian Ridge: 0.5047234366540709
+\end{itemize}
+
+Posteriormente analizaremos esta métrica en profundidad pero por el momento nos vale con saber que el mejor valor es 1 y a partir de 0 cualquier valor negativo significa que ajusta peor incluso que un hiperplano. 
+
+De esta forma podemos ver que Lars puede ser eliminado del estudio pues es a priori el que muestra un desmarque más significativo entre él y el resto de algoritmos. También vemos que Lasso y ElasticNet obtienen unos resultados pobres pero veremos cómo mejoran con el preprocesamiento.
+
+Por tanto ya estamos en disposición de explicar los modelos que vamos a utilizar. 
+
+\begin{itemize}
+	\item Mínimos cuadrados: este modelo intenta ajustar una función lineal, esto es un vector de pesos $w$ de forma que se minimice la suma de los residuos al cuadrado. Esto es en términos generales como decir que la recta y los verdaderos puntos mantengan la mínima distancia o lo que es lo mismo que los errores entre la recta y el verdadero punto se mantengan al mínimo posible.
+	\item Ridge: este método sigue la misma base matemática que mínimos cuadrados pues continúa intentando minimizar el factor $min_w || Xw-y ||_2^2$ pero ahora se añade un coeficiente de regularización. Esta regularización es denominada regularización de Tikhonov y que en este caso en la implementación de Scikit Learn se ha tomado como $\alpha ||w||_2^2$ por lo que el modelo completo quedaría como:
+	
+	$$min_w || Xw-y ||_2^2 + \alpha ||w||_2^2$$ donde $\alpha\geq 0$ es un parámetro que se puede controlar y que si se hace 0 convierte al método Ridge en el propio mínimos cuadrados.
+	\item Lasso: este modelo también nace partiendo del modelo de mínimos cuadrados. Lasso intenta minimizar $min_w \frac{1}{2\cdot n_{samples}}||Xw-y||_2^2 + \alpha ||w||_1$. Como podemos ver comparte el término $||Xw-y||_2^2$ como es lógico con mínimos cuadrados. Además este método provee como Ridge un factor de regularización que en el caso de Scikit Learn se ha implementado como $\lambda ||w||_1$ donde $w$ es el vector de pesos que estamos ajustando y $\lambda$ es un parámetro ajustable. Además de este factor de regularización escalamos por el número de muestras. Como diferencia también con Ridge estamos tomando en el factor de regularización la norma $L1$ en vez de la $L2$, es decir, $||w||_1 = \sum_{i=1}^{n}|w_i|$. 
+	\item ElascticNet: ElasticNet toma la base de mínimos cuadrados, Lasso y Ridge intentando hacer una combinación adecuada de estos métodos de regularización. La forma que queremos minimizar ahora es $min_w \frac{1}{2n_{samples}}|| Xw-y ||_2^2 + \alpha \rho ||w||_1 + \frac{\alpha (1-\rho)}{2}||w||_2^2$. La ventaja que estamos viendo es la combinación de la ponderación de la norma $L1$ y $L2$ que incorporaban de forma independiente Lasso y Ridge. La complejidad del modelo asciende pues ahora tenemos los parámetros de Ridge y los de Lasso pero comprobaremos que el comportamiento está a la altura del resto de algoritmos. Esta combinación nació como solución a algunas flaquezas que los modelos Ridge y Lasso presentaban de forma separada pero no las sufren con una combinación adecuada.
+	\item Lasso-Lars: LARS es un paradigma nuevo de regresión que intenta en vez de minimizar únicamente los errores, mantener una relación de ángulos entre la recta propuesta y los puntosdel espacio. El modelo LARS es el que hemos descartado anteriormente pues funcionaba mal. La idea es que LARS está pensado para alta dimensionalidad mientras que Lasso no, por lo tanto la combinación del método LARS con la regularización propuesta por Lasso hace que se mejore el comportamiento haciendo interesante considerar este método.
+	\item Bayesian Ridge: este modelo intenta utilizar conocimiento del área de la inferencia bayesiana junto con el modelo de regresión Ridge. Las probabilidades ahora de $w$ vienen dadas por una distribución esférica gaussiana. Los parámetros $\alpha$ y $\lambda$ vienen dados por una distribución gamma. De esta forma se intenta hacer una estimación de los parámetros mediante estas distribuciones para ajustar mejor los modelos a los datos.
+\end{itemize}
+
+Veamos los resultados de los modelos:
+
+\begin{table}[H]
+	\begin{tabular}{|c|c|c|c|c|c|c|}
+		\hline
+		\multirow{2}{*}{{\ul Preprocesamiento}}                              & \multicolumn{6}{c|}{{\ul Algoritmos}}                                                             \\ \cline{2-7} 
+		& {\ul MC} & {\ul Ridge} & {\ul Lasso} & {\ul ElasticNet} & {\ul Lasso-LARS} & {\ul Bayesian Ridge} \\ \hline
+		\textbf{Sin}                                                         & 0.5034   & 0.4877      & 0.3170      & 0.2495           & 0.4917           & 0.2474               \\ \hline
+		\textbf{\begin{tabular}[c]{@{}c@{}}Raiz cuadrada\\ (R)\end{tabular}} & 0.4935   & 0.4898      & 0.4046      & 0.2521           & 0.4975           & 0.4926               \\ \hline
+		\textbf{Logaritmo(L)}                                                & 0.4416   & 0.3842      & 0.2145      & 0.1151           & 0.4438           & 0.4422               \\ \hline
+		\textbf{L+E}                                                         & 0.4706   & 0.4706      & 0.4588      & 0.2966           & 0.4610           & 0.4688               \\ \hline
+		\textbf{R+E}                                                         & 0.5023   & 0.5024      & 0.5034      & 0.3613           & 0.5042           & 0.5033               \\ \hline
+		\textbf{P+R+E}                                                       & 0.7940   & 0.7735      & 0.6486      & 0.5937           & 0.6504           & 0.7037               \\ \hline
+		\textbf{P+L+E}                                                       & 0.4925   & 0.7300      & 0.5806      & 0.4727           & 0.5846           & 0.7204               \\ \hline
+		\textbf{Estandarizado (E)}                                           & 0.5013   & 0.5013      & 0.4889      & 0.3045           & 0.4909           & 0.5009               \\ \hline
+		\textbf{Normalización (N)}                                           & 0.1526   & 0.0678      & -0.004      & -0.004           & 0.1341           & 0.1319               \\ \hline
+		\textbf{Polinómica}                                                  & 0.5483   & 0.6627      & 0.6612      & 0.6541           & 0.6180           & 0.5134               \\ \hline
+		\textbf{P+E}                                                         & 0.6861   & 0.7003      & 0.6255      & 0.5717           & 0.6263           & 0.6371               \\ \hline
+		\textbf{P+N}                                                         & -2.8666  & 0.0765      & -0.0004     & -0.0004          & 0.1560           & 0.17833              \\ \hline
+		\textbf{P+N+E}                                                       & 0.1246   & 0.1255      & 0.1158      & 0.0153           & 0.1231           & 0.1312               \\ \hline
+		\textbf{N+E}                                                         & -20.6287 & -0.1940     & 0.1400      & 0.0694           & 0.1387           & -0.6916              \\ \hline
+	\end{tabular}
+\end{table}
+
+El mejor escenario y puntuación para cada algoritmo ha sido:
+
+\begin{table}[H]
+	\begin{tabular}{|l|l|l|}
+		\hline
+		\multirow{2}{*}{{\ul Algoritmos}} & \multicolumn{2}{l|}{{\ul Mejor combinación}}              \\ \cline{2-3} 
+		& {\ul Procesamiento}                         & {\ul Score} \\ \hline
+		\textbf{Mínimos cuadrados}        & Polinómica + Raíz cuadrada+ estandarización & 0.7940      \\ \hline
+		\textbf{Ridge}                    & Polinómica + Raíz cuadrada+ estandarización & 0.7735      \\ \hline
+		\textbf{Lasso}                    & Polinómica                                  & 0.6612      \\ \hline
+		\textbf{ElasticNet}               & Polinómica                                  & 0.6541      \\ \hline
+		\textbf{Lasso-LARS}               & Polinómica + Raíz cuadrada+ estandarización & 0.6504      \\ \hline
+		\textbf{Bayesian Ridge}           & Polinómica + Raíz cuadrada+ estandarización & 0.7204      \\ \hline
+	\end{tabular}
+\end{table}
+
+Como podemos observar el algoritmo que mejor score nos ha dado ha sido mínimos cuadrados que nos arroja un 79.40\% de acierto en la métrica $R^2$ que nos proporciona Sklearn por defecto. 
+
+Estudiemos y ajustemos un poco más el modelo.
 
 \subsection{Selección y ajuste del modelo final}
 
