@@ -96,7 +96,7 @@ def raizDatos(dataset):
 
 def logDatos(dataset):
     '''
-    @brief Función que aplica la raíz cuadrada a los datos
+    @brief Función que aplica una transformación logarítmica log(1+x) a los datos
     @return Devuelve el conjunto de datos transformados
     '''
     transformer = preprocessing.FunctionTransformer(np.log1p)
