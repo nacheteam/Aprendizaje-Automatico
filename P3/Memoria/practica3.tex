@@ -52,7 +52,7 @@ Por tanto tras este primer análisis del conjunto de datos el problema que tenem
 
 \subsection{Preprocesado de los datos}
 
-En primer lugar debemos recordar del apartado anterior que el conjunto de datos no tiene ningún valor perdido por lo que no corresponde hacer ningún tipo de preprocesamiento dirigidoa solventar este problema.
+En primer lugar debemos recordar del apartado anterior que el conjunto de datos no tiene ningún valor perdido por lo que no corresponde hacer ningún tipo de preprocesamiento dirigido a solventar este problema.
 
 En segundo lugar disponemos de un conjunto con 64 atributos por lo que en un principio cabría descartar cualquier preprocesamiento que añada nuevas variables al conjunto de datos tales como expansiones polinómicas de ordenes superiores. Estas técnicas pretenden añadir más información al conjunto de datos pero no tenemos signos que nos indiquen que esto sería necesario por lo que en un principio no conviene emplear la técnica. 
 
@@ -74,11 +74,11 @@ Por último Factor Analysis utiliza una descomposición similar a PCA pero posee
 
 \subsection{Selección de clases de funciones}
 
-En este caso se nos pide por parte del enunciado del problema que empleemos modelos lineales, esto es modelos que intenten ajustar una función que sea una transformación lineal de los atributos. Por tanto la clase de funciones viene prefijada y por tanto $\mathcal{H}$ viene dada por las fuciones de la forma $h(x) = w_0 + w_1 x_1 + ... + w_d x_d \in \mathcal{H}$.
+En este caso se nos pide por parte del enunciado del problema que empleemos modelos lineales, esto es modelos que intenten ajustar una función que sea una transformación lineal de los atributos. Por tanto la clase de funciones viene prefijada y por tanto $\mathcal{H}$ viene dada por las funciones de la forma $h(x) = w_0 + w_1 x_1 + ... + w_d x_d \in \mathcal{H}$.
 
 \subsection{Conjuntos de training, test y validación}
 
-Para comprobar la efectividad de los modelos he utilizado una partición del conjunto original en test y train. En este caso he utilizado un 80\% del conjunto para entrenamiento y un 20\% para test. Esta partición la he tomado mediante la funcion train\_test\_split de sklearn estratificando los datos, esto es, manteniendo el porcentaje de clases en los conjuntos de test y train equilibrados con respecto al conjunto original.
+Para comprobar la efectividad de los modelos he utilizado una partición del conjunto original en test y train. En este caso he utilizado un 80\% del conjunto para entrenamiento y un 20\% para test. Esta partición la he tomado mediante la función train\_test\_split de sklearn estratificando los datos, esto es, manteniendo el porcentaje de clases en los conjuntos de test y train equilibrados con respecto al conjunto original.
 
 \subsection{Regularización, necesidad e implementación}
 
@@ -209,7 +209,7 @@ Como podemos observar en la tabla para cada algoritmo los mejores resultados que
 
 Como podemos observar el ganador de forma ligera con respecto al resto es el algoritmo Logistic Regression y además resulta especialmente curioso el hecho de que como mejor funcionan los algoritmos es sin preprocesamiento. Vamos a intentar observar el conjunto de datos proyectado sobre dos dimensiones para razonar el por qué de estos resultados.
 
-En primer lugar cabe decir que la ténica de reducción de dimensionalidad que estoy aplicando es TSNE que es una técnica ampliamente utilizada en reducción de dimensionalidad orientada a visualización de datos. En este caso he reducido a dos dimensiones y como resultado he obtenido la siguiente imagen:
+En primer lugar cabe decir que la técnica de reducción de dimensionalidad que estoy aplicando es TSNE que es una técnica ampliamente utilizada en reducción de dimensionalidad orientada a visualización de datos. En este caso he reducido a dos dimensiones y como resultado he obtenido la siguiente imagen:
 
 \begin{figure}[H]
 	\centering
@@ -297,7 +297,7 @@ En este conjunto de datos no tenemos tantos datos en la descripción como en el 
 
 \subsection{Preprocesado de los datos}
 
-En este caso no podemos aplicar la reducción de dimensionalidad del ejercicio anterior pues carcería de sentido al disponer ya de muy pocos atributos. Por contra necesitaremos aplicar alguna técnica que nos permita añadir información.
+En este caso no podemos aplicar la reducción de dimensionalidad del ejercicio anterior pues carecería de sentido al disponer ya de muy pocos atributos. Por contra necesitaremos aplicar alguna técnica que nos permita añadir información.
 
 En primer lugar he probado tres procesamientos que son la estandarización, la normalización y la combinación de estos dos de la forma estandarización y después normalización. 
 
@@ -313,19 +313,19 @@ De igual forma si tuviéramos tres características $(X_1,X_2,X_3)$ se convierte
 
 $(1,X_1,X_2,X_3,X_1\cdot X_2,X_1\cdot X_3,X_2\cdot X_3,X_1\cdot X_2\cdot X_3, X_1^2, X_1^2\cdot X_2, X_1^2\cdot X_3, X_2^2\cdot X_1, X_2^3\cdot X_3, X_3^2\cdot X_1, X_3^2\cdot X_2, X_1^3, X_2^3, X_3^3)$
 
-Esta construcción no está pensada al tuntún. El hecho de haber incluído no sólo las potencias de los valores, si no además los polinomios mixtos constituye una estructura de anillo de polinomios sobre las variables $(X_1, X_2, X_3)$. Esta construcción además resulta de alto interés porque no sólo añade información extra de cada una de las variables, si no que también añade información interrelacionada de las variables entre sí gracias a los polinomios de variables mixtas.
+Esta construcción no está pensada al tuntún. El hecho de haber incluido no sólo las potencias de los valores, si no además los polinomios mixtos constituye una estructura de anillo de polinomios sobre las variables $(X_1, X_2, X_3)$. Esta construcción además resulta de alto interés porque no sólo añade información extra de cada una de las variables, si no que también añade información interrelacionada de las variables entre sí gracias a los polinomios de variables mixtas.
 
-Tras el estudio de esta aplicación he decidido que el mejor grado es 3 para este conjunto de datos, pues si ponemos menor grado no obtenemos beneficio alguno al aplicar la técnica y si tomamos un grado mayor añadimos complejidad excesiva e información redundante que hace que los regresores obtengan resultados de peor calidad. Además tenemos la capacidad de elegir si tomar sólamente los polinomios mixtos o todos incluídos los que tengan alguna potencia de una variable. En este caso he tomado todos los polinomios porque parece que la información que aportan las potencias es de mayor valor que la que aportan los términos mixtos.
+Tras el estudio de esta aplicación he decidido que el mejor grado es 3 para este conjunto de datos, pues si ponemos menor grado no obtenemos beneficio alguno al aplicar la técnica y si tomamos un grado mayor añadimos complejidad excesiva e información redundante que hace que los regresores obtengan resultados de peor calidad. Además tenemos la capacidad de elegir si tomar solamente los polinomios mixtos o todos incluidos los que tengan alguna potencia de una variable. En este caso he tomado todos los polinomios porque parece que la información que aportan las potencias es de mayor valor que la que aportan los términos mixtos.
 
 Tras aplicar este proceso he decidido estudiar también el comportamiento de los regresores con este conjunto de datos tras la transformación polinómica y aplicando un esquema de normalización, estandarización y estandarización+normalización.
 
 Como preprocesado extra he decidido aplicar transformaciones de tipo logarítmicas y raíces cuadradas a los datos para estudiar si el comportamiento mejora tras el procesado. 
 
-Con estas tranformaciones he probado a ponerlas solas, junto con estandarizado y junto con generación polinómica de valores.
+Con estas transformaciones he probado a ponerlas solas, junto con estandarizado y junto con generación polinómica de valores.
 
 \subsection{Selección de clases de funciones}
 
-En este caso se nos pide por parte del enunciado del problema que empleemos modelos lineales, esto es modelos que intenten ajustar una función que sea una transformación lineal de los atributos. Por tanto la clase de funciones viene prefijada y por tanto $\mathcal{H}$ viene dada por las fuciones de la forma $h(x) = w_0 + w_1 x_1 + ... + w_d x_d \in \mathcal{H}$.
+En este caso se nos pide por parte del enunciado del problema que empleemos modelos lineales, esto es modelos que intenten ajustar una función que sea una transformación lineal de los atributos. Por tanto la clase de funciones viene prefijada y por tanto $\mathcal{H}$ viene dada por las funciones de la forma $h(x) = w_0 + w_1 x_1 + ... + w_d x_d \in \mathcal{H}$.
 
 \subsection{Conjuntos de training, test y validación}
 
@@ -378,11 +378,15 @@ Por tanto ya estamos en disposición de explicar los modelos que vamos a utiliza
 	$$min_w || Xw-y ||_2^2 + \alpha ||w||_2^2$$ donde $\alpha\geq 0$ es un parámetro que se puede controlar y que si se hace 0 convierte al método Ridge en el propio mínimos cuadrados.
 	\item Lasso: este modelo también nace partiendo del modelo de mínimos cuadrados. Lasso intenta minimizar $min_w \frac{1}{2\cdot n_{samples}}||Xw-y||_2^2 + \alpha ||w||_1$. Como podemos ver comparte el término $||Xw-y||_2^2$ como es lógico con mínimos cuadrados. Además este método provee como Ridge un factor de regularización que en el caso de Scikit Learn se ha implementado como $\lambda ||w||_1$ donde $w$ es el vector de pesos que estamos ajustando y $\lambda$ es un parámetro ajustable. Además de este factor de regularización escalamos por el número de muestras. Como diferencia también con Ridge estamos tomando en el factor de regularización la norma $L1$ en vez de la $L2$, es decir, $||w||_1 = \sum_{i=1}^{n}|w_i|$. 
 	\item ElascticNet: ElasticNet toma la base de mínimos cuadrados, Lasso y Ridge intentando hacer una combinación adecuada de estos métodos de regularización. La forma que queremos minimizar ahora es $min_w \frac{1}{2n_{samples}}|| Xw-y ||_2^2 + \alpha \rho ||w||_1 + \frac{\alpha (1-\rho)}{2}||w||_2^2$. La ventaja que estamos viendo es la combinación de la ponderación de la norma $L1$ y $L2$ que incorporaban de forma independiente Lasso y Ridge. La complejidad del modelo asciende pues ahora tenemos los parámetros de Ridge y los de Lasso pero comprobaremos que el comportamiento está a la altura del resto de algoritmos. Esta combinación nació como solución a algunas flaquezas que los modelos Ridge y Lasso presentaban de forma separada pero no las sufren con una combinación adecuada.
-	\item Lasso-Lars: LARS es un paradigma nuevo de regresión que intenta en vez de minimizar únicamente los errores, mantener una relación de ángulos entre la recta propuesta y los puntosdel espacio. El modelo LARS es el que hemos descartado anteriormente pues funcionaba mal. La idea es que LARS está pensado para alta dimensionalidad mientras que Lasso no, por lo tanto la combinación del método LARS con la regularización propuesta por Lasso hace que se mejore el comportamiento haciendo interesante considerar este método.
+	\item Lasso-Lars: LARS es un paradigma nuevo de regresión que intenta en vez de minimizar únicamente los errores, mantener una relación de ángulos entre la recta propuesta y los puntos del espacio. El modelo LARS es el que hemos descartado anteriormente pues funcionaba mal. La idea es que LARS está pensado para alta dimensionalidad mientras que Lasso no, por lo tanto la combinación del método LARS con la regularización propuesta por Lasso hace que se mejore el comportamiento haciendo interesante considerar este método.
 	\item Bayesian Ridge: este modelo intenta utilizar conocimiento del área de la inferencia bayesiana junto con el modelo de regresión Ridge. Las probabilidades ahora de $w$ vienen dadas por una distribución esférica gaussiana. Los parámetros $\alpha$ y $\lambda$ vienen dados por una distribución gamma. De esta forma se intenta hacer una estimación de los parámetros mediante estas distribuciones para ajustar mejor los modelos a los datos.
 \end{itemize}
 
-Veamos los resultados de los modelos:
+Veamos los resultados de los modelos en la siguiente sección y elijamos en consecuencia uno.
+
+\subsection{Selección y ajuste del modelo final}
+
+Los resultados que he obtenido han sido:
 
 \begin{table}[H]
 	\begin{tabular}{|c|c|c|c|c|c|c|}
@@ -422,16 +426,88 @@ El mejor escenario y puntuación para cada algoritmo ha sido:
 	\end{tabular}
 \end{table}
 
-Como podemos observar el algoritmo que mejor score nos ha dado ha sido mínimos cuadrados que nos arroja un 79.40\% de acierto en la métrica $R^2$ que nos proporciona Sklearn por defecto. 
+Como podemos observar el algoritmo que mejor score nos ha dado ha sido mínimos cuadrados que nos arroja un 79.40\% de acierto en la métrica $R^2$ que nos proporciona Sklearn por defecto.
 
-Estudiemos y ajustemos un poco más el modelo.
+Visualicemos los datos para intentar entender esto.
 
-\subsection{Selección y ajuste del modelo final}
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.27]{./Imagenes/REG_sin_preprocesado.png}
+	\caption{Sin preprocesado}
+\end{figure}
+
+Como podemos ver los datos de por si no son muy favorables para regresión lineal, incluso cuando hacemos las parejas dos a dos de las características no obtenemos espacios acordes al problema.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.27]{./Imagenes/REG_estandarizados.png}
+	\caption{Estandarizados}
+\end{figure}
+
+Cuando estandarizamos realmente no estamos modificando los datos y añadiendo un comportamiento satisfactorio excesivamente.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.27]{./Imagenes/REG_normalizados.png}
+	\caption{Normalizados}
+\end{figure}
+
+Al normalizar si que apreciamos un comportamiento mucho mejor destinado a la regresión, como podemos ver ahora tenemos casi todos los plots en situaciones favorables para regresión por lo que este preprocesado es altamente eficiente para nuestro caso de estudio.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.27]{./Imagenes/REG_raiz_cuadrada.png}
+	\caption{Raíz cuadrada}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.27]{./Imagenes/REG_logaritmo.png}
+	\caption{Logaritmo de x+1}
+\end{figure}
+
+Tanto la raíz cuadrada como el logaritmo de por si no obtienen un comportamiento excepcional pero su potencial está cuando lo mezclamos con la imputación de valores polinómicos, cuestión que no es representable por la alta dimensionalidad que adquiere el conjunto de datos.
+
+Por tanto podemos ver que el preprocesado que estamos aplicando mantiene una tendencia positiva a mejorar nuestro conjunto de datos de cara al problema.
+
+Como podemos ver en los pairplots lo que he hecho es tomar un modelo de regresión lineal ordinario como mínimos cuadrados para ajustar el conjunto de datos para que podamos ver con mayor detalle el algoritmo en subespacios de los datos.
 
 \subsection{Idoneidad de la métrica usada en el ajuste}
 
+Los dos scores que he empleado han sido el score $R^2$ implementado por defecto y el score de la varianza explicada.
+
+El coeficiente $R^2$ se calcula de la siguiente manera:
+
+$$R^2(y,\hat{y}) = 1 - \frac{\sum_{i=0}^{n_{samples}-1} (y_i - \hat{y}_i)^2}{\sum_{i=0}^{n_{samples}-1}(y_i - \bar{y})^2}$$ donde $\bar{y}$ es la media de la salida.
+
+Tengamos en cuenta además que $\hat{y}$ son los valores predichos mientras que $y$ son los valores reales. De esta forma lo que estamos obteniendo de alguna forma es el error medio escalado por la desviación de la salida a su media. La medida de este coeficiente alcanza su mejor valor en 1 o -1 en el caso lineal y los valores cercanos a 0 son los peores. Esto es así pues en el caso de regresión lineal este coeficiente coincide con el de correlación de Pearson que se calcula como:
+
+$$R^2 = \frac{\sigma_{XY}}{\sigma_X^2 \sigma_Y^2}$$
+
+donde $\sigma_{XY}$ es la covarianza de $X$ e $Y$, $\sigma_X^2$ es la varianza de X y $\sigma_Y^2$ es la varianza de Y.
+
+En este caso el score que obtenemos bajo esta métrica es 0.6991313122028858 que resulta un poco más bajo que los datos anteriores debido a la generación aleatoria de los conjuntos de test y train.
+
+Por otro lado he decidido utilizar la medida o score de la varianza explicada que se calcula como:
+
+$$varianza \ explicada(y,\hat{y}) = 1-\frac{Var\{y-\hat{y}\}}{Var\{y\}}$$
+
+De alguna forma aquí lo que estamos midiendo es cómo nos distanciamos en varianza de la salida verdadera. El score es mejor cuánto más cercano sea a 1. En este caso he obtenido 0.7008244187176096.
+
 \subsection{Estimación de $E_{out}$}
 
+Para la estimación del error fuera de la muestra he utilizado una división del conjunto en train y test. El conjunto de train es el que tomaremos como nuestra muestra y el conjunto de test como fuera de la muestra. De esta forma podremos estimar el error fuera de la muestra.
+
+Como medida del error fuera de la muestra he decidido aplicar MSE o Mean Squared Error. 
+
+Esta medida del error se calcula como:
+
+$$MSE(y,\hat{y}) = \frac{1}{n_{samples}}\sum_{i=0}^{n_{samples}1-1}(y_i - \hat{y}_i)^2$$
+
+Como sería razonable esperar la mejor medida de error sería 0, en este caso he obtenido 14.312121398365376 lo cual parece ser alto. Pensemos que estamos midiendo el error que cometemos por instancia del conjunto de datos.
+
 \subsection{Justificación del modelo y calidad del mismo}
+
+La calidad del modelo es buena por la medida de acierto pero como podemos comprobar no es del todo satisfactorio y podría invitarnos a realizar un preprocesado más complejo o incluso a rechazar los modelos lineales por su simplicidad y pensar en utilizar modelos más complejos como redes neuronales.
 
 \end{document}
