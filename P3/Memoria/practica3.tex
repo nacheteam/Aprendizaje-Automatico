@@ -321,7 +321,11 @@ Tras aplicar este proceso he decidido estudiar también el comportamiento de los
 
 \subsection{Selección de clases de funciones}
 
+En este caso se nos pide por parte del enunciado del problema que empleemos modelos lineales, esto es modelos que intenten ajustar una función que sea una transformación lineal de los atributos. Por tanto la clase de funciones viene prefijada y por tanto $\mathcal{H}$ viene dada por las fuciones de la forma $h(x) = w_0 + w_1 x_1 + ... + w_d x_d \in \mathcal{H}$.
+
 \subsection{Conjuntos de training, test y validación}
+
+Para los conjuntos de training y test he decidido tomar un esquema de 80\% de train y 20\% de test. Además cabe decir que en este caso como es lógico no podemos utilizar el parámetro stratify para mantener la proporción de las clases pues no tenemos clases, tenemos una salida continua. De esta forma la división no es atendiendo a la salida si no completamente aleatoria manteniendo la proporción 80/20.
 
 \subsection{Regularización, necesidad e implementación}
 
